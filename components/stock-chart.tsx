@@ -90,7 +90,7 @@ function StockChart() {
 
 				const grossProductData = todaysStocks.reduce((acc: any, item) => {
 					const { item_id, quentity, buy_price } = item;
-					const quantity = parseInt(, 10);
+					const quantity = 10
 					const totalPrice = buy_price * quantity;
 
 					if (!acc[item_id]) {

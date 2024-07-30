@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
-import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, } from '../bootstrap/Modal';
+import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
 import showNotification from '../extras/showNotification';
 import Icon from '../icon/Icon';
 import FormGroup from '..//bootstrap/forms/FormGroup';
@@ -30,7 +30,6 @@ interface Item {
 }
 // StockAddModal component definition
 const StockAddModal: FC<StockAddModalProps> = ({ id, isOpen, setIsOpen }) => {
-
 	const [item, setItem] = useState<Item[]>([]);
 	const [searchTerm, setSearchTerm] = useState('');
 	const currentDate = new Date();
@@ -59,73 +58,110 @@ const StockAddModal: FC<StockAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	}, []);
 
 	// Logic for filtering options based on search term
-	const filteredOptions = item.filter(item =>
-		item.name.toLowerCase().includes(searchTerm.toLowerCase())
+	const filteredOptions = item.filter((item) =>
+		item.name.toLowerCase().includes(searchTerm.toLowerCase()),
 	);
 
 	// Initialize formik for form management
 	const formik = useFormik({
 		initialValues: {
-			item_id: '',
-			location: 'Reserve store',
-			sublocation: "",
-			exp: '',
-			buy_price: '',
-			quentity: '',
-			status: "",
-			date:formattedDate,
-			active:true
-
+			code: '',
+			description: '',
+			color: '',
+			fabric_type: '',
+			gsm: '',
+			width: '',
+			knit_type: '',
+			GRN_number: '',
+			GRA_number: '',
+			quantity: '',
+			UOM: '',
+			bales: '',
+			suplier: '',
+			active: true,
 		},
 		validate: (values) => {
 			const errors: {
-				item_id?: string;
-				location?: string;
-				sublocation?: string;
-				exp?: string;
-				buy_price?: string;
-				quentity?: string;
-				status?: string
+				
+				code?: string;
+				description?: string;
+				color?: string;
+				fabric_type?: string;
+				gsm?: string;
+				width?: string;
+				knit_type?: string;
+				GRN_number?: string;
+				GRA_number?: string;
+				quantity?: string;
+				UOM?: string;
+				bales?: string;
+				suplier?: string;
 			} = {};
-			if (!values.buy_price) {
-				errors.buy_price = 'Required';
+			if (!values.GRA_number) {
+				errors.GRA_number = 'Required';
 			}
-			if (!values.item_id) {
-				errors.item_id = 'Required';
+			if (!values.GRN_number) {
+				errors.GRN_number = 'Required';
 			}
-			if (!values.location) {
-				errors.location = 'Required';
+			if (!values.UOM) {
+				errors.UOM = 'Required';
 			}
-			if (!values.quentity) {
-				errors.quentity = 'Required';
+			if (!values.bales) {
+				errors.bales = 'Required';
 			}
-			if (!values.status) {
-				errors.status = 'Required';
+			if (!values.code) {
+				errors.code = 'Required';
 			}
-			if (!values.sublocation) {
-				errors.sublocation = 'Required';
+			if (!values.color) {
+				errors.color = 'Required';
 			}
+			if (!values.description) {
+				errors.description = 'Required';
+			}
+			if (!values.fabric_type) {
+				errors.fabric_type = 'Required';
+			}
+			if (!values.gsm) {
+				errors.gsm = 'Required';
+			}
+			if (!values.knit_type) {
+				errors.knit_type = 'Required';
+			}
+			if (!values.quantity) {
+				errors.quantity = 'Required';
+			}
+			if (!values.suplier) {
+				errors.suplier = 'Required';
+			}
+			if (!values.width) {
+				errors.width = 'Required';
+			}
+
 			return errors;
 		},
 		onSubmit: async (values) => {
 			try {
-				values.active=true
+				values.active = true;
 				const collectionRef = collection(firestore, 'stock');
-				addDoc(collectionRef, values).then(() => {
-					setIsOpen(false);
-					showNotification(
-						<span className='d-flex align-items-center'>
-							<Icon icon='Info' size='lg' className='me-1' />
-							<span>Successfully Added</span>
-						</span>,
-						'Stock has been added successfully',
-					);
-					Swal.fire('Added!', 'Stock has been add successfully.', 'success');
-					formik.resetForm()
-				}).catch((error) => {
-					console.error('Error adding document: ', error);
-					alert('An error occurred while adding the document. Please try again later.');
-				});
+				addDoc(collectionRef, values)
+					.then(() => {
+						setIsOpen(false);
+						showNotification(
+							<span className='d-flex align-items-center'>
+								<Icon icon='Info' size='lg' className='me-1' />
+								<span>Successfully Added</span>
+							</span>,
+							'Stock has been added successfully',
+						);
+						Swal.fire('Added!', 'Stock has been add successfully.', 'success');
+						formik.resetForm();
+					})
+					.catch((error) => {
+						console.error('Error adding document: ', error);
+						alert(
+							'An error occurred while adding the document. Please try again later.',
+						);
+					});
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
 				alert('An error occurred during file upload. Please try again later.');
@@ -136,118 +172,169 @@ const StockAddModal: FC<StockAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
 			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
-				<ModalTitle id="">{'New Stock'}</ModalTitle>
+				<ModalTitle id=''>{'New Stock'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>
-
-					<Input
-						type="text"
-						placeholder="Search..."
-						value={searchTerm}
-						onChange={(e: any) => setSearchTerm(e.target.value)}
-					/>
-					<FormGroup id='item_id' label='Item Name' className='col-md-6'>
-						<Select
-							ariaLabel='Default select example'
-							onChange={formik.handleChange}
-							value={formik.values.item_id}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							placeholder='Select Item'
-							isTouched={formik.touched.item_id}
-							invalidFeedback={formik.errors.item_id}
-							validFeedback='Looks good!'>
-							{filteredOptions.map((option, index) => (
-								<Option value={option.name}>{option.name}</Option>
-							))}
-						</Select>
-					</FormGroup>
-					<FormGroup id='buy_price' label='Unit cost' className='col-md-6'>
+					<FormGroup id='code' label='Code' className='col-md-6'>
 						<Input
-							type="number"
+							type='number'
 							onChange={formik.handleChange}
-							value={formik.values.buy_price}
+							value={formik.values.code}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
-							isTouched={formik.touched.buy_price}
-							invalidFeedback={formik.errors.buy_price}
+							isTouched={formik.touched.code}
+							invalidFeedback={formik.errors.code}
 							min={0}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='location' label='Location' className='col-md-6'>
+					<FormGroup id='description' label='Description' className='col-md-6'>
 						<Input
 							disabled={true}
 							onChange={formik.handleChange}
-							value={formik.values.location}
+							value={formik.values.description}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
-							isTouched={formik.touched.location}
-							invalidFeedback={formik.errors.location}
+							isTouched={formik.touched.description}
+							invalidFeedback={formik.errors.description}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='sublocation' label='Sub Location' className='col-md-6'>
+					<FormGroup id='color' label='Color' className='col-md-6'>
 						<Input
 							onChange={formik.handleChange}
-							value={formik.values.sublocation}
+							value={formik.values.color}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
-							isTouched={formik.touched.sublocation}
-							invalidFeedback={formik.errors.sublocation}
+							isTouched={formik.touched.color}
+							invalidFeedback={formik.errors.color}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='exp' label='EXP Date' className='col-md-6'>
+					<FormGroup id='fabric_type' label='Fabric Type' className='col-md-6'>
 						<Input
-							type='date'
 							onChange={formik.handleChange}
-							value={formik.values.exp}
+							value={formik.values.fabric_type}
 							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.fabric_type}
+							invalidFeedback={formik.errors.fabric_type}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='quentity' label='Quantity' className='col-md-6'>
+					<FormGroup id='GSM' label='GSM' className='col-md-6'>
+						<Input
+							onChange={formik.handleChange}
+							value={formik.values.gsm}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.gsm}
+							invalidFeedback={formik.errors.gsm}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='width' label='Width' className='col-md-6'>
+						<Input
+							onChange={formik.handleChange}
+							value={formik.values.width}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.width}
+							invalidFeedback={formik.errors.width}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='knit_type' label='Knit Type' className='col-md-6'>
+						<Input
+							onChange={formik.handleChange}
+							value={formik.values.knit_type}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.knit_type}
+							invalidFeedback={formik.errors.knit_type}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
+						<Input
+							onChange={formik.handleChange}
+							value={formik.values.GRN_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRN_number}
+							invalidFeedback={formik.errors.GRN_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='GRA_number' label='GRA Number' className='col-md-6'>
 						<Input
 							type='number'
 							onChange={formik.handleChange}
-							value={formik.values.quentity}
+							value={formik.values.GRA_number}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
-							isTouched={formik.touched.quentity}
-							invalidFeedback={formik.errors.quentity}
-							min={1}
+							isTouched={formik.touched.GRA_number}
+							invalidFeedback={formik.errors.GRA_number}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='status' label='Status' className='col-md-6'>
-						<Select
-							ariaLabel='Default select example'
-							placeholder='Open this select status'
+					<FormGroup id='quantity' label='Quantity' className='col-md-6'>
+						<Input
+							type='number'
 							onChange={formik.handleChange}
-							value={formik.values.status}
+							value={formik.values.quantity}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
-							isTouched={formik.touched.status}
-							invalidFeedback={formik.errors.status}
-							validFeedback='Looks good!'>
-							<Option value='Paid'>Paid</Option>
-							<Option value='Half Payment'>Half Payment</Option>
-							<Option value='Not Paid'>Not Paid</Option>
-						</Select>
+							isTouched={formik.touched.quantity}
+							invalidFeedback={formik.errors.quantity}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='UOM' label='UOM' className='col-md-6'>
+						<Input
+							onChange={formik.handleChange}
+							value={formik.values.UOM}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.UOM}
+							invalidFeedback={formik.errors.UOM}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='bales' label='Bales' className='col-md-6'>
+						<Input
+							onChange={formik.handleChange}
+							value={formik.values.bales}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.bales}
+							invalidFeedback={formik.errors.bales}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='suplier' label='Suplier' className='col-md-6'>
+						<Input
+							onChange={formik.handleChange}
+							value={formik.values.suplier}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.suplier}
+							invalidFeedback={formik.errors.suplier}
+							validFeedback='Looks good!'
+						/>
 					</FormGroup>
 				</div>
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
 				{/* Save button to submit the form */}
-				<Button color='info' onClick={formik.handleSubmit} >
+				<Button color='info' onClick={formik.handleSubmit}>
 					Save
 				</Button>
 			</ModalFooter>
 		</Modal>
 	);
-}
+};
 // Prop types definition for CustomerEditModal component
 StockAddModal.propTypes = {
 	id: PropTypes.string.isRequired,

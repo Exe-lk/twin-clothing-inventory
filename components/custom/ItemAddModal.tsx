@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
-import Modal, {ModalBody,ModalFooter,ModalHeader,ModalTitle,} from '../bootstrap/Modal';
+import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
 import showNotification from '../extras/showNotification';
 import Icon from '../icon/Icon';
 import FormGroup from '../bootstrap/forms/FormGroup';
@@ -21,14 +21,16 @@ interface ItemAddModalProps {
 	setIsOpen(...args: unknown[]): unknown;
 }
 interface Category {
-	categoryname: string
+	categoryname: string;
+	subcategory:string[];
 }
 // ItemAddModal component definition
 const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
-    const [imageurl, setImageurl] = useState<any>(null);
+	const [imageurl, setImageurl] = useState<any>(null);
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 	const [category, setCategory] = useState<Category[]>([]);
-    //get data from database
+	const [subcategory, setSubcategory] = useState<[]>([]);
+	//get data from database
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -39,36 +41,41 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					const data = doc.data() as Category;
 					return {
 						...data,
-                    };
+					};
 				});
-                setCategory(firebaseData);
+				setCategory(firebaseData);
 			} catch (error) {
 				console.error('Error fetching data: ', error);
 			}
 		};
-        fetchData();
+		fetchData();
 	}, []);
-   //image upload 
+	//change subcategory
+	const changeSubCategory= async(category:any)=>{
+		console.log("hi")
+console.log(category)
+	}
+	//image upload
 	const handleUploadimage = async () => {
-        if (imageurl) {
+		if (imageurl) {
 			// Assuming generatePDF returns a Promise
 			const pdfFile = imageurl;
-            const storageRef = ref(storage, `item/${pdfFile.name}`);
+			const storageRef = ref(storage, `item/${pdfFile.name}`);
 			const uploadTask = uploadBytesResumable(storageRef, pdfFile);
-            return new Promise((resolve, reject) => {
+			return new Promise((resolve, reject) => {
 				uploadTask.on(
 					'state_changed',
 					(snapshot) => {
 						const progress1 = Math.round(
-							(snapshot.bytesTransferred / snapshot.totalBytes) * 100
+							(snapshot.bytesTransferred / snapshot.totalBytes) * 100,
 						);
 					},
 					(error) => {
 						console.error(error.message);
 						reject(error.message);
 					},
-					 () => {
-						    getDownloadURL(uploadTask.snapshot.ref)
+					() => {
+						getDownloadURL(uploadTask.snapshot.ref)
 							.then((url) => {
 								console.log('File uploaded successfully. URL:', url);
 
@@ -79,116 +86,125 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								console.error(error.message);
 								reject(error.message);
 							});
-				    }
+					},
 				);
 			});
 		} else {
-			return ""
+			return '';
 		}
-	}
+	};
 	const divRef: any = useRef(null);
-    // Initialize formik for form management
+	// Initialize formik for form management
 	const formik = useFormik({
-        initialValues: {
-            category: '',
-			image: "",
-			name: '',
-			price: '',
-			quentity: 0,
-			reorderlevel: '',
-			status:true
-        },
+		initialValues: {
+			code: '',
+			description: '',
+			color: '',
+			fabric_type: '',
+			gsm: '',
+			width: '',
+			knit_type: '',
+			GRN_number: '',
+			GRA_number: '',
+			status: true,
+			category:'',
+			subcategory:"",
+		},
 		validate: (values) => {
 			const errors: {
-				category?: string;
-				image?: string;
-				name?: string;
-				price?: string;
-				quentity?: string;
-				reorderlevel?: string;
+				code?: string;
+				description?: string;
+				color?: string;
+				fabric_type?: string;
+				gsm?: string;
+				width?: string;
+				knit_type?: string;
+				GRN_number?: string;
+				GRA_number?: string;
+				category?:string;
+				subcategory?:string
 			} = {};
-            if (!values.category) {
-				errors.category = 'Required';
+			if (!values.code) {
+				errors.code = 'Required';
 			}
-            if (!values.name) {
-				errors.name = 'Required';
+			if (!values.description) {
+				errors.description = 'Required';
 			}
-			if (!values.price) {
-				errors.price = 'Required';
+			if (!values.color) {
+				errors.color = 'Required';
+			}
+			if (!values.fabric_type) {
+				errors.fabric_type = 'Required';
+			}
+			if (!values.gsm) {
+				errors.gsm = 'Required';
+			}
+			if (!values.width) {
+				errors.width= 'Required';
+			}
+			if (!values.knit_type) {
+				errors.knit_type = 'Required';
+			}
+			if (!values.GRA_number) {
+				errors.GRA_number = 'Required';
+			}
+			if (!values.GRN_number) {
+				errors.GRN_number = 'Required';
 			}
 			return errors;
 		},
 		onSubmit: async (values) => {
 			try {
 				Swal.fire({
-					title: "Processing...",
+					title: 'Processing...',
 					html: 'Please wait while the data is being processed.<br><div class="spinner-border" role="status"></div>',
 					allowOutsideClick: false,
 					showCancelButton: false,
 					showConfirmButton: false,
 				});
-				const imgurl: any = await handleUploadimage()
-				values.image = imgurl || "";
-				values.status=true
-                const documentId = '11005';
+				const imgurl: any = await handleUploadimage();
+				
+				values.status = true;
+				const documentId = '11005';
 				const collectionRef = doc(firestore, 'item', id);
-				setDoc(collectionRef, values).then(() => {
-                    setIsOpen(false);
-					showNotification(
-						<span className='d-flex align-items-center'>
-							<Icon icon='Info' size='lg' className='me-1' />
-							<span>Successfully Added</span>
-						</span>,
-						'Stock has been added successfully',
-					);
-					Swal.fire('Added!', 'Stock has been add successfully.', 'success');
-					formik.resetForm()
-					setSelectedImage(null)
-				}).catch((error) => {
-					console.error('Error adding document: ', error);
-					Swal.close
-					alert('An error occurred while adding the document. Please try again later.');
-				});
+				setDoc(collectionRef, values)
+					.then(() => {
+						setIsOpen(false);
+						showNotification(
+							<span className='d-flex align-items-center'>
+								<Icon icon='Info' size='lg' className='me-1' />
+								<span>Successfully Added</span>
+							</span>,
+							'Stock has been added successfully',
+						);
+						Swal.fire('Added!', 'Stock has been add successfully.', 'success');
+						formik.resetForm();
+						setSelectedImage(null);
+					})
+					.catch((error) => {
+						console.error('Error adding document: ', error);
+						Swal.close;
+						alert(
+							'An error occurred while adding the document. Please try again later.',
+						);
+					});
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
-				Swal.close
+				Swal.close;
 				alert('An error occurred during file upload. Please try again later.');
 			}
-        },
+		},
 	});
 
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
 			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
-				<ModalTitle id="">{'New Stock'}</ModalTitle>
+				<ModalTitle id=''>{'New Stock'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>
-					<FormGroup id='name' label='Name' className='col-md-6'>
-						<Input
-							onChange={formik.handleChange}
-							value={formik.values.name}
-                            onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.name}
-							invalidFeedback={formik.errors.name}
-							validFeedback='Looks good!'
-                        />
-					</FormGroup>
-                    <FormGroup id='price' label='Price' className='col-md-6'>
-						<Input
-							type="number"
-							onChange={formik.handleChange}
-							value={formik.values.price}
-                            onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.price}
-							invalidFeedback={formik.errors.price}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
-                    <FormGroup id='category' label='Category' className='col-md-6'>
-                       <Select
+				<FormGroup id='category' label='Category' className='col-md-6'>
+						<Select
 							ariaLabel='Default select example'
 							placeholder='Open this select category'
 							onChange={formik.handleChange}
@@ -198,26 +214,138 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							isTouched={formik.touched.category}
 							invalidFeedback={formik.errors.category}
 							validFeedback='Looks good!'>
-							{
-								category.map((item, index) => (
-                                    <Option value={item.categoryname}>{item.categoryname}</Option>
-								))
-							}
+							{category.map((item, index) => (
+								<Option value={item.categoryname} onChange={(e:any)=>(changeSubCategory(e.target.value))}>{item.categoryname}</Option>
+							))}
 						</Select>
 					</FormGroup>
-					<FormGroup id='reorderlevel' label='Reorder Level' className='col-md-6'>
-						<Input
-							type='number'
+					<FormGroup id='subcategory' label='Category' className='col-md-6'>
+						<Select
+							ariaLabel='Default select example'
+							placeholder='Open this select sub category'
 							onChange={formik.handleChange}
-							value={formik.values.reorderlevel}
-                            onBlur={formik.handleBlur}
+							value={formik.values.subcategory}
+							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
-							isTouched={formik.touched.reorderlevel}
-							invalidFeedback={formik.errors.reorderlevel}
+							isTouched={formik.touched.subcategory}
+							invalidFeedback={formik.errors.subcategory}
+							validFeedback='Looks good!'>
+							{category.map((item, index) => (
+								<Option value={item.categoryname}>{item.categoryname}</Option>
+							))}
+						</Select>
+					</FormGroup>
+					<FormGroup id='code' label='Code' className='col-md-6'>
+						<Input
+							onChange={formik.handleChange}
+							value={formik.values.code}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.code}
+							invalidFeedback={formik.errors.code}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup label='Profile Picture' className='col-md-6'>
+					<FormGroup id='description' label='Description' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							value={formik.values.description}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.description}
+							invalidFeedback={formik.errors.description}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='color' label='Color' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							value={formik.values.color}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.color}
+							invalidFeedback={formik.errors.color}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='fabric_type' label='Fabric Type' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							value={formik.values.fabric_type}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.fabric_type}
+							invalidFeedback={formik.errors.fabric_type}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					
+					<FormGroup id='gsm' label='GSM' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							value={formik.values.gsm}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.gsm}
+							invalidFeedback={formik.errors.gsm}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='width' label='Width' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							value={formik.values.width}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.width}
+							invalidFeedback={formik.errors.width}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='knit_type' label='Knit Type' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							value={formik.values.knit_type}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.knit_type}
+							invalidFeedback={formik.errors.knit_type}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							value={formik.values.GRN_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRN_number}
+							invalidFeedback={formik.errors.GRN_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='GRA_number' label='GRA Number' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							value={formik.values.GRA_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRA_number}
+							invalidFeedback={formik.errors.GRA_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					
+					
+					{/* <FormGroup label='Profile Picture' className='col-md-6'>
 						<Input
 							type='file'
 							onChange={(e: any) => {
@@ -226,23 +354,21 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								setSelectedImage(URL.createObjectURL(e.target.files[0]));
 							}}
 						/>
-					</FormGroup>
-					{selectedImage && <img src={selectedImage} className="mx-auto d-block mb-4" alt="Selected Profile Picture" style={{ width: '200px', height: '200px', }} />}
-					{/* Barcode component */}
-					<div ref={divRef}>
-						{/* <Barcode value={formik.values.barcode} /> */}
-					</div>
+					</FormGroup> */}
+				
+				
+					<div ref={divRef}>{/* <Barcode value={formik.values.barcode} /> */}</div>
 				</div>
-            </ModalBody>
+			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
 				{/* Save button to submit the form */}
-				<Button color='info' onClick={formik.handleSubmit} >
+				<Button color='info' onClick={formik.handleSubmit}>
 					Save
 				</Button>
 			</ModalFooter>
 		</Modal>
 	);
-}
+};
 // Prop types definition for ItemAddModal component
 ItemAddModal.propTypes = {
 	id: PropTypes.string.isRequired,
@@ -250,3 +376,7 @@ ItemAddModal.propTypes = {
 	setIsOpen: PropTypes.func.isRequired,
 };
 export default ItemAddModal;
+function async() {
+	throw new Error('Function not implemented.');
+}
+

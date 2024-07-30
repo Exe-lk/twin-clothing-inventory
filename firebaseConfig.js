@@ -9,13 +9,13 @@ import { getDatabase } from "firebase/database";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAvyoRkeqnKXXoLpwxRKF-5etrbHtpjzH0",
-  authDomain: "exelk-pos.firebaseapp.com",
-  projectId: "exelk-pos",
-  storageBucket: "exelk-pos.appspot.com",
-  messagingSenderId: "798417359656",
-  appId: "1:798417359656:web:c303e409fb7d5a35da761d",
-  measurementId: "G-M675QRMR8G"
+  apiKey: "AIzaSyCio3bKDF184Zw8QaCugMuHsfcz_97H0V8",
+  authDomain: "twin-clothing-a0c4d.firebaseapp.com",
+  projectId: "twin-clothing-a0c4d",
+  storageBucket: "twin-clothing-a0c4d.appspot.com",
+  messagingSenderId: "396009247464",
+  appId: "1:396009247464:web:8247a236e0eae83c172f5d",
+  measurementId: "G-9CTYY1RLZ7"
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);

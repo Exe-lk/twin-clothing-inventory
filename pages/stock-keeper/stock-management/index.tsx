@@ -14,15 +14,16 @@ import Input from '../../../components/bootstrap/forms/Input';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
 import Card, { CardBody } from '../../../components/bootstrap/Card';
-import StockEditModal from '../../../components/custom/locationEditModal';
+import StockAddModal from '../../../components/custom/StockAddModal';
+import StockEditModal from '../../../components/custom/StockEditModal';
 import { doc, deleteDoc, collection, getDocs } from 'firebase/firestore';
 import { firestore } from '../../../firebaseConfig';
 import Dropdown, { DropdownToggle, DropdownMenu } from '../../../components/bootstrap/Dropdown';
 import { getColorNameWithIndex } from '../../../common/data/enumColors';
 import { getFirstLetter } from '../../../helpers/helpers';
-import showNotification from '../../../components/extras/showNotification';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
+// Define the interface for stock data
 interface Stock {
 	cid: string;
 	buy_price: number;
@@ -33,69 +34,46 @@ interface Stock {
 	sublocation: string;
 	exp: string;
 }
+// Define the functional component for the index page
 const Index: NextPage = () => {
 	const { darkModeStatus } = useDarkMode(); // Dark mode
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
-	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State to control the visibility of the Add Stock modal
-	const [editModalStatus, setEditModalStatus] = useState<boolean>(false); // State to control the visibility of the Edit Stock modal
-	const [stock, setStock] = useState<Stock[]>([]); // State to store stock data fetched from Firestore
-	const [id, setId] = useState<string>(''); // State to store the ID of the stock being edited
+	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
+	const [editModalStatus, setEditModalStatus] = useState<boolean>(false); // State for edit modal status
+	const [stock, setStock] = useState<Stock[]>([]); // State for stock data
+	const [id, setId] = useState<string>(''); // State for current stock ID
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 	const position = [
 		{ position: 'Reserve store' },
 		{ position: 'main store' },
 		{ position: 'showroom' },
 	];
-	//get data from database
+	// Fetch stock data from Firestore
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const dataCollection = collection(firestore, 'stock'); // Reference to the 'stock' collection in Firestore
-				const querySnapshot = await getDocs(dataCollection); // Fetching all documents from the collection
+				const dataCollection = collection(firestore, 'stock');
+				const querySnapshot = await getDocs(dataCollection);
 				const firebaseData = querySnapshot.docs.map((doc) => {
 					const data = doc.data() as Stock;
 					return {
 						...data,
-						cid: doc.id, // Adding the document ID as 'cid' in the data object
+						cid: doc.id,
 					};
 				});
-				setStock(firebaseData); // Updating the stock state with the fetched data
+
+				setStock(firebaseData);
 			} catch (error) {
 				console.error('Error fetching data: ', error);
 			}
 		};
-		fetchData();
-	}, [editModalStatus, addModalStatus]); // Dependency array: useEffect runs when editModalStatus or addModalStatus changes
 
-	// useEffect(() => {
-	// 	let timerId: NodeJS.Timeout;
-	// 	const checkLowStock = () => {
-	// 		// Check if any stock item has a quantity less than 50
-	// 		const lowStockItem = stock.find((item) => parseInt(item.quentity) < 50);
-	// 		if (lowStockItem) {
-	// 			// Show notification
-	// 			showLowStockNotification(lowStockItem.item_id);
-	// 		}
-	// 		// Schedule the next check after 1 minute
-	// 		timerId = setTimeout(checkLowStock, 50000); // 1 minute = 60000 milliseconds
-	// 	};
-	// 	// Start checking for low stock items
-	// 	checkLowStock();
-	// 	// Cleanup function
-	// 	return () => clearTimeout(timerId);
-	// }, [stock]);
-	// // Function to show low stock notification
-	// const showLowStockNotification = (itemName: string) => {
-	// 	showNotification(
-	// 		'Insufficient Stock',
-	// 		`${itemName} stock quantity is less than 50. Manage your stock.`,
-	// 		'warning',
-	// 	);
-	// };
+		fetchData();
+	}, [editModalStatus, addModalStatus]);
 	return (
 		<PageWrapper>
 			<Head>
-				<></>
+				<> {/* Place head content here if needed */}</>
 			</Head>
 			<SubHeader>
 				<SubHeaderLeft>
@@ -160,8 +138,18 @@ const Index: NextPage = () => {
 							</div>
 						</DropdownMenu>
 					</Dropdown>
+					<SubheaderSeparator />
+					{/* Button to open new stock modal */}
+					<Button
+						icon='AddCircleOutline'
+						color='primary'
+						isLight
+						onClick={() => setAddModalStatus(true)}>
+						New Stock
+					</Button>
 				</SubHeaderRight>
 			</SubHeader>
+			{/* Main page content */}
 			<Page>
 				<div className='row h-100'>
 					<div className='col-12'>
@@ -182,7 +170,9 @@ const Index: NextPage = () => {
 										</tr>
 									</thead>
 									<tbody>
+										{/* Map through each stock item */}
 										{stock
+
 											.filter((val) => {
 												if (searchTerm === '') {
 													if (!selectedCategories.length) {
@@ -209,6 +199,7 @@ const Index: NextPage = () => {
 											.map((stock, index) => (
 												<tr key={stock.cid}>
 													<td>
+														{/* Display stock item details */}
 														<div className='d-flex align-items-center'>
 															<div className='flex-shrink-0'>
 																<div
@@ -246,15 +237,16 @@ const Index: NextPage = () => {
 													<td>{stock.quentity}</td>
 													<td>{stock.status}</td>
 													<td>
+														{/* Button to open edit stock modal */}
 														<Button
-															icon='Location'
+															icon='Edit'
 															tag='a'
 															color='info'
 															onClick={() => (
 																setEditModalStatus(true),
 																setId(stock.cid)
 															)}>
-															Change Location
+															Edit
 														</Button>
 													</td>
 												</tr>
@@ -266,7 +258,8 @@ const Index: NextPage = () => {
 					</div>
 				</div>
 			</Page>
-			{/* Edit Stock modal */}
+			{/* Modals for adding and editing stock */}
+			<StockAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id='' />
 			<StockEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
 		</PageWrapper>
 	);

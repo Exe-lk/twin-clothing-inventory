@@ -6,7 +6,7 @@ import { demoPagesMenu, pageLayoutTypesPagesMenu } from '../menu';
 const AdminAside = dynamic(() => import('../pages/_layout/_asides/AdminAside'));
 const OfficeAside = dynamic(() => import('../pages/_layout/_asides/OfficeAsider'));
 const ViewAside = dynamic(() => import('../pages/_layout/_asides/ViewAside'));
-const StockAside = dynamic(() => import('../pages/_layout/_asides/stockKeeperAsider'));
+const StockAside = dynamic(() => import('../pages/_layout/_asides/StockKeeperAsider'));
 const SupperAdminAside = dynamic(() => import('../pages/_layout/_asides/SupperAdminAsider'));
 
 
