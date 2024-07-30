@@ -1,22 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
 import type { NextPage } from 'next';
-import PageWrapper from '../../../../../layout/PageWrapper/PageWrapper';
-import useDarkMode from '../../../../../hooks/useDarkMode';
-import Page from '../../../../../layout/Page/Page';
-import { firestore } from '../../../../../firebaseConfig';
+import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
+import useDarkMode from '../../../../hooks/useDarkMode';
+import Page from '../../../../layout/Page/Page';
+import { firestore } from '../../../../firebaseConfig';
 import SubHeader, {
 	SubHeaderLeft,
 	SubHeaderRight,
 	SubheaderSeparator,
-} from '../../../../../layout/SubHeader/SubHeader';
-import Icon from '../../../../../components/icon/Icon';
-import Input from '../../../../../components/bootstrap/forms/Input';
-import Dropdown, { DropdownMenu, DropdownToggle } from '../../../../../components/bootstrap/Dropdown';
-import Button from '../../../../../components/bootstrap/Button';
-import Card, { CardBody } from '../../../../../components/bootstrap/Card';
+} from '../../../../layout/SubHeader/SubHeader';
+import Icon from '../../../../components/icon/Icon';
+import Input from '../../../../components/bootstrap/forms/Input';
+import Dropdown, { DropdownMenu, DropdownToggle } from '../../../../components/bootstrap/Dropdown';
+import Button from '../../../../components/bootstrap/Button';
+import Card, { CardBody } from '../../../../components/bootstrap/Card';
 import { collection, deleteDoc, doc, getDocs, query, updateDoc, where, writeBatch } from 'firebase/firestore';
-import CategoryAddModal from '../../../../../components/custom/CategoryAddModal';
-import CategoryEditModal from '../../../../../components/custom/CategoryEditModal';
+import CategoryAddModal from '../../../../components/custom/CategoryAddModal';
+import CategoryEditModal from '../../../../components/custom/CategoryEditModal';
 import Swal from 'sweetalert2';
 // Define the interface for category data
 interface Category {
