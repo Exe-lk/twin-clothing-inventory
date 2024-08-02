@@ -16,7 +16,7 @@ const headers = [
 		element: <AdminHeader />,
 	},
 	{
-		path: `/office-management/*`,
+		path: `/production-coordinator/*`,
 		element: <OfficeHeader />,
 	},
 	

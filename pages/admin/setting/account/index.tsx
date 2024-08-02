@@ -25,37 +25,35 @@ interface Company {
 	phone: string;
 	tax: number;
 	address: string;
-	email:string
-
+	email: string;
 }
 export default function index() {
 	const [editStatus, setEditStatus] = useState<boolean>(false); // State for
 	const [imageurl, setImageurl] = useState<any>(null);
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 	const [company, setCompany] = useState<Company>();
- //fetch data from database
- useEffect(() => {
-	const fetchData = async () => {
-		try {
-			const dataCollection = collection(firestore, 'company');
-			const q = query(dataCollection, where('__name__', '==', "001"));
-			const querySnapshot = await getDocs(q);
-			const firebaseData: any = querySnapshot.docs.map((doc) => {
-				const data = doc.data() as Company;
-				return {
-					...data,
-					cid: doc.id,
-				};
-			});
-		
-			await setCompany(firebaseData[0])
-			
-		} catch (error) {
-			console.error('Error fetching data: ', error);
-		}
-	};
-	fetchData();
-}, []);
+	//fetch data from database
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const dataCollection = collection(firestore, 'company');
+				const q = query(dataCollection, where('__name__', '==', '001'));
+				const querySnapshot = await getDocs(q);
+				const firebaseData: any = querySnapshot.docs.map((doc) => {
+					const data = doc.data() as Company;
+					return {
+						...data,
+						cid: doc.id,
+					};
+				});
+
+				await setCompany(firebaseData[0]);
+			} catch (error) {
+				console.error('Error fetching data: ', error);
+			}
+		};
+		fetchData();
+	}, []);
 	const handleUploadimage = async () => {
 		if (imageurl) {
 			// Assuming generatePDF returns a Promise
@@ -100,7 +98,7 @@ export default function index() {
 			company_name: '',
 			address: '',
 			tax: '',
-            image:''
+			image: '',
 		},
 		validate: (values) => {
 			const errors: {
@@ -129,35 +127,38 @@ export default function index() {
 		onSubmit: async (values) => {
 			try {
 				Swal.fire({
-					title: "Processing...",
+					title: 'Processing...',
 					html: 'Please wait while the data is being processed.<br><div class="spinner-border" role="status"></div>',
 					allowOutsideClick: false,
 					showCancelButton: false,
 					showConfirmButton: false,
 				});
-			console.log(company?.image)
-				const imgurl: any = await handleUploadimage()
-				values.image = imgurl||company?.image||"";
-                const docRef = doc(firestore, "company", "001");
+				console.log(company?.image);
+				const imgurl: any = await handleUploadimage();
+				values.image = imgurl || company?.image || '';
+				const docRef = doc(firestore, 'company', '001');
 				// Update the data
-				updateDoc(docRef,values).then(() => {
-                  
-					showNotification(
-						<span className='d-flex align-items-center'>
-							<Icon icon='Info' size='lg' className='me-1' />
-							<span>Successfully Update</span>
-						</span>,
-						'Item has been update successfully',
-					);
-					Swal.fire('Added!', 'Item has been update successfully.', 'success');
-				}).catch((error) => {
-					console.error('Error adding document: ', error);
-					Swal.close
-					alert('An error occurred while adding the document. Please try again later.');
-				});
+				updateDoc(docRef, values)
+					.then(() => {
+						showNotification(
+							<span className='d-flex align-items-center'>
+								<Icon icon='Info' size='lg' className='me-1' />
+								<span>Successfully Update</span>
+							</span>,
+							'Item has been update successfully',
+						);
+						Swal.fire('Added!', 'Item has been update successfully.', 'success');
+					})
+					.catch((error) => {
+						console.error('Error adding document: ', error);
+						Swal.close;
+						alert(
+							'An error occurred while adding the document. Please try again later.',
+						);
+					});
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
-				Swal.close
+				Swal.close;
 				alert('An error occurred during file upload. Please try again later.');
 			}
 		},
@@ -256,6 +257,52 @@ export default function index() {
 										/>
 									)}
 
+									<FormGroup id='tax' label='color' className='col-md-6'>
+										<Input
+										type='color'
+											onChange={formik.handleChange}
+											value={formik.values.tax}
+											onBlur={formik.handleBlur}
+											isValid={formik.isValid}
+											isTouched={formik.touched.tax}
+											invalidFeedback={formik.errors.tax}
+											validFeedback='Looks good!'
+										/>
+									</FormGroup>
+									<FormGroup id='tax' label='Fabric Type' className='col-md-6'>
+										<Input
+											onChange={formik.handleChange}
+											value={formik.values.tax}
+											onBlur={formik.handleBlur}
+											isValid={formik.isValid}
+											isTouched={formik.touched.tax}
+											invalidFeedback={formik.errors.tax}
+											validFeedback='Looks good!'
+										/>
+									</FormGroup>
+									<FormGroup id='tax' label='Knit Type' className='col-md-6'>
+										<Input
+											onChange={formik.handleChange}
+											value={formik.values.tax}
+											onBlur={formik.handleBlur}
+											isValid={formik.isValid}
+											isTouched={formik.touched.tax}
+											invalidFeedback={formik.errors.tax}
+											validFeedback='Looks good!'
+										/>
+									</FormGroup>
+									<FormGroup id='tax' label='GSM' className='col-md-6'>
+										<Input
+											onChange={formik.handleChange}
+											value={formik.values.tax}
+											onBlur={formik.handleBlur}
+											isValid={formik.isValid}
+											isTouched={formik.touched.tax}
+											invalidFeedback={formik.errors.tax}
+											validFeedback='Looks good!'
+										/>
+									</FormGroup>
+
 									{/* Button to add new product input field */}
 									<div className='d-grid gap-2 d-md-flex justify-content-md-end'>
 										<Button
@@ -272,19 +319,20 @@ export default function index() {
 						) : (
 							<div>
 								{company?.image && (
-										<img
-											src={company.image}
-											className='mx-auto d-block mb-4'
-											alt='Selected Profile Picture'
-											style={{ width: '200px', height: '200px' }}
-										/>
-									)}
+									<img
+										src={company.image}
+										className='mx-auto d-block mb-4'
+										alt='Selected Profile Picture'
+										style={{ width: '200px', height: '200px' }}
+									/>
+								)}
 								<div className='row m-4'>
 									<div className='col-6 '>
 										<div className='row m-4'>
 											<div className='col-6 '>Company Name :</div>
 											<div className='col-6 '>
-												<strong>{company?.company_name}</strong>
+												{/* <strong>{company?.company_name}</strong> */}
+												<strong>Twin clothing</strong>
 											</div>
 										</div>
 									</div>
@@ -292,7 +340,8 @@ export default function index() {
 										<div className='row m-4'>
 											<div className='col-6 '>Company Email :</div>
 											<div className='col-6 '>
-												<strong>{company?.email}</strong>
+												{/* <strong>{company?.email}</strong> */}
+												<strong>twinclothing@gmail.com</strong>
 											</div>
 										</div>
 									</div>
@@ -302,7 +351,7 @@ export default function index() {
 										<div className='row m-4'>
 											<div className='col-6 '>Company Address :</div>
 											<div className='col-6 '>
-												<strong>{company?.address}</strong>
+												<strong>Biyagama</strong>
 											</div>
 										</div>
 									</div>
@@ -310,17 +359,66 @@ export default function index() {
 										<div className='row m-4'>
 											<div className='col-6 '>Company Contact :</div>
 											<div className='col-6 '>
-												<strong>{company?.company_name}</strong>
+												<strong>077903549</strong>
 											</div>
 										</div>
 									</div>
 								</div>
 								<div className='row m-4'>
-									<div className='col-6 '>
+									<div className='col-12 '>
 										<div className='row m-4'>
-											<div className='col-6 '>TEX rate :</div>
-											<div className='col-6 '>
-												<strong>{company?.tax}</strong>
+											<div className='col-2 '>Colors:</div>
+											<div className='col-10 '>
+												<button
+													className='p-4'
+													style={{ backgroundColor: 'green' }}></button>
+												<button
+													className='p-4 ms-3'
+													style={{ backgroundColor: 'black' }}></button>
+												<button
+													className='p-4 ms-3'
+													style={{ backgroundColor: 'brown' }}></button>
+												<button
+													className='p-4 ms-3'
+													style={{ backgroundColor: 'gray' }}></button>
+												<button
+													className='p-4 ms-3'
+													style={{ backgroundColor: 'gold' }}></button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div className='row m-4'>
+									<div className='col-12 '>
+										<div className='row m-4'>
+											<div className='col-2 '>Fabric Type:</div>
+											<div className='col-10 '>
+												<p>ABC</p>
+												<p>ABC</p>
+												<p>ABC</p>
+												<p>ABC</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div className='row m-4'>
+									<div className='col-12 '>
+										<div className='row m-4'>
+											<div className='col-2 '>Knit Type:</div>
+											<div className='col-10 '>
+												<p>ABC</p>
+												<p>ABC</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div className='row m-4'>
+									<div className='col-12 '>
+										<div className='row m-4'>
+											<div className='col-2 '>GSM:</div>
+											<div className='col-10 '>
+												<p>60</p>
+												<p>40</p>
 											</div>
 										</div>
 									</div>
@@ -333,7 +431,7 @@ export default function index() {
 										tag='a'
 										color='info'
 										onClick={() => setEditStatus(true)}>
-										Edit
+										Change
 									</Button>
 								</div>
 							</div>

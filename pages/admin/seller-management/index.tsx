@@ -163,6 +163,85 @@ const Index: NextPage = () => {
 										</tr>
 									</thead>
 									<tbody>
+										<tr>
+											<td>malinka</td>
+											<td>ABC</td>
+											<td>abc@gmail.com</td>
+											<td>0778965412</td>
+											<td>malinka@gmail.com</td>
+											<td><Dropdown>
+														<DropdownToggle hasIcon={false}>
+															<Button icon='List' color='primary'>
+																View Products
+															</Button>
+														</DropdownToggle>
+														<DropdownMenu isAlignmentEnd size='md'>
+															<div>abc</div>
+															<div>efg</div>
+														</DropdownMenu>
+													</Dropdown></td>
+													<td>
+														<Button
+															icon='Edit'
+															tag='a'
+															color='info'
+															onClick={() => (
+																setEditModalStatus(true)
+																
+															)}
+															>
+															Edit
+														</Button>
+														<Button
+															className='m-2'
+															icon='Delete'
+															color='warning'
+															onClick={() => handleClickDelete(seller)}
+															>
+															Delete
+														</Button>
+													</td>
+										</tr>
+										<tr>
+											<td>malinka</td>
+											<td>ABC</td>
+											<td>abc@gmail.com</td>
+											<td>0778965412</td>
+											<td>malinka@gmail.com</td>
+											<td><Dropdown>
+														<DropdownToggle hasIcon={false}>
+															<Button icon='List' color='primary'>
+																View Products
+															</Button>
+														</DropdownToggle>
+														<DropdownMenu isAlignmentEnd size='md'>
+															<div>abc</div>
+															<div>efg</div>
+														</DropdownMenu>
+													</Dropdown></td>
+													<td>
+														<Button
+															icon='Edit'
+															tag='a'
+															color='info'
+															onClick={() => (
+																setEditModalStatus(true)
+															
+															)}
+															>
+															Edit
+														</Button>
+														<Button
+															className='m-2'
+															icon='Delete'
+															color='warning'
+															onClick={() => handleClickDelete(seller)}
+															>
+															Delete
+														</Button>
+													</td>
+
+										</tr>
 										{seller.map((seller, index) => (
 											<tr key={seller.cid}>
 												<td>

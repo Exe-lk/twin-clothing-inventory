@@ -13,62 +13,59 @@ import Input from '../../../components/bootstrap/forms/Input';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
 import Card, { CardBody } from '../../../components/bootstrap/Card';
-import StockAddModal from '../../../components/custom/StockAddModal';
-import StockEditModal from '../../../components/custom/StockEditModal';
-import { doc, deleteDoc, collection, getDocs, updateDoc, query, where } from 'firebase/firestore';
+import SellerAddModal from '../../../components/custom/SellerAddModal';
+import SellerEditModal from '../../../components/custom/SellerEditModal';
+import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { firestore } from '../../../firebaseConfig';
 import Dropdown, { DropdownToggle, DropdownMenu } from '../../../components/bootstrap/Dropdown';
 import { getColorNameWithIndex } from '../../../common/data/enumColors';
 import { getFirstLetter } from '../../../helpers/helpers';
 import Swal from 'sweetalert2';
-import showNotification from '../../../components/extras/showNotification';
-// Define interfaces for data objects
-interface Stock {
+// Define interfaces for Seller
+interface Seller {
 	cid: string;
-	buy_price: number;
-	item_id: string;
-	location: string;
-	quentity: string;
-	status: string;
-	sublocation: string;
-	exp: string;
-	active: boolean;
+	name: string;
+	phone: string;
+	email: string;
+	company_name: string;
+	company_email: string;
+	product: { category: string; name: string }[];
+	status:boolean
 }
 const Index: NextPage = () => {
 	const { darkModeStatus } = useDarkMode(); // Dark mode
-	const [searchTerm, setSearchTerm] = useState(''); // State for search term
-	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
-	const [editModalStatus, setEditModalStatus] = useState<boolean>(false); // State for edit modal status
-	const [stock, setStock] = useState<Stock[]>([]); // State for stock data
-	const [id, setId] = useState<string>(''); // State for current stock item ID
-	const [status, setStatus] = useState(true); // State for managing data fetching status
-	// Fetch data from Firestore for stock
+	const [searchTerm, setSearchTerm] = useState('');
+	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State to control the visibility of the Add Seller modal
+	const [editModalStatus,setEditModalStatus] = useState<boolean>(false); // State to control the visibility of the Edit Seller modal
+	const [seller, setStock] = useState<Seller[]>([]); // State to store the seller data fetched from Firestore
+	const [id, setId] = useState<string>(''); // State to store the ID of the seller being edited
+	const [status, setStatus] = useState(true);
+	// Effect hook to fetch data from Firestore when addModalStatus or editModalStatus changes
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const dataCollection = collection(firestore, 'stock');
-				const q = query(dataCollection, where('active', '==', true));
-				const querySnapshot = await getDocs(q);
+				const dataCollection = collection(firestore, 'seller'); // Reference to the 'seller' collection in Firestore
+				const q = query(dataCollection, where('status', '==',true));
+				const querySnapshot = await getDocs(q); // Fetching all documents from the collection
 				const firebaseData = querySnapshot.docs.map((doc) => {
-					const data = doc.data() as Stock;
+					const data = doc.data() as Seller; // Extracting data from each document
 					return {
 						...data,
-						cid: doc.id,
+						cid: doc.id, // Extracting data from each document
 					};
 				});
-				setStock(firebaseData);
+				setStock(firebaseData); // Updating the seller state with the fetched data
 			} catch (error) {
 				console.error('Error fetching data: ', error);
 			}
 		};
 		fetchData();
-	}, [editModalStatus, addModalStatus,status]); // Fetch data whenever editModalStatus or addModalStatus changes
-	// Function to handle deletion of a stock item
-	const handleClickDelete = async (stock: any) => {
+	}, [editModalStatus, addModalStatus, status]); // Dependency array: useEffect runs when addModalStatus or editModalStatus changes
+	const handleClickDelete = async (item: any) => {
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-				// text: 'You will not be able to recover this stock!',
+
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -76,60 +73,44 @@ const Index: NextPage = () => {
 				confirmButtonText: 'Yes, delete it!',
 			});
 			if (result.isConfirmed) {
-				stock.active = false;
+				try {
+					item.status = false;
+					const docRef = doc(firestore, 'seller', item.cid);
+					// Update the data
+					updateDoc(docRef, item)
+						.then(() => {
+							Swal.fire('Deleted!', 'seller has been deleted.', 'success');
+							if (status) {
+								// Toggle status to trigger data refetch
+								setStatus(false);
+							} else {
+								setStatus(true);
+							}
+						})
+						.catch((error) => {
+							console.error('Error adding document: ', error);
 
-				let data: any = stock;
-				const docRef = doc(firestore, 'stock', stock.cid);
-				// Update the data
-				updateDoc(docRef, data)
-					.then(() => {
-						Swal.fire('Deleted!', 'item has been deleted.', 'success');
-						if (status) {
-							setStatus(false);
-						} else {
-							setStatus(true);
-						}
-					})
-					.catch((error) => {
-						console.error('Error adding document: ', error);
-						alert(
-							'An error occurred while adding the document. Please try again later.',
-						);
-					});
+							alert(
+								'An error occurred while adding the document. Please try again later.',
+							);
+						});
+				} catch (error) {
+					console.error('Error during deleting: ', error);
+					Swal.close;
+					alert('An error occurred during file upload. Please try again later.');
+				}
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
-			Swal.fire('Error', 'Failed to delete employee.', 'error');
+			Swal.fire('Error', 'Failed to delete seller.', 'error');
 		}
 	};
-	// useEffect(() => {
-	// 	let timerId: NodeJS.Timeout;
-	// 	const checkLowStock = () => {
-	// 		// Check if any stock item has a quantity less than 50
-	// 		const lowStockItem = stock.find((item) => parseInt(item.quentity) < 50);
-	// 		if (lowStockItem) {
-	// 			// Show notification
-	// 			showLowStockNotification(lowStockItem.item_id);
-	// 		}
-	// 		// Schedule the next check after 1 minute
-	// 		timerId = setTimeout(checkLowStock, 60000); // 1 minute = 60000 milliseconds
-	// 	};
-	// 	// Start checking for low stock items
-	// 	checkLowStock();
-	// 	// Cleanup function
-	// 	return () => clearTimeout(timerId);
-	// }, [stock]); //Check low stock whenever stock data changes
-	// Function to show low stock notification
-	// const showLowStockNotification = (itemName: string) => {
-	// 	showNotification(
-	// 		'Insufficient Stock',
-	// 		`${itemName} stock quantity is less than 50. Manage your stock.`,
-	// 		'warning',
-	// 	);
-	// };
-	// Return the JSX for rendering the page
+	
 	return (
 		<PageWrapper>
+			<Head>
+				<></>
+			</Head>
 			<SubHeader>
 				<SubHeaderLeft>
 					{/* Search input */}
@@ -149,112 +130,158 @@ const Index: NextPage = () => {
 						value={searchTerm}
 					/>
 				</SubHeaderLeft>
-				{/* <SubHeaderRight>
+				<SubHeaderRight>
+					{/* Dropdown for filter options */}
+
 					<SubheaderSeparator />
-					Button to open new stock modal
+					{/* Button to open the Add Seller modal */}
 					<Button
 						icon='AddCircleOutline'
 						color='primary'
 						isLight
 						onClick={() => setAddModalStatus(true)}>
-						New Stock
+						Add Seller
 					</Button>
-				</SubHeaderRight> */}
+				</SubHeaderRight>
 			</SubHeader>
 			<Page>
 				<div className='row h-100'>
 					<div className='col-12'>
-						{/* Table for displaying stock data */}
+						{/* Table for displaying customer data */}
 						<Card stretch>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-modern table-hover'>
 									<thead>
 										<tr>
-											<th>Name</th>
-											<th>Unit Cost</th>
-											<th>Location</th>
-											<th>Sub Location</th>
-											<th>EXP Date</th>
-											<th>Quantity</th>
-											<th>status</th>
+											<th>Seller name</th>
+											<th>Company name</th>
+											<th>Company email</th>
+											<th>Phone number</th>
+											<th>Seller email</th>
+											<th>Product</th>
 											<th></th>
 										</tr>
 									</thead>
 									<tbody>
-										{stock
-											.filter((values) => {
-												if (searchTerm == '') {
-													return values;
-												} else if (
-													values.item_id
-														.toLowerCase()
-														.includes(searchTerm.toLowerCase())
-												) {
-													return values;
-												}
-											})
-											.map((stock, index) => (
-												<tr key={stock.cid}>
-													<td>
-														<div className='d-flex align-items-center'>
-															<div className='flex-shrink-0'>
+										<tr>
+											<td>malinka</td>
+											<td>ABC</td>
+											<td>abc@gmail.com</td>
+											<td>0778965412</td>
+											<td>malinka@gmail.com</td>
+											<td><Dropdown>
+														<DropdownToggle hasIcon={false}>
+															<Button icon='List' color='primary'>
+																View Products
+															</Button>
+														</DropdownToggle>
+														<DropdownMenu isAlignmentEnd size='md'>
+															<div>abc</div>
+															<div>efg</div>
+														</DropdownMenu>
+													</Dropdown></td>
+										</tr>
+										<tr>
+											<td>malinka</td>
+											<td>ABC</td>
+											<td>abc@gmail.com</td>
+											<td>0778965412</td>
+											<td>malinka@gmail.com</td>
+											<td><Dropdown>
+														<DropdownToggle hasIcon={false}>
+															<Button icon='List' color='primary'>
+																View Products
+															</Button>
+														</DropdownToggle>
+														<DropdownMenu isAlignmentEnd size='md'>
+															<div>abc</div>
+															<div>efg</div>
+														</DropdownMenu>
+													</Dropdown></td>
+										</tr>
+										{seller.map((seller, index) => (
+											<tr key={seller.cid}>
+												<td>
+													{/* Displaying seller name with first letter icon */}
+													<div className='d-flex align-items-center'>
+														<div className='flex-shrink-0'>
+															<div
+																className='ratio ratio-1x1 me-3'
+																style={{ width: 48 }}>
 																<div
-																	className='ratio ratio-1x1 me-3'
-																	style={{ width: 48 }}>
-																	<div
-																		className={`bg-l${
-																			darkModeStatus
-																				? 'o25'
-																				: '25'
-																		}-${getColorNameWithIndex(
-																			index,
-																		)} text-${getColorNameWithIndex(
-																			index,
-																		)} rounded-2 d-flex align-items-center justify-content-center`}>
-																		<span className='fw-bold'>
-																			{getFirstLetter(
-																				stock.item_id,
-																			)}
-																		</span>
-																	</div>
-																</div>
-															</div>
-															<div className='flex-grow-1'>
-																<div className='fs-6 fw-bold'>
-																	{stock.item_id}
+																	className={`bg-l${
+																		darkModeStatus
+																			? 'o25'
+																			: '25'
+																	}-${getColorNameWithIndex(
+																		index,
+																	)} text-${getColorNameWithIndex(
+																		index,
+																	)} rounded-2 d-flex align-items-center justify-content-center`}>
+																	<span className='fw-bold'>
+																		{getFirstLetter(
+																			seller.name,
+																		)}
+																	</span>
 																</div>
 															</div>
 														</div>
-													</td>
-													<td>{stock.buy_price}</td>
-													<td>{stock.location}</td>
-													<td>{stock.sublocation}</td>
-													<td>{stock.exp}</td>
-													<td>{stock.quentity}</td>
-													<td>{stock.status}</td>
-													<td>
+														<div className='flex-grow-1'>
+															<div className='fs-6 fw-bold'>
+																{seller.name}
+															</div>
+														</div>
+													</div>
+												</td>
+												<td>{seller.company_name}</td>
+												<td>{seller.company_email}</td>
+												<td>{seller.phone}</td>
+												<td>{seller.email}</td>
+												<td>
+													{/* Dropdown to view seller's products */}
+													<Dropdown>
+														<DropdownToggle hasIcon={false}>
+															<Button icon='List' color='primary'>
+																View Products
+															</Button>
+														</DropdownToggle>
+														<DropdownMenu isAlignmentEnd size='md'>
+															{Array.isArray(seller.product) &&
+																seller.product.map(
+																	(product, index) => (
+																		<div
+																			key={index}
+																			className='ps-2'>
+																			{product.name}
+																		</div>
+																	),
+																)}
+														</DropdownMenu>
+													</Dropdown>
+												</td>
+												<td>
 														<Button
 															icon='Edit'
 															tag='a'
 															color='info'
 															onClick={() => (
 																setEditModalStatus(true),
-																setId(stock.cid)
-															)}>
+																setId(seller.cid)
+															)}
+															>
 															Edit
 														</Button>
 														<Button
 															className='m-2'
 															icon='Delete'
 															color='warning'
-															onClick={() =>
-																handleClickDelete(stock)
-															}>
+															onClick={() => handleClickDelete(seller)}
+															>
 															Delete
 														</Button>
 													</td>
-												</tr>
-											))}
+											</tr>
+										))}
 									</tbody>
 								</table>
 							</CardBody>
@@ -262,9 +289,10 @@ const Index: NextPage = () => {
 					</div>
 				</div>
 			</Page>
-			{/* Modals for adding and editing stock items */}
-			<StockAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id='' />
-			<StockEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
+			{/* Add Seller modal */}
+			<SellerAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id='' />
+			<SellerEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
+
 		</PageWrapper>
 	);
 };

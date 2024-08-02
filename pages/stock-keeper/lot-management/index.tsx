@@ -210,7 +210,6 @@ const Index: NextPage = () => {
 		}
 	}, [stockData, orderData]);
 
-
 	// Function to handle deletion of an item
 	const handleClickDelete = async (item: any) => {
 		try {
@@ -326,10 +325,18 @@ const Index: NextPage = () => {
 					{/* Button to open  New Item modal */}
 					<Button
 						icon='AddCircleOutline'
+						color='warning'
+						
+						onClick={() => setAddModalStatus(true)}>
+						export
+					</Button>
+					<Button
+					
+						icon='AddCircleOutline'
 						color='primary'
 						isLight
 						onClick={() => setAddModalStatus(true)}>
-						New Item
+						New Lot
 					</Button>
 				</SubHeaderRight>
 			</SubHeader>
@@ -342,18 +349,65 @@ const Index: NextPage = () => {
 								<table className='table table-modern table-hover'>
 									<thead>
 										<tr>
-											<th>Name</th>
-											<th>Price</th>
-											<th>Quantity</th>
-											<th>Reorder Level</th>
-											<th>BarCode</th>
+											<th>Code</th>
+											<th>Category</th>
+											<th>Fabric type</th>
+											<th>GSM</th>
+											<th>GRN number</th>
 											<th></th>
 											{/* <th><Button icon='PersonAdd' color='primary' isLight onClick={() => setAddModalStatus(true)}>
                         New Item
                       </Button></th> */}
 										</tr>
 									</thead>
+
 									<tbody>
+										<tr>
+											<td>15368</td>
+											<td>Main</td>
+											<td>Fabric</td>
+											<td>90</td>
+											<td>320</td>
+											<td>
+												<Button
+													icon='Edit'
+													tag='a'
+													color='info'
+													onClick={() => setEditModalStatus(true)}>
+													Edit
+												</Button>
+												<Button
+													className='m-2'
+													icon='Delete'
+													color='warning'
+													onClick={() => handleClickDelete(item)}>
+													Delete
+												</Button>
+											</td>
+										</tr>
+										<tr>
+											<td>15678</td>
+											<td>Main</td>
+											<td>Fabric</td>
+											<td>80</td>
+											<td>350</td>
+											<td>
+												<Button
+													icon='Edit'
+													tag='a'
+													color='info'
+													onClick={() => setEditModalStatus(true)}>
+													Edit
+												</Button>
+												<Button
+													className='m-2'
+													icon='Delete'
+													color='warning'
+													onClick={() => handleClickDelete(item)}>
+													Delete
+												</Button>
+											</td>
+										</tr>
 										{item
 											.filter((val) => {
 												if (searchTerm === '') {
@@ -428,7 +482,6 @@ const Index: NextPage = () => {
 															.map((quentity: any, index) => (
 																<>{quentity.quantity_difference}</>
 															))}
-															
 													</td>
 													<td>{item.reorderlevel}</td>
 													<td>
