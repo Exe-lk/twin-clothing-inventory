@@ -62,7 +62,7 @@ const Index: NextPage = () => {
 			}
 		};
 		fetchData();
-	}, [editModalStatus, addModalStatus,status]); // Fetch data whenever editModalStatus or addModalStatus changes
+	}, [editModalStatus, addModalStatus, status]); // Fetch data whenever editModalStatus or addModalStatus changes
 	// Function to handle deletion of a stock item
 	const handleClickDelete = async (stock: any) => {
 		try {
@@ -171,16 +171,34 @@ const Index: NextPage = () => {
 									<thead>
 										<tr>
 											<th>Name</th>
-											<th>Unit Cost</th>
+											<th>code</th>
+											<th>Cost(Rs)</th>
 											<th>Location</th>
 											<th>Sub Location</th>
-											<th>EXP Date</th>
+											<th>Date</th>
 											<th>Quantity</th>
-											<th>status</th>
 											<th></th>
 										</tr>
 									</thead>
 									<tbody>
+										<tr>
+											<td>abc</td>
+											<td>2834</td>
+											<td>55000</td>
+											<td>main</td>
+											<td>fabric</td>
+											<td>20024/12/02</td>
+											<td>500</td>
+										</tr>
+										<tr>
+											<td>abc</td>
+											<td>2834</td>
+											<td>55000</td>
+											<td>main</td>
+											<td>fabric</td>
+											<td>20024/12/02</td>
+											<td>500</td>
+										</tr>
 										{stock
 											.filter((values) => {
 												if (searchTerm == '') {

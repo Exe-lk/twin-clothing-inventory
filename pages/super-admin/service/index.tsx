@@ -192,7 +192,7 @@ const Index: NextPage = () => {
 						color='primary'
 						isLight
 						onClick={() => setAddModalStatus(true)}>
-						New Admin
+						New Service
 					</Button>
 				</SubHeaderRight>
 			</SubHeader>
@@ -202,160 +202,9 @@ const Index: NextPage = () => {
 						{/* Table for displaying user data */}
 						<Card stretch>
 							<CardBody isScrollable className='table-responsive'>
-								<table className='table table-modern table-hover'>
-									<thead>
-										<tr>
-											<th>User</th>
-											<th>Position</th>
-											<th>Email</th>
-											<th>Mobile number</th>
-											<th></th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>Kalpa Chamathkara</td>
-											<td>Admin</td>
-											<td>kalpa@gmail.com</td>
-											<td>0772369745</td>
-											<td>
-											<td>
-														<Button
-															icon='Edit'
-															tag='a'
-															color='info'
-															onClick={() => (
-																setEditModalStatus(true)
-																
-															)}>
-															Edit
-														</Button>
-														<Button
-															className='m-2'
-															icon=''
-															color='warning'
-															onClick={() => handleClickDelete(user)}>
-															Deactivate
-														</Button>
-													</td>
-											</td>
-										</tr>
-										<tr>
-											<td>Ravidu Idamalgoda</td>
-											<td>Admin</td>
-											<td>ravidu@gmail.com</td>
-											<td>0772369745</td>
-											<td>
-												
-											<Button
-															icon='Edit'
-															tag='a'
-															color='info'
-															onClick={() => (
-																setEditModalStatus(true)
-																
-															)}>
-															Edit
-														</Button>
-														<Button
-															className='m-2'
-															icon=''
-															color='warning'
-															onClick={() => handleClickDelete(user)}>
-															Activate
-														</Button>
-											</td>
-										</tr>
-										{user
-											.filter((val) => {
-												if (searchTerm === '') {
-													if (!selectedCategories.length) {
-														return true; // Show all items if no categories selected
-													} else {
-														return selectedCategories.includes(
-															val.position.toString(),
-														);
-													}
-												} else if (
-													val.name
-														.toLowerCase()
-														.includes(searchTerm.toLowerCase())
-												) {
-													if (!selectedCategories.length) {
-														return true; // Show all items if no categories selected
-													} else {
-														return selectedCategories.includes(
-															val.position.toString(),
-														);
-													}
-												}
-											})
-
-											.map((user, index) => (
-												<tr key={user.cid}>
-													<td>
-														<div className='d-flex align-items-center'>
-															<div className='flex-shrink-0'>
-																<div
-																	className='ratio ratio-1x1 me-3'
-																	style={{ width: 48 }}>
-																	<div
-																		className={`bg-l${
-																			darkModeStatus
-																				? 'o25'
-																				: '25'
-																		}-${getColorNameWithIndex(
-																			index,
-																		)} text-${getColorNameWithIndex(
-																			index,
-																		)} rounded-2 d-flex align-items-center justify-content-center`}>
-																		<span className='fw-bold'>
-																			{getFirstLetter(
-																				user.name,
-																			)}
-																		</span>
-																	</div>
-																</div>
-															</div>
-															<div className='flex-grow-1'>
-																<div className='fs-6 fw-bold'>
-																	{user.name}
-																</div>
-																<div className='text-muted'>
-																	<Icon icon='Label' />{' '}
-																	<small>{user.cid}</small>
-																</div>
-															</div>
-														</div>
-													</td>
-													<td>{user.position}</td>
-													<td>{user.email}</td>
-													<td>{user.mobile}</td>
-													<td>{user.password}</td>
-													<td>{user.pin_number}</td>
-													<td>
-														<Button
-															icon='Edit'
-															tag='a'
-															color='info'
-															onClick={() => (
-																setEditModalStatus(true),
-																setId(user.cid)
-															)}>
-															Edit
-														</Button>
-														<Button
-															className='m-2'
-															icon='Delete'
-															color='warning'
-															onClick={() => handleClickDelete(user)}>
-															Delete
-														</Button>
-													</td>
-												</tr>
-											))}
-									</tbody>
-								</table>
+								<div>
+									
+								</div>
 							</CardBody>
 						</Card>
 					</div>

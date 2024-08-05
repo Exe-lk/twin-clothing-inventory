@@ -13,8 +13,8 @@ import Input from '../../../components/bootstrap/forms/Input';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
 import Card, { CardBody } from '../../../components/bootstrap/Card';
-import StockAddModal from '../../../components/custom/ItemAddModal';
-import StockEditModal from '../../../components/custom/ItemEditModal';
+import StockAddModal from '../../../components/custom/JobAddModal';
+import StockEditModal from '../../../components/custom/JobEditModal';
 import { doc, deleteDoc, collection, getDocs, updateDoc, query, where } from 'firebase/firestore';
 import { firestore } from '../../../firebaseConfig';
 import Dropdown, { DropdownToggle, DropdownMenu } from '../../../components/bootstrap/Dropdown';
@@ -322,20 +322,13 @@ const Index: NextPage = () => {
 						</DropdownMenu>
 					</Dropdown>
 					<SubheaderSeparator />
-					<Button
-						icon='AddCircleOutline'
-						color='warning'
-						
-						onClick={() => setAddModalStatus(true)}>
-						Export 
-					</Button>
 					{/* Button to open  New Item modal */}
 					<Button
 						icon='AddCircleOutline'
 						color='primary'
 						isLight
 						onClick={() => setAddModalStatus(true)}>
-						New Lot
+						New Job
 					</Button>
 				</SubHeaderRight>
 			</SubHeader>
@@ -350,9 +343,11 @@ const Index: NextPage = () => {
 										<tr>
 											<th>Code</th>
 											<th>Category</th>
-											<th>Fabric type</th>
-											<th>GSM</th>
-											<th>GRN number</th>
+											<th>Sub Category</th>
+											<th>Code</th>
+											<th>Quentity(Kg)</th>
+											<th>Location</th>
+											<th>status</th>
 											<th></th>
 											{/* <th><Button icon='PersonAdd' color='primary' isLight onClick={() => setAddModalStatus(true)}>
                         New Item
@@ -365,10 +360,13 @@ const Index: NextPage = () => {
 											<td>15368</td>
 											<td>Main</td>
 											<td>Fabric</td>
-											<td>90</td>
-											<td>320</td>
+											<td>9096</td>
+											<td>500</td>
+											<th>Outsource</th>
+											<th>Approved</th>
 											<td>
 												<Button
+													isDisable={true}
 													icon='Edit'
 													tag='a'
 													color='info'
@@ -376,6 +374,7 @@ const Index: NextPage = () => {
 													Edit
 												</Button>
 												<Button
+													isDisable={true}
 													className='m-2'
 													icon='Delete'
 													color='warning'
@@ -385,13 +384,17 @@ const Index: NextPage = () => {
 											</td>
 										</tr>
 										<tr>
-											<td>15678</td>
+										
+											<td>15369</td>
 											<td>Main</td>
 											<td>Fabric</td>
-											<td>80</td>
-											<td>350</td>
+											<td>90526</td>
+											<td>50</td>
+											<th>Garment</th>
+											<th>Pending</th>
 											<td>
 												<Button
+													
 													icon='Edit'
 													tag='a'
 													color='info'
@@ -399,6 +402,7 @@ const Index: NextPage = () => {
 													Edit
 												</Button>
 												<Button
+													
 													className='m-2'
 													icon='Delete'
 													color='warning'

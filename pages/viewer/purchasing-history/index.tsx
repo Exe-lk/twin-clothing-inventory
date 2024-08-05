@@ -168,19 +168,36 @@ const Index: NextPage = () => {
 						<Card stretch>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-modern table-hover'>
-									<thead>
+								<thead>
 										<tr>
 											<th>Name</th>
-											<th>Unit Cost</th>
-											<th>Location</th>
-											<th>Sub Location</th>
-											<th>EXP Date</th>
+											<th>code</th>
+											<th>Unit Cost(Rs)</th>
+											<th>Totle cost</th>
+											<th>Date</th>
 											<th>Quantity</th>
-											<th>status</th>
-											<th></th>
+											
 										</tr>
 									</thead>
 									<tbody>
+										<tr>
+											<td>abc</td>
+											<td>2834</td>
+											<td>55000</td>
+											<td>550000</td>
+											
+											<td>20024/12/02</td>
+											<td>500</td>
+										</tr>
+										<tr>
+										<td>abc</td>
+											<td>2834</td>
+											<td>55000</td>
+											<td>550000</td>
+											
+											<td>20024/12/02</td>
+											<td>500</td>
+										</tr>
 										{stock
 											.filter((values) => {
 												if (searchTerm == '') {

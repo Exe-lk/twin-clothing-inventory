@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
-import Head from 'next/head';
 import useDarkMode from '../../../hooks/useDarkMode';
-import { PER_COUNT } from '../../../components/PaginationButtons';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import SubHeader, {
 	SubHeaderLeft,
@@ -14,70 +12,118 @@ import Input from '../../../components/bootstrap/forms/Input';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
 import Card, { CardBody } from '../../../components/bootstrap/Card';
-import StockAddModal from '../../../components/custom/StockAddModal';
-import StockEditModal from '../../../components/custom/StockEditModal';
-import { doc, deleteDoc, collection, getDocs } from 'firebase/firestore';
+import UserAddModal from '../../../components/custom/UserAddModal';
+import UserEditModal from '../../../components/custom/UserEditModal';
+import { doc, deleteDoc, collection, getDocs, updateDoc, query, where } from 'firebase/firestore';
 import { firestore } from '../../../firebaseConfig';
 import Dropdown, { DropdownToggle, DropdownMenu } from '../../../components/bootstrap/Dropdown';
 import { getColorNameWithIndex } from '../../../common/data/enumColors';
 import { getFirstLetter } from '../../../helpers/helpers';
+import Swal from 'sweetalert2';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
-// Define the interface for stock data
-interface Stock {
+
+interface User {
 	cid: string;
-	buy_price: number;
-	item_id: string;
-	location: string;
-	quentity: string;
-	status: string;
-	sublocation: string;
-	exp: string;
+	image: string;
+	name: string;
+	position: string;
+	email: string;
+	password: string;
+	mobile: number;
+	pin_number: number;
+	status: boolean;
 }
-// Define the functional component for the index page
+
 const Index: NextPage = () => {
-	const { darkModeStatus } = useDarkMode(); // Dark mode
-	const [searchTerm, setSearchTerm] = useState(''); // State for search term
-	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
-	const [editModalStatus, setEditModalStatus] = useState<boolean>(false); // State for edit modal status
-	const [stock, setStock] = useState<Stock[]>([]); // State for stock data
-	const [id, setId] = useState<string>(''); // State for current stock ID
+	// Dark mode
+	const { darkModeStatus } = useDarkMode();
+	const [searchTerm, setSearchTerm] = useState('');
+	const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
+	const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
+	const [user, setuser] = useState<User[]>([]);
+	const [id, setId] = useState<string>('');
+	const [status, setStatus] = useState(true);
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 	const position = [
-		{ position: 'Reserve store' },
-		{ position: 'main store' },
-		{ position: 'showroom' },
+		{ position: 'Admin' },
+		{ position: 'Stock keeper' },
+		{ position: 'Accountant' },
+		{ position: 'Cashier' },
+		{ position: 'Data entry operator' },
 	];
-	// Fetch stock data from Firestore
+	//get user data from database
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const dataCollection = collection(firestore, 'stock');
-				const querySnapshot = await getDocs(dataCollection);
+				const dataCollection = collection(firestore, 'user');
+				const q = query(dataCollection, where('status', '==', true));
+				const querySnapshot = await getDocs(q);
 				const firebaseData = querySnapshot.docs.map((doc) => {
-					const data = doc.data() as Stock;
+					const data = doc.data() as User;
 					return {
 						...data,
 						cid: doc.id,
 					};
 				});
-
-				setStock(firebaseData);
+				setuser(firebaseData);
 			} catch (error) {
 				console.error('Error fetching data: ', error);
 			}
 		};
-
 		fetchData();
-	}, [editModalStatus, addModalStatus]);
+	}, [editModalStatus, addModalStatus, status]);
+
+	//delete user
+	const handleClickDelete = async (user: any) => {
+		try {
+			const result = await Swal.fire({
+				title: 'Are you sure?',
+				// text: 'You will not be able to recover this user!',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes, delete it!',
+			});
+			if (result.isConfirmed) {
+				try {
+					user.status = false;
+					const docRef = doc(firestore, 'user', user.cid);
+					// Update the data
+					updateDoc(docRef, user)
+						.then(() => {
+							// Show success message
+
+							if (status) {
+								setStatus(false);
+							} else {
+								setStatus(true);
+							}
+							Swal.fire('Deleted!', 'user has been deleted.', 'success');
+						})
+						.catch((error) => {
+							console.error('Error adding document: ', error);
+							alert(
+								'An error occurred while adding the document. Please try again later.',
+							);
+						});
+				} catch (error) {
+					console.error('Error during handleUpload: ', error);
+					alert('An error occurred during file upload. Please try again later.');
+				}
+			}
+		} catch (error) {
+			console.error('Error deleting document: ', error);
+			Swal.fire('Error', 'Failed to delete user.', 'error');
+		}
+	};
+
 	return (
 		<PageWrapper>
-			<Head>
-				<> {/* Place head content here if needed */}</>
-			</Head>
 			<SubHeader>
 				<SubHeaderLeft>
-					{/* Search input */}
+					{/* Search input  */}
 					<label
 						className='border-0 bg-transparent cursor-pointer me-0'
 						htmlFor='searchInput'>
@@ -87,7 +133,8 @@ const Index: NextPage = () => {
 						id='searchInput'
 						type='search'
 						className='border-0 shadow-none bg-transparent'
-						placeholder='Search stock...'
+						placeholder='Search...'
+						// onChange={formik.handleChange}
 						onChange={(event: any) => {
 							setSearchTerm(event.target.value);
 						}}
@@ -138,45 +185,41 @@ const Index: NextPage = () => {
 							</div>
 						</DropdownMenu>
 					</Dropdown>
+
 					<SubheaderSeparator />
-					{/* Button to open new stock modal */}
 					<Button
-						icon='AddCircleOutline'
+						icon='PersonAdd'
 						color='primary'
 						isLight
 						onClick={() => setAddModalStatus(true)}>
-						Stock Out
+						New User
 					</Button>
 				</SubHeaderRight>
 			</SubHeader>
-			{/* Main page content */}
 			<Page>
 				<div className='row h-100'>
 					<div className='col-12'>
-						{/* Table for displaying stock data */}
+						{/* Table for displaying user data */}
 						<Card stretch>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-modern table-hover'>
 									<thead>
 										<tr>
-											<th>Name</th>
-											<th>Unit Cost</th>
-											<th>Location</th>
-											<th>Sub Location</th>
-			
-											<th>status</th>
+											<th>User</th>
+											<th>Position</th>
+											<th>Email</th>
+											<th>Mobile number</th>
 											<th></th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
-											<td>Fabric</td>
-											<td>600/=</td>
-											<td>warehouse</td>
-											<td>Ag34</td>
-											<td>pending</td>
-											<td><td>
-														{/* Button to open edit stock modal */}
+											<td>Kalpa Chamathkara</td>
+											<td>Production Codinater</td>
+											<td>kalpa@gmail.com</td>
+											<td>0772369745</td>
+											<td>
+											<td>
 														<Button
 															icon='Edit'
 															tag='a'
@@ -187,22 +230,54 @@ const Index: NextPage = () => {
 															)}>
 															Edit
 														</Button>
-													</td></td>
+														<Button
+															className='m-2'
+															icon=''
+															color='warning'
+															onClick={() => handleClickDelete(user)}>
+															Deactivate
+														</Button>
+													</td>
+											</td>
 										</tr>
-										{/* Map through each stock item */}
-										{stock
-
+										<tr>
+											<td>Ravidu Idamalgoda</td>
+											<td>Admin</td>
+											<td>ravidu@gmail.com</td>
+											<td>0772369745</td>
+											<td>
+												
+											<Button
+															icon='Edit'
+															tag='a'
+															color='info'
+															onClick={() => (
+																setEditModalStatus(true)
+																
+															)}>
+															Edit
+														</Button>
+														<Button
+															className='m-2'
+															icon=''
+															color='warning'
+															onClick={() => handleClickDelete(user)}>
+															Activate
+														</Button>
+											</td>
+										</tr>
+										{user
 											.filter((val) => {
 												if (searchTerm === '') {
 													if (!selectedCategories.length) {
 														return true; // Show all items if no categories selected
 													} else {
 														return selectedCategories.includes(
-															val.location.toString(),
+															val.position.toString(),
 														);
 													}
 												} else if (
-													val.item_id
+													val.name
 														.toLowerCase()
 														.includes(searchTerm.toLowerCase())
 												) {
@@ -210,15 +285,15 @@ const Index: NextPage = () => {
 														return true; // Show all items if no categories selected
 													} else {
 														return selectedCategories.includes(
-															val.location.toString(),
+															val.position.toString(),
 														);
 													}
 												}
 											})
-											.map((stock, index) => (
-												<tr key={stock.cid}>
+
+											.map((user, index) => (
+												<tr key={user.cid}>
 													<td>
-														{/* Display stock item details */}
 														<div className='d-flex align-items-center'>
 															<div className='flex-shrink-0'>
 																<div
@@ -236,7 +311,7 @@ const Index: NextPage = () => {
 																		)} rounded-2 d-flex align-items-center justify-content-center`}>
 																		<span className='fw-bold'>
 																			{getFirstLetter(
-																				stock.item_id,
+																				user.name,
 																			)}
 																		</span>
 																	</div>
@@ -244,28 +319,37 @@ const Index: NextPage = () => {
 															</div>
 															<div className='flex-grow-1'>
 																<div className='fs-6 fw-bold'>
-																	{stock.item_id}
+																	{user.name}
+																</div>
+																<div className='text-muted'>
+																	<Icon icon='Label' />{' '}
+																	<small>{user.cid}</small>
 																</div>
 															</div>
 														</div>
 													</td>
-													<td>{stock.buy_price}</td>
-													<td>{stock.location}</td>
-													<td>{stock.sublocation}</td>
-													<td>{stock.exp}</td>
-													<td>{stock.quentity}</td>
-													<td>{stock.status}</td>
+													<td>{user.position}</td>
+													<td>{user.email}</td>
+													<td>{user.mobile}</td>
+													<td>{user.password}</td>
+													<td>{user.pin_number}</td>
 													<td>
-														{/* Button to open edit stock modal */}
 														<Button
 															icon='Edit'
 															tag='a'
 															color='info'
 															onClick={() => (
 																setEditModalStatus(true),
-																setId(stock.cid)
+																setId(user.cid)
 															)}>
 															Edit
+														</Button>
+														<Button
+															className='m-2'
+															icon='Delete'
+															color='warning'
+															onClick={() => handleClickDelete(user)}>
+															Delete
 														</Button>
 													</td>
 												</tr>
@@ -277,9 +361,8 @@ const Index: NextPage = () => {
 					</div>
 				</div>
 			</Page>
-			{/* Modals for adding and editing stock */}
-			<StockAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id='' />
-			<StockEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
+			<UserAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id='' />
+			<UserEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
 		</PageWrapper>
 	);
 };

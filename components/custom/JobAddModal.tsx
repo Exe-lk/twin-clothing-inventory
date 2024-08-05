@@ -296,7 +296,7 @@ console.log(category)
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='width' label='Width' className='col-md-6'>
+					<FormGroup id='width' label='Quentity' className='col-md-6'>
 						<Input
 							type='number'
 							onChange={formik.handleChange}
@@ -320,7 +320,7 @@ console.log(category)
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
+					{/* <FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
 						<Input
 							type='number'
 							onChange={formik.handleChange}
@@ -343,7 +343,7 @@ console.log(category)
 							invalidFeedback={formik.errors.GRA_number}
 							validFeedback='Looks good!'
 						/>
-					</FormGroup>
+					</FormGroup> */}
 					
 					
 					{/* <FormGroup label='Profile Picture' className='col-md-6'>

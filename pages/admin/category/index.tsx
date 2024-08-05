@@ -22,7 +22,7 @@ import Swal from 'sweetalert2';
 interface Category {
 	cid: string;
 	categoryname: string;
-	status:boolean
+	status: boolean;
 }
 // Define the functional component for the index page
 const Index: NextPage = () => {
@@ -53,13 +53,13 @@ const Index: NextPage = () => {
 			}
 		};
 		fetchData();
-	}, [editModalStatus, addModalStatus,status]);
+	}, [editModalStatus, addModalStatus, status]);
 	const customOptions = {
 		width: 3,
 		color: '#FF0000',
 	};
 	// Function to handle deletion of a category
-	const handleClickDelete = async (category:any) => {
+	const handleClickDelete = async (category: any) => {
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
@@ -71,24 +71,26 @@ const Index: NextPage = () => {
 				confirmButtonText: 'Yes, delete it!',
 			});
 			if (result.isConfirmed) {
-				category.status=false
-				let data: any =category
-				const docRef = doc(firestore, "category", category.cid);
-				
-				updateDoc(docRef, data).then(() => {
-					if (status) {
-						setStatus(false);
-					} else {
-						setStatus(true);
-					}
-					
-					Swal.fire('Delete!', 'category has been delete successfully.', 'success');
-				}).catch((error) => {
-					console.error('Error adding document: ', error);
-					alert('An error occurred while adding the document. Please try again later.');
-				});
-				
-				
+				category.status = false;
+				let data: any = category;
+				const docRef = doc(firestore, 'category', category.cid);
+
+				updateDoc(docRef, data)
+					.then(() => {
+						if (status) {
+							setStatus(false);
+						} else {
+							setStatus(true);
+						}
+
+						Swal.fire('Delete!', 'category has been delete successfully.', 'success');
+					})
+					.catch((error) => {
+						console.error('Error adding document: ', error);
+						alert(
+							'An error occurred while adding the document. Please try again later.',
+						);
+					});
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
@@ -141,9 +143,74 @@ const Index: NextPage = () => {
 										<tr>
 											<th>Category name</th>
 											<th></th>
+											<th></th>
 										</tr>
 									</thead>
 									<tbody>
+										<tr>
+											<td>Main</td>
+											<td>
+												<Dropdown>
+													<DropdownToggle hasIcon={false}>
+														<Button icon='List' color='primary'>
+															View Sub Category
+														</Button>
+													</DropdownToggle>
+													<DropdownMenu isAlignmentEnd size='md'>
+														<div className='p-2'>abc</div>
+														<div  className='p-2'>efg</div>
+													</DropdownMenu>
+												</Dropdown>
+											</td>
+											<td>
+												<Button
+													icon='Edit'
+													tag='a'
+													color='info'
+													onClick={() => setEditModalStatus(true)}>
+													Edit
+												</Button>
+												<Button
+													className='m-2'
+													icon='Delete'
+													color='warning'
+													onClick={() => handleClickDelete(category)}>
+													Delete
+												</Button>
+											</td>
+										</tr>
+										<tr>
+											<td>Embroider</td>
+											<td>
+												<Dropdown>
+													<DropdownToggle hasIcon={false}>
+														<Button icon='List' color='primary'>
+															View Sub Category
+														</Button>
+													</DropdownToggle>
+													<DropdownMenu isAlignmentEnd size='md'>
+													<div className='p-2'>abc</div>
+													<div  className='p-2'>efg</div>
+													</DropdownMenu>
+												</Dropdown>
+											</td>
+											<td>
+												<Button
+													icon='Edit'
+													tag='a'
+													color='info'
+													onClick={() => setEditModalStatus(true)}>
+													Edit
+												</Button>
+												<Button
+													className='m-2'
+													icon='Delete'
+													color='warning'
+													onClick={() => handleClickDelete(category)}>
+													Delete
+												</Button>
+											</td>
+										</tr>
 										{category
 											.filter((values) => {
 												if (searchTerm == '') {

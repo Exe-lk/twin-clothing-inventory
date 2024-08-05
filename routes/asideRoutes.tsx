@@ -13,7 +13,7 @@ const SupperAdminAside = dynamic(() => import('../pages/_layout/_asides/SupperAd
 const asides = [
 	
 	{ path: '/admin/*', element: <AdminAside/>, exact: true },
-	{ path: '/office-management/*', element: <OfficeAside/>, exact: true },
+	{ path: '/production-coordinator/*', element: <OfficeAside/>, exact: true },
 	{ path: '/super-admin/*', element: <SupperAdminAside/>, exact: true },
 	{ path: '/stock-keeper/*', element: <StockAside/>, exact: true },
 	{ path: '/viewer/*', element: <ViewAside/>, exact: true },

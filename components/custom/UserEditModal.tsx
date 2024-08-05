@@ -221,11 +221,11 @@ const UserEditModal: FC<UserEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 						isValid={formik.isValid}
 						isTouched={formik.touched.position}
 						invalidFeedback={formik.errors.position}>
-						<Option value={'Admin'}>Admin</Option>
+						{/* <Option value={'Admin'}>Admin</Option> */}
 						<Option value={'Stock keeper'}>Stock keeper</Option>
-						<Option value={'Data entry operator'}>Data entry operator</Option>
-						<Option value={'Accountant'}>Accountant</Option>
-						<Option value={'Cashier'}>Cashier</Option>
+						<Option value={'Data entry operator'}>Production Coordinator</Option>
+						{/* <Option value={'Accountant'}>Accountant</Option> */}
+						{/* <Option value={'Cashier'}>Cashier</Option> */}
 					</Select>
 				</FormGroup>
                     <FormGroup id='email' label='Email' onChange={formik.handleChange} className='col-md-6'>

@@ -50,14 +50,21 @@ export const addminPagesMenu = {
 		id: 'lot',
 		text: 'Lot Management',
 		path: 'admin/lot-management',
-		icon: 'Category',
+		icon: 'Ballot',
 		subMenu: null,
 	},
 	seller: {
 		id: 'lot',
 		text: 'Suppler Management',
 		path: 'admin/seller-management',
-		icon: 'Category',
+		icon: 'SelectAll',
+		subMenu: null,
+	},
+	user: {
+		id: 'user',
+		text: 'User Management',
+		path: 'admin/user-management',
+		icon: 'SupervisedUserCircle',
 		subMenu: null,
 	},
 	
@@ -93,7 +100,7 @@ export const addminPagesMenu = {
 					},
 					fluidSingle: {
 						id: 'fluidSingle',
-						text: 'Orders',
+						text: 'Lot',
 						path: 'admin/setting/recycle-bin/orders',
 						icon: 'HistoryToggleOff',
 					},
@@ -119,18 +126,26 @@ export const stockkeeperPagesMenu = {
 	},
 	stock: {
 		id: 'stock',
-		text: 'Stock in Management',
+		text: 'Stock Management',
 		path: 'stock-keeper/stock-management',
 		icon: 'Article',
 		subMenu: null,
 	},
+	// stockout: {
+	// 	id: 'stock',
+	// 	text: 'Stock out Management',
+	// 	path: 'stock-keeper/stock-out-management',
+	// 	icon: 'Article',
+	// 	subMenu: null,
+	// },
 	stockout: {
-		id: 'stock',
-		text: 'Stock out Management',
+		id: 'stockout',
+		text: 'Transaction History',
 		path: 'stock-keeper/stock-out-management',
-		icon: 'Article',
+		icon: 'CallMissedOutgoing',
 		subMenu: null,
 	},
+	
 	item: {
 		id: 'item',
 		text: 'Lot Management',
@@ -145,13 +160,13 @@ export const stockkeeperPagesMenu = {
 		icon: 'Category',
 		subMenu: null,
 	},
-	seller: {
-		id: 'seller',
-		text: 'Supplier Management',
-		path: 'stock-keeper/seller-management',
-		icon: 'Groups',
-		subMenu: null,
-	},
+	// seller: {
+	// 	id: 'seller',
+	// 	text: 'Supplier Management',
+	// 	path: 'stock-keeper/seller-management',
+	// 	icon: 'Groups',
+	// 	subMenu: null,
+	// },
 	singlePages1: {
 		id: 'singlePages',
 		text: 'Recycle Bin',
@@ -161,20 +176,19 @@ export const stockkeeperPagesMenu = {
 		
 			fluidSingle: {
 				id: 'fluidSingle',
-				text: 'Item',
+				text: 'Lot',
 				path: 'stock-keeper/recycle-bin/item',
 				icon: 'HistoryToggleOff',
 			},
+			category: {
+				id: 'boxedSingle',
+				text: 'Category',
+				path: 'stock-keeper/recycle-bin/category',
+				icon: 'Category',
+			},
 		},
 	},
-	// stockout: {
-	// 	id: 'stockout',
-	// 	text: 'Stockout Management',
-	// 	path: 'stock-keeper/stock-out-management',
-	// 	icon: 'CallMissedOutgoing',
-	// 	subMenu: null,
-	// },
-	
+
 	
 	
 };
@@ -183,15 +197,22 @@ export const supperaddminmenu = {
 	dashboard: {
 		id: 'dashboard',
 		text: 'Dashboard',
-		path: 'stock-keeper/dashboard',
+		path: 'super-admin/dashboard',
 		icon: 'Dashboard',
 		subMenu: null,
 	},
-	seller: {
+	user: {
 		id: 'seller',
 		text: 'User Management',
-		path: 'stock-keeper/user-management',
+		path: 'super-admin/user-management',
 		icon: 'Groups',
+		subMenu: null,
+	},
+	service: {
+		id: 'seller',
+		text: 'Service Management',
+		path: 'super-admin/service',
+		icon: 'Circle',
 		subMenu: null,
 	},
 };
@@ -200,59 +221,59 @@ export const officemenu = {
 	dashboard: {
 		id: 'dashboard',
 		text: 'Dashboard',
-		path: 'office-management/dashboard',
+		path: 'production-coordinator/dashboard',
 		icon: 'Dashboard',
 		subMenu: null,
 	},
 	seller: {
 		id: 'seller',
 		text: 'Job Management',
-		path: 'office-management/job-management',
+		path: 'production-coordinator/job-management',
 		icon: 'Groups',
 		subMenu: null,
 	},
 };
 export const viewmenu = {
-	dashboard: {
-		id: 'dashboard',
-		text: 'Dashboard',
-		path: 'viewer/dashboard',
-		icon: 'Dashboard',
-		subMenu: null,
-	},
+	// dashboard: {
+	// 	id: 'dashboard',
+	// 	text: 'Dashboard',
+	// 	path: 'viewer/dashboard',
+	// 	icon: 'Dashboard',
+	// 	subMenu: null,
+	// },
 	order: {
 		id: 'order',
 		text: 'Order History',
 		path: 'viewer/order-history',
-		icon: 'Groups',
+		icon: 'StarBorderPurple500',
 		subMenu: null,
 	},
 	purchasing: {
 		id: 'order',
 		text: 'Purchasing History',
 		path: 'viewer/purchasing-history',
-		icon: 'Groups',
+		icon: 'Money',
 		subMenu: null,
 	},
 	restore: {
 		id: 'restore',
-		text: 'Restore History',
+		text: 'Transaction History',
 		path: 'viewer/restore-history',
 		icon: 'Groups',
 		subMenu: null,
 	},
-	stock: {
-		id: 'restore',
-		text: 'Stock in History',
-		path: 'viewer/stock-in-history',
-		icon: 'Groups',
-		subMenu: null,
-	},
+	// stock: {
+	// 	id: 'restore',
+	// 	text: 'Stock in History',
+	// 	path: 'viewer/stock-in-history',
+	// 	icon: 'ScatterPlot',
+	// 	subMenu: null,
+	// },
 	stockout: {
 		id: 'restore',
-		text: 'supplier',
+		text: 'supplier History',
 		path: 'viewer/supplier-history',
-		icon: 'Groups',
+		icon: 'SupervisedUserCircle',
 		subMenu: null,
 	},
 

@@ -171,8 +171,8 @@ const Index: NextPage = () => {
     <PageWrapper>
      
       <Page>
-        <div className='row'>
-         
+        <div>
+          
         </div>
       </Page>
     </PageWrapper>
