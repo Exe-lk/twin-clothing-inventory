@@ -29,6 +29,10 @@ interface Company {
 }
 export default function index() {
 	const [editStatus, setEditStatus] = useState<boolean>(false); // State for
+	const [editColor, setEditColor] = useState<boolean>(false); // State for
+	const [editFabric, setEditFabric] = useState<boolean>(false); // State for
+	const [editKnit, setEditKnit] = useState<boolean>(false); // State for
+	const [editGSM, setEditGSM] = useState<boolean>(false); // State for
 	const [imageurl, setImageurl] = useState<any>(null);
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 	const [company, setCompany] = useState<Company>();
@@ -163,6 +167,45 @@ export default function index() {
 			}
 		},
 	});
+	const formik1 = useFormik({
+		initialValues: {
+			categoryname: '',
+			status: true,
+			subcategory: [''],
+		},
+		validate: (values) => {
+			const errors: {
+				categoryname?: string;
+				subcategory?: string;
+			} = {};
+			if (!values.categoryname) {
+				errors.categoryname = 'Required';
+			}
+			if (values.subcategory) {
+				errors.subcategory = 'Required';
+			}
+			return errors;
+		},
+		onSubmit: async (values) => {
+
+		},
+	});
+
+	const addSubcategoryField = () => {
+		formik1.setValues({
+			...formik1.values,
+			subcategory: [...formik1.values.subcategory, ''],
+		});
+	};
+
+	const removeSubcategoryField = (index: number) => {
+		const newSubcategories = [...formik1.values.subcategory];
+		newSubcategories.splice(index, 1);
+		formik1.setValues({
+			...formik1.values,
+			subcategory: newSubcategories,
+		});
+	};
 	return (
 		<PageWrapper>
 			<Page>
@@ -257,9 +300,9 @@ export default function index() {
 										/>
 									)}
 
-									<FormGroup id='tax' label='color' className='col-md-6'>
+									{/* <FormGroup id='tax' label='color' className='col-md-6'>
 										<Input
-										type='color'
+											type='color'
 											onChange={formik.handleChange}
 											value={formik.values.tax}
 											onBlur={formik.handleBlur}
@@ -301,7 +344,7 @@ export default function index() {
 											invalidFeedback={formik.errors.tax}
 											validFeedback='Looks good!'
 										/>
-									</FormGroup>
+									</FormGroup> */}
 
 									{/* Button to add new product input field */}
 									<div className='d-grid gap-2 d-md-flex justify-content-md-end'>
@@ -364,66 +407,6 @@ export default function index() {
 										</div>
 									</div>
 								</div>
-								<div className='row m-4'>
-									<div className='col-12 '>
-										<div className='row m-4'>
-											<div className='col-2 '>Colors:</div>
-											<div className='col-10 '>
-												<button
-													className='p-4'
-													style={{ backgroundColor: 'green' }}></button>
-												<button
-													className='p-4 ms-3'
-													style={{ backgroundColor: 'black' }}></button>
-												<button
-													className='p-4 ms-3'
-													style={{ backgroundColor: 'brown' }}></button>
-												<button
-													className='p-4 ms-3'
-													style={{ backgroundColor: 'gray' }}></button>
-												<button
-													className='p-4 ms-3'
-													style={{ backgroundColor: 'gold' }}></button>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div className='row m-4'>
-									<div className='col-12 '>
-										<div className='row m-4'>
-											<div className='col-2 '>Fabric Type:</div>
-											<div className='col-10 '>
-												<p>ABC</p>
-												<p>ABC</p>
-												<p>ABC</p>
-												<p>ABC</p>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div className='row m-4'>
-									<div className='col-12 '>
-										<div className='row m-4'>
-											<div className='col-2 '>Knit Type:</div>
-											<div className='col-10 '>
-												<p>ABC</p>
-												<p>ABC</p>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div className='row m-4'>
-									<div className='col-12 '>
-										<div className='row m-4'>
-											<div className='col-2 '>GSM:</div>
-											<div className='col-10 '>
-												<p>60</p>
-												<p>40</p>
-											</div>
-										</div>
-									</div>
-								</div>
-
 								<div className='d-grid gap-2 d-md-flex justify-content-md-end'>
 									<Button
 										className='btn btn-primary'
@@ -434,6 +417,337 @@ export default function index() {
 										Change
 									</Button>
 								</div>
+								{editColor ? (
+									<>
+										<div className='row m-4'>
+											<div className='col-12 '>
+												<div className='row m-4'>
+													<div className='col-12 mb-3'>Change Color:</div>
+													{formik1.values.subcategory.map((sub, index) => (
+														<FormGroup
+															key={index}
+															id={`subcategory-${index}`}
+															// label={`Sub Category ${index + 1}`}
+															className='col-md-6 mb-3'>
+															<div className='d-flex align-items-center'>
+																<Input
+																	name={`subcategory[${index}]`}
+																	onChange={formik1.handleChange}
+																	value={formik1.values.subcategory[index]}
+																	onBlur={formik1.handleBlur}
+																	isValid={formik1.isValid}
+																	// isTouched={formik.touched.subcategory?.[index]}
+																	invalidFeedback={formik1.errors.subcategory?.[index]}
+																	validFeedback='Looks good!'
+																/>
+																<button
+																	type='button'
+																	onClick={() => removeSubcategoryField(index)}
+																	className='btn btn-outline-danger ms-2'>
+																	<Icon icon='Delete' />
+																</button>
+															</div>
+														</FormGroup>
+													))}
+												</div>
+												<div className='row m-4'>
+													<div className='col-10'>
+														<Button color='info' onClick={addSubcategoryField}>
+															Add Color
+														</Button>
+													</div>
+													<div className='col-2'>
+														<Button color='warning' onClick={() => setEditColor(false)}>
+															cancel
+														</Button>
+														<Button color='success' className='ms-4' >
+															save
+														</Button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</>
+								) : (
+									<>
+										<div className='row m-4'>
+											<div className='col-6 '>
+												<div className='row m-4'>
+													<div className='col-4 '>Color:</div>
+													<div className='col-8 '>
+														<p>Red</p>
+														<p>green</p>
+														<p>blue</p>
+
+													</div>
+												</div>
+											</div>
+											<div className='col-6 '>
+												<Button
+													// className='btn '
+													icon='Edit'
+													tag='a'
+													// color=''
+													onClick={() => setEditColor(true)}>
+													EDIT
+												</Button>
+											</div>
+										</div>
+
+									</>
+								)}
+
+								{editFabric ? (
+									<>
+										<div className='row m-4'>
+											<div className='col-12 '>
+												<div className='row m-4'>
+													<div className='col-12 mb-3'>Change Fabric:</div>
+													{formik1.values.subcategory.map((sub, index) => (
+														<FormGroup
+															key={index}
+															id={`subcategory-${index}`}
+															// label={`Sub Category ${index + 1}`}
+															className='col-md-6 mb-3'>
+															<div className='d-flex align-items-center'>
+																<Input
+																	name={`subcategory[${index}]`}
+																	onChange={formik1.handleChange}
+																	value={formik1.values.subcategory[index]}
+																	onBlur={formik1.handleBlur}
+																	isValid={formik1.isValid}
+																	// isTouched={formik.touched.subcategory?.[index]}
+																	invalidFeedback={formik1.errors.subcategory?.[index]}
+																	validFeedback='Looks good!'
+																/>
+																<button
+																	type='button'
+																	onClick={() => removeSubcategoryField(index)}
+																	className='btn btn-outline-danger ms-2'>
+																	<Icon icon='Delete' />
+																</button>
+															</div>
+														</FormGroup>
+													))}
+												</div>
+												<div className='row m-4'>
+													<div className='col-10'>
+														<Button color='info' onClick={addSubcategoryField}>
+															Add Fabric
+														</Button>
+													</div>
+													<div className='col-2'>
+														<Button color='warning' onClick={() => setEditFabric(false)}>
+															cancel
+														</Button>
+														<Button color='success' className='ms-4' >
+															save
+														</Button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</>
+								) : (
+									<>
+										<div className='row m-4'>
+											<div className='col-6 '>
+												<div className='row m-4'>
+													<div className='col-4 '>Fabric Type:</div>
+													<div className='col-8 '>
+														<p>ABC</p>
+														<p>ABC</p>
+														<p>ABC</p>
+														<p>ABC</p>
+													</div>
+												</div>
+											</div>
+											<div className='col-6 '>
+												<Button
+													// className='btn '
+													icon='Edit'
+													tag='a'
+													// color=''
+													onClick={() => setEditFabric(true)}>
+													EDIT
+												</Button>
+											</div>
+										</div>
+
+									</>
+								)}
+
+{editKnit ? (
+									<>
+										<div className='row m-4'>
+											<div className='col-12 '>
+												<div className='row m-4'>
+													<div className='col-12 mb-3'>Change Knit:</div>
+													{formik1.values.subcategory.map((sub, index) => (
+														<FormGroup
+															key={index}
+															id={`subcategory-${index}`}
+															// label={`Sub Category ${index + 1}`}
+															className='col-md-6 mb-3'>
+															<div className='d-flex align-items-center'>
+																<Input
+																	name={`subcategory[${index}]`}
+																	onChange={formik1.handleChange}
+																	value={formik1.values.subcategory[index]}
+																	onBlur={formik1.handleBlur}
+																	isValid={formik1.isValid}
+																	// isTouched={formik.touched.subcategory?.[index]}
+																	invalidFeedback={formik1.errors.subcategory?.[index]}
+																	validFeedback='Looks good!'
+																/>
+																<button
+																	type='button'
+																	onClick={() => removeSubcategoryField(index)}
+																	className='btn btn-outline-danger ms-2'>
+																	<Icon icon='Delete' />
+																</button>
+															</div>
+														</FormGroup>
+													))}
+												</div>
+												<div className='row m-4'>
+													<div className='col-10'>
+														<Button color='info' onClick={addSubcategoryField}>
+															Add Knit type
+														</Button>
+													</div>
+													<div className='col-2'>
+														<Button color='warning' onClick={() => setEditKnit(false)}>
+															cancel
+														</Button>
+														<Button color='success' className='ms-4' >
+															save
+														</Button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</>
+								) : (
+									<>
+										<div className='row m-4'>
+											<div className='col-6 '>
+												<div className='row m-4'>
+													<div className='col-4 '>Knit Type:</div>
+													<div className='col-8 '>
+														<p>ABC</p>
+														<p>ABC</p>
+														
+													</div>
+												</div>
+											</div>
+											<div className='col-6 '>
+												<Button
+													// className='btn '
+													icon='Edit'
+													tag='a'
+													// color=''
+													onClick={() => setEditKnit(true)}>
+													EDIT
+												</Button>
+											</div>
+										</div>
+
+									</>
+								)}
+
+
+{editGSM ? (
+									<>
+										<div className='row m-4'>
+											<div className='col-12 '>
+												<div className='row m-4'>
+													<div className='col-12 mb-3'>Change GSM:</div>
+													{formik1.values.subcategory.map((sub, index) => (
+														<FormGroup
+															key={index}
+															id={`subcategory-${index}`}
+															// label={`Sub Category ${index + 1}`}
+															className='col-md-6 mb-3'>
+															<div className='d-flex align-items-center'>
+																<Input
+																	name={`subcategory[${index}]`}
+																	onChange={formik1.handleChange}
+																	value={formik1.values.subcategory[index]}
+																	onBlur={formik1.handleBlur}
+																	isValid={formik1.isValid}
+																	// isTouched={formik.touched.subcategory?.[index]}
+																	invalidFeedback={formik1.errors.subcategory?.[index]}
+																	validFeedback='Looks good!'
+																/>
+																<button
+																	type='button'
+																	onClick={() => removeSubcategoryField(index)}
+																	className='btn btn-outline-danger ms-2'>
+																	<Icon icon='Delete' />
+																</button>
+															</div>
+														</FormGroup>
+													))}
+												</div>
+												<div className='row m-4'>
+													<div className='col-10'>
+														<Button color='info' onClick={addSubcategoryField}>
+															Add GSM
+														</Button>
+													</div>
+													<div className='col-2'>
+														<Button color='warning' onClick={() => setEditGSM(false)}>
+															cancel
+														</Button>
+														<Button color='success' className='ms-4' >
+															save
+														</Button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</>
+								) : (
+									<>
+										<div className='row m-4'>
+											<div className='col-6 '>
+												<div className='row m-4'>
+													<div className='col-4 '>GSM:</div>
+													<div className='col-8 '>
+														<p>70</p>
+														<p>90</p>
+														
+													</div>
+												</div>
+											</div>
+											<div className='col-6 '>
+												<Button
+													// className='btn '
+													icon='Edit'
+													tag='a'
+													// color=''
+													onClick={() => setEditGSM(true)}>
+													EDIT
+												</Button>
+											</div>
+										</div>
+
+									</>
+								)}
+
+
+
+
+
+
+
+
+
+
+
+
+
 							</div>
 						)}
 					</CardBody>
