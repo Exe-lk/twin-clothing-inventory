@@ -238,8 +238,10 @@ const ItemEditModal: FC<ItemEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 						/>
 					</FormGroup>
 					<FormGroup id='color' label='Color' onChange={formik.handleChange}className='col-md-6'>
-						<Input
-							type='number'
+						
+						<Select
+							ariaLabel='Default select example'
+							placeholder='Open this select color'
 							onChange={(e: any) => {
 								item.color = e.target.value;
 							}}
@@ -248,12 +250,20 @@ const ItemEditModal: FC<ItemEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 							isValid={formik.isValid}
 							isTouched={formik.touched.color}
 							invalidFeedback={formik.errors.color}
-							validFeedback='Looks good!'
-						/>
+							validFeedback='Looks good!'>
+							
+								<Option value={"dd"}>Green</Option>
+								<Option value={"dd"}>Red</Option>
+								<Option value={"dd"}>Blue</Option>
+							
+						</Select>
 					</FormGroup>
 					<FormGroup id='fabric_type' label='Fabric Type'onChange={formik.handleChange} className='col-md-6'>
-						<Input
-							type='number'
+						
+						
+						<Select
+							ariaLabel='Default select example'
+							placeholder='Open this select fabric type'
 							onChange={(e: any) => {
 								item.fabric_type = e.target.value;
 							}}
@@ -262,14 +272,21 @@ const ItemEditModal: FC<ItemEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 							isValid={formik.isValid}
 							isTouched={formik.touched.fabric_type}
 							invalidFeedback={formik.errors.fabric_type}
-							validFeedback='Looks good!'
-						/>
+							validFeedback='Looks good!'>
+							
+								<Option value={"dd"}>123</Option>
+								<Option value={"dd"}>1234</Option>
+								<Option value={"dd"}>789</Option>
+							
+						</Select>
 					</FormGroup>
 					
 				
 					<FormGroup id='gsm' label='GSM'onChange={formik.handleChange} className='col-md-6'>
-						<Input
-							type='number'
+					
+						<Select
+							ariaLabel='Default select example'
+							placeholder='Open this select fabric type'
 							onChange={(e: any) => {
 								item.gsm= e.target.value;
 							}}
@@ -278,8 +295,13 @@ const ItemEditModal: FC<ItemEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 							isValid={formik.isValid}
 							isTouched={formik.touched.gsm}
 							invalidFeedback={formik.errors.gsm}
-							validFeedback='Looks good!'
-						/>
+							validFeedback='Looks good!'>
+							
+								<Option value={"dd"}>60</Option>
+								<Option value={"dd"}>70</Option>
+								<Option value={"dd"}>80</Option>
+							
+						</Select>
 					</FormGroup>
 					<FormGroup id='width' label='Width' onChange={formik.handleChange}className='col-md-6'>
 						<Input
@@ -296,18 +318,25 @@ const ItemEditModal: FC<ItemEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 						/>
 					</FormGroup>
 					<FormGroup id='knit_type' label='Knit Type'onChange={formik.handleChange} className='col-md-6'>
-						<Input
-							type='number'
+					
+						<Select
+							ariaLabel='Default select example'
+							placeholder='Open this select knit type'
 							onChange={(e: any) => {
 								item.knit_type = e.target.value;
 							}}
-							value={formik.values.knit_type}
+							value={formik.values.gsm}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
-							isTouched={formik.touched.knit_type}
-							invalidFeedback={formik.errors.knit_type}
-							validFeedback='Looks good!'
-						/>
+							isTouched={formik.touched.gsm}
+							invalidFeedback={formik.errors.gsm}
+							validFeedback='Looks good!'>
+							
+								<Option value={"dd"}>60</Option>
+								<Option value={"dd"}>70</Option>
+								<Option value={"dd"}>80</Option>
+							
+						</Select>
 					</FormGroup>
 					<FormGroup id='GRN_number' label='GRN Number'onChange={formik.handleChange} className='col-md-6'>
 						<Input
