@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import PropTypes from 'prop-types';
-import logo from '../assets/logos/Logo.png'
+import logo from '../assets/logos/exelk.svg'
 interface ILogoProps {
 	width?: number;
 	height?: number;
@@ -14,13 +14,7 @@ const Logo: FC<ILogoProps> = ({ width, height }) => {
 		// 	fill='none'
 		// 	xmlns='http://www.w3.org/2000/svg'
 		// 	>
-				<img src={logo}
-				width={height !== 854 && !!height ? height * (2155 / 854) : width}
-				height={width !== 2155 && !!width ? width * (854 / 2155) : height}
-			
-			
 				
-				/>  
 		// 	<path
 		// 		d='M985.058 284.2C953.411 284.2 937.587 301.4 937.587 335.8V355H1025.92V415H939.991V673H864.879V415H812V355H864.879V334.6C864.879 300.2 874.894 273.2 894.924 253.6C914.953 233.6 943.195 223.6 979.65 223.6C1008.49 223.6 1031.13 229.4 1047.55 241L1026.52 297.4C1013.7 288.6 999.88 284.2 985.058 284.2Z'
 		// 		fill='currentColor'
@@ -54,6 +48,16 @@ const Logo: FC<ILogoProps> = ({ width, height }) => {
 		// 		fill='#F35421'
 		// 	/>
 		// </svg>
+
+
+
+		<img src={logo}
+				width={height !== 854 && !!height ? height * (2600 / 854) : width}
+				height={width !== 2155 && !!width ? width * (1400 / 2155) : height}
+			
+			
+				
+				/>  
 	);
 };
 Logo.propTypes = {
