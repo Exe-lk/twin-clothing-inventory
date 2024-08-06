@@ -361,17 +361,48 @@ console.log(category)
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='GRA_number' label='GRA Number' className='col-md-6'>
+					
+					<FormGroup id='GRA_number' label='Order Name' className='col-md-6'>
 						<Input
-							type='number'
+							type='text'
 							onChange={formik.handleChange}
-							value={formik.values.GRA_number}
+							// value={formik.values.GRA_number}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
 							isTouched={formik.touched.GRA_number}
 							invalidFeedback={formik.errors.GRA_number}
 							validFeedback='Looks good!'
 						/>
+					</FormGroup>
+					<FormGroup id='GRA_number' label='Job ID' className='col-md-6'>
+						<Input
+							type='text'
+							onChange={formik.handleChange}
+							// value={formik.values.GRA_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRA_number}
+							invalidFeedback={formik.errors.GRA_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='GRA_number' label='supplier Name' className='col-md-6'>
+					<Select
+							ariaLabel='Default select example'
+							placeholder='Open this select knit type'
+							onChange={formik.handleChange}
+							value={formik.values.gsm}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.gsm}
+							invalidFeedback={formik.errors.gsm}
+							validFeedback='Looks good!'>
+							
+								<Option value={"dd"}>abc</Option>
+								<Option value={"dd"}>efg</Option>
+								<Option value={"dd"}>ijk</Option>
+							
+						</Select>
 					</FormGroup>
 					
 					
