@@ -343,6 +343,8 @@ const Index: NextPage = () => {
 										<tr>
 											<th>Code</th>
 											<th>Category</th>
+											<th>Type</th>
+											<th>quentity</th>
 											<th>Fabric type</th>
 											<th>GSM</th>
 											<th>GRN number</th>
@@ -359,6 +361,8 @@ const Index: NextPage = () => {
 										<tr>
 											<td>15368</td>
 											<td>Main</td>
+											<td>outgoing</td>
+											<td>260</td>
 											<td>Fabric</td>
 											<td>90</td>
 											<td>320</td>
@@ -384,6 +388,8 @@ const Index: NextPage = () => {
 										<tr>
 											<td>15678</td>
 											<td>Main</td>
+											<td>return</td>
+											<td>500</td>
 											<td>Fabric</td>
 											<td>80</td>
 											<td>350</td>

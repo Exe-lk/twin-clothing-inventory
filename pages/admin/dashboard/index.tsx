@@ -28,6 +28,8 @@ import SellsChart from '../../../components/sells-chart';
 import StockChart from '../../../components/stock-chart';
 import Cashier from '../../../components/cashier';
 import PaginationButtons from '../../../components/PaginationButtons';
+import LineWithLabel from '../../../components/sells-chart';
+
 
 interface Item {
 	cid: string;
@@ -220,9 +222,9 @@ const Index: NextPage = () => {
 	return (
 		<PageWrapper>
 			<Page>
-				<div className='row'>
-					
-				</div>
+				
+				<LineWithLabel />
+				
 			</Page>
 		</PageWrapper>
 	);
