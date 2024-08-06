@@ -16,6 +16,8 @@ import Dropdown, {
 } from './bootstrap/Dropdown';
 import Button from './bootstrap/Button';
 import { or } from 'firebase/firestore';
+import Checks, { ChecksGroup } from './bootstrap/forms/Checks';
+import FormGroup from './bootstrap/forms/FormGroup';
 interface Item {
 	cid: string;
 	category: string;
@@ -78,7 +80,7 @@ const Index: React.FC<KeyboardProps>  = ({ orderedItems, setOrderedItems, isActi
 				<CardHeader borderSize={1}>
 					<CardLabel icon='AssignmentTurnedIn' iconColor='danger'>
 						<CardTitle tag='h4' className='h5'>
-							Order Items
+							Lot Movement
 						</CardTitle>
 					</CardLabel>
 				</CardHeader>
@@ -139,9 +141,9 @@ const Index: React.FC<KeyboardProps>  = ({ orderedItems, setOrderedItems, isActi
 											className='form-control '
 										/>
 									</div>
-									<div className='me-2'>
+									{/* <div className='me-2'>
 										<strong>{priceFormat(order.quentity * order.price)}</strong>
-									</div>
+									</div> */}
 								</div>
 								<div className='todo-extras'>
 									<span>
@@ -150,6 +152,52 @@ const Index: React.FC<KeyboardProps>  = ({ orderedItems, setOrderedItems, isActi
 											onClick={() => handleDelete(index)}></Button>
 									</span>
 								</div>
+							</div>
+							<div>
+							<FormGroup id='membershipDate' className='col-md-12'>
+							
+							<ChecksGroup isInline
+							// isValid={formik.isValid}
+							// isTouched={}
+							// invalidFeedback={formik.errors.type}
+							>
+
+								<Checks
+									type='radio'
+									key={"full-time"}
+									id={"full-time"}
+									label={"Return"}
+									name='type'
+									value={"full-time"}
+								// onChange={formik.handleChange}
+								checked={"full-time"}
+
+								/>
+								<Checks
+									type='radio'
+									key={"full-time"}
+									id={"full-time"}
+									label={"Restore"}
+									name='type'
+									value={"full-time"}
+								// onChange={formik.handleChange}
+								// checked={formik.values.type}
+
+								/>
+								<Checks
+								
+									type='radio'
+									key={"part-time"}
+									id={"part-time"}
+									label={"stock out"}
+									name='type'
+									value={"part-time"}
+								// onChange={formik.handleChange}
+								// checked={formik.values.type}
+
+								/>
+							</ChecksGroup>
+						</FormGroup>
 							</div>
 						</Card>
 					))}
