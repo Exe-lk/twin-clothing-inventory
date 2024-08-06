@@ -10,6 +10,9 @@ import Keyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
 import Input from './bootstrap/forms/Input';
 import { isatty } from 'tty';
+import FormGroup from './bootstrap/forms/FormGroup';
+import Label from './bootstrap/forms/Label';
+import Checks, { ChecksGroup } from './bootstrap/forms/Checks';
 
 // Define TypeScript interfaces for Category and Item
 interface Category {
@@ -41,15 +44,55 @@ const Index: React.FC<KeyboardProps> = ({
 	setOrderedItems,
 	isActive,
 	setActiveComponent,
-	
+
 }) => {
+
+	const cdata = [
+		{ status: true, categoryname: 'Main', cid: '0bc5HUELspDzvrUdt5u6' },
+
+
+		{ status: true, categoryname: 'Embroider', cid: 'LKcV57ThRnHtE9bxBHMb' },
+
+
+		{ status: true, categoryname: 'Painting', cid: 'La1K7XLguIsFPZN19vp4' },
+
+
+		{ categoryname: 'clothes', cid: 'NowdRVU0K7hDZiMRkksn', status: true },
+
+
+		{ categoryname: 'other', status: true, cid: 'irufyXKsbSNPk3z8ziC8' },
+
+
+	]
+	const idata = [
+		{
+			price: 1000,
+			cid: "12356",
+			status: true,
+			image: "",
+			quentity: 0,
+			name: "button",
+			category: "clothes",
+			reorderlevel: "1500"
+		},
+		{
+			category: "clothes",
+			status: false,
+			quentity: 0,
+			image: "",
+			cid: "12358",
+			reorderlevel: 3,
+			name: "fabric",
+			price: 10
+		}
+	]
 	// Custom hook to manage dark mode
 	const { darkModeStatus } = useDarkMode();
 
 	// State variables
 	const [category1, setCategory1] = useState<string>('');
-	const [category, setCategory] = useState<Category[]>([]);
-	const [items, setItems] = useState<Item[]>([]);
+	const [category, setCategory] = useState<Category[]>(cdata);
+	const [items, setItems] = useState<any[]>(idata);
 	const [input, setInput] = useState<string>('');
 	const keyboard = useRef<any>(null);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
@@ -75,7 +118,7 @@ const Index: React.FC<KeyboardProps> = ({
 						cid: doc.id,
 					};
 				});
-				setCategory(firebaseData);
+				// setCategory(firebaseData);
 			} catch (error) {
 				console.error('Error fetching data: ', error);
 			}
@@ -96,7 +139,7 @@ const Index: React.FC<KeyboardProps> = ({
 						cid: doc.id,
 					};
 				});
-				setItems(firebaseData);
+				// setItems(firebaseData);
 			} catch (error) {
 				console.error('Error fetching data: ', error);
 			}
@@ -139,7 +182,7 @@ const Index: React.FC<KeyboardProps> = ({
 
 	// Handle OK button click in the popup
 	const handlePopupOk = async () => {
-		if(popupInput<=0){
+		if (popupInput <= 0) {
 			return
 		}
 		if (selectedItem) {
@@ -196,7 +239,7 @@ const Index: React.FC<KeyboardProps> = ({
 				if (button) {
 					button.click();
 				}
-			} else if(focusedIndex>=0){
+			} else if (focusedIndex >= 0) {
 				handlePopupOpen(focusedIndex);
 			}
 		} else if (event.key === 'ArrowLeft') {
@@ -249,13 +292,13 @@ const Index: React.FC<KeyboardProps> = ({
 				<Card className='mt-4' style={{ height: '40vh' }}>
 					<CardHeader>
 						<CardLabel>
-							<CardTitle>Item</CardTitle>
+							<CardTitle>Lot</CardTitle>
 						</CardLabel>
-						<CardActions>
-							<Button color='info' isLink icon='Summarize' tag='a'>
+						{/* <CardActions>
+						 <Button color='info' isLink icon='Summarize' tag='a'>
 								View
-							</Button>
-						</CardActions>
+							</Button> 
+						</CardActions> */}
 					</CardHeader>
 					<CardBody isScrollable>
 						<div className='row g-3'>
@@ -315,11 +358,11 @@ const Index: React.FC<KeyboardProps> = ({
 											</div>
 											<div className='col-auto text-end'>
 												<div>
-													<strong>{priceFormat(item.price)}</strong>
+													<strong>{item.cid}</strong>
 												</div>
-												<div className='text-muted'>
+												{/* <div className='text-muted'>
 													<small>{item.cid}</small>
-												</div>
+												</div> */}
 											</div>
 										</div>
 									</div>
@@ -397,6 +440,51 @@ const Index: React.FC<KeyboardProps> = ({
 							className='form-control mb-4 p-2'
 							ref={popupInputRef}
 						/>
+
+						<FormGroup id='membershipDate' className='col-md-6'>
+							<Label htmlFor='ChecksGroup'>Type</Label>
+							<ChecksGroup isInline
+							// isValid={formik.isValid}
+							// isTouched={formik.touched.type}
+							// invalidFeedback={formik.errors.type}
+							>
+
+								<Checks
+									type='radio'
+									key={"full-time"}
+									id={"full-time"}
+									label={"Return"}
+									name='type'
+									value={"full-time"}
+								// onChange={formik.handleChange}
+								// checked={formik.values.type}
+
+								/>
+								<Checks
+									type='radio'
+									key={"full-time"}
+									id={"full-time"}
+									label={"Restore"}
+									name='type'
+									value={"full-time"}
+								// onChange={formik.handleChange}
+								// checked={formik.values.type}
+
+								/>
+								<Checks
+								
+									type='radio'
+									key={"part-time"}
+									id={"part-time"}
+									label={"stock out"}
+									name='type'
+									value={"part-time"}
+								// onChange={formik.handleChange}
+								// checked={formik.values.type}
+
+								/>
+							</ChecksGroup>
+						</FormGroup>
 
 						<div className='d-flex justify-content-end' >
 							<button onClick={handlePopupCancel} className='btn btn-danger me-2'>
