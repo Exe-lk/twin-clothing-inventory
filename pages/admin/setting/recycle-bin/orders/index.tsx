@@ -61,7 +61,7 @@ const Index: NextPage = () => {
 			}
 		};
 		fetchData();
-	}, [editModalStatus, addModalStatus,status]); // Fetch data whenever editModalStatus or addModalStatus changes
+	}, [editModalStatus, addModalStatus, status]); // Fetch data whenever editModalStatus or addModalStatus changes
 	// Function to handle deletion of a stock item
 	const handleClickDelete = async (id: string) => {
 		try {
@@ -115,7 +115,7 @@ const Index: NextPage = () => {
 			'warning',
 		);
 	};
-	const handleClickRestore= async (stock: any) => {
+	const handleClickRestore = async (stock: any) => {
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
@@ -148,67 +148,67 @@ const Index: NextPage = () => {
 						);
 					});
 
-			
+
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
 			Swal.fire('Error', 'Failed to delete employee.', 'error');
 		}
 	};
-	 // Function to handle deletion of all stock items
-	 const handleDeleteAll = async () => {
-        try {
-            const result = await Swal.fire({
-                title: 'Are you sure?',
-                text: 'You will not be able to recover these stock items!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete all!',
-            });
-            if (result.isConfirmed) {
-                const batch = writeBatch(firestore);
-                stock.forEach((item) => {
-                    const docRef = doc(firestore, 'stock', item.cid);
-                    batch.delete(docRef);
-                });
-                await batch.commit();
-                Swal.fire('Deleted!', 'All stock items have been deleted.', 'success');
-                setStatus(!status);
-            }
-        } catch (error) {
-            console.error('Error deleting all documents: ', error);
-            Swal.fire('Error', 'Failed to delete all stock items.', 'error');
-        }
-    };
+	// Function to handle deletion of all stock items
+	const handleDeleteAll = async () => {
+		try {
+			const result = await Swal.fire({
+				title: 'Are you sure?',
+				text: 'You will not be able to recover these stock items!',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes, delete all!',
+			});
+			if (result.isConfirmed) {
+				const batch = writeBatch(firestore);
+				stock.forEach((item) => {
+					const docRef = doc(firestore, 'stock', item.cid);
+					batch.delete(docRef);
+				});
+				await batch.commit();
+				Swal.fire('Deleted!', 'All stock items have been deleted.', 'success');
+				setStatus(!status);
+			}
+		} catch (error) {
+			console.error('Error deleting all documents: ', error);
+			Swal.fire('Error', 'Failed to delete all stock items.', 'error');
+		}
+	};
 
-    // Function to handle restoration of all stock items
-    const handleRestoreAll = async () => {
-        try {
-            const result = await Swal.fire({
-                title: 'Are you sure?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, restore all!',
-            });
-            if (result.isConfirmed) {
-                const batch = writeBatch(firestore);
-                stock.forEach((item) => {
-                    const docRef = doc(firestore, 'stock', item.cid);
-                    batch.update(docRef, { active: true });
-                });
-                await batch.commit();
-                Swal.fire('Restored!', 'All stock items have been restored.', 'success');
-                setStatus(!status);
-            }
-        } catch (error) {
-            console.error('Error restoring all documents: ', error);
-            Swal.fire('Error', 'Failed to restore all stock items.', 'error');
-        }
-    };
+	// Function to handle restoration of all stock items
+	const handleRestoreAll = async () => {
+		try {
+			const result = await Swal.fire({
+				title: 'Are you sure?',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes, restore all!',
+			});
+			if (result.isConfirmed) {
+				const batch = writeBatch(firestore);
+				stock.forEach((item) => {
+					const docRef = doc(firestore, 'stock', item.cid);
+					batch.update(docRef, { active: true });
+				});
+				await batch.commit();
+				Swal.fire('Restored!', 'All stock items have been restored.', 'success');
+				setStatus(!status);
+			}
+		} catch (error) {
+			console.error('Error restoring all documents: ', error);
+			Swal.fire('Error', 'Failed to restore all stock items.', 'error');
+		}
+	};
 	// Return the JSX for rendering the page
 	return (
 		<PageWrapper>
@@ -245,7 +245,7 @@ const Index: NextPage = () => {
 						icon='Restore'
 						color='primary'
 						onClick={handleRestoreAll}
-						
+
 					>
 						Restore All
 					</Button>
@@ -260,17 +260,48 @@ const Index: NextPage = () => {
 								<table className='table table-modern table-hover'>
 									<thead>
 										<tr>
-											<th>Name</th>
-											<th>Unit Cost</th>
-											<th>Location</th>
-											<th>Sub Location</th>
-											<th>EXP Date</th>
-											<th>Quantity</th>
-											<th>status</th>
+											<th>Code</th>
+											<th>Color</th>
+											<th>Description</th>
+											<th>GSM</th>
+											<th>Knit Type</th>
+											<th>GRN number</th>
+
 											<th></th>
 										</tr>
 									</thead>
 									<tbody>
+										<tr>
+											<td>5641</td>
+											<td>green</td>
+											<td>abc</td>
+											<td>70</td>
+											<td>123</td>
+											<td>785</td>
+
+											<td>
+												<Button
+													icon='Restore'
+													tag='a'
+													color='info'
+													onClick={() =>
+														handleClickRestore(stock)
+													}>
+
+													Restore
+												</Button>
+												<Button
+													className='m-2'
+													icon='Delete'
+													color='warning'
+												// onClick={() =>
+												// 	handleClickDelete(stock.cid)
+												// }
+												>
+													Delete
+												</Button>
+											</td>
+										</tr>
 										{stock
 											.filter((values) => {
 												if (searchTerm == '') {
@@ -292,15 +323,14 @@ const Index: NextPage = () => {
 																	className='ratio ratio-1x1 me-3'
 																	style={{ width: 48 }}>
 																	<div
-																		className={`bg-l${
-																			darkModeStatus
+																		className={`bg-l${darkModeStatus
 																				? 'o25'
 																				: '25'
-																		}-${getColorNameWithIndex(
-																			index,
-																		)} text-${getColorNameWithIndex(
-																			index,
-																		)} rounded-2 d-flex align-items-center justify-content-center`}>
+																			}-${getColorNameWithIndex(
+																				index,
+																			)} text-${getColorNameWithIndex(
+																				index,
+																			)} rounded-2 d-flex align-items-center justify-content-center`}>
 																		<span className='fw-bold'>
 																			{getFirstLetter(
 																				stock.item_id,
@@ -330,8 +360,8 @@ const Index: NextPage = () => {
 															onClick={() =>
 																handleClickRestore(stock)
 															}>
-															
-														Restore
+
+															Restore
 														</Button>
 														<Button
 															className='m-2'

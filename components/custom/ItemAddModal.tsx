@@ -260,41 +260,62 @@ console.log(category)
 						/>
 					</FormGroup>
 					<FormGroup id='color' label='Color' className='col-md-6'>
-						<Input
-							type='number'
+						
+						<Select
+							ariaLabel='Default select example'
+							placeholder='Open this select color'
 							onChange={formik.handleChange}
 							value={formik.values.color}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
 							isTouched={formik.touched.color}
 							invalidFeedback={formik.errors.color}
-							validFeedback='Looks good!'
-						/>
+							validFeedback='Looks good!'>
+							
+								<Option value={"dd"}>Green</Option>
+								<Option value={"dd"}>Red</Option>
+								<Option value={"dd"}>Blue</Option>
+							
+						</Select>
 					</FormGroup>
 					<FormGroup id='fabric_type' label='Fabric Type' className='col-md-6'>
-						<Input
-							type='number'
+						
+						<Select
+							ariaLabel='Default select example'
+							placeholder='Open this select fabric type'
 							onChange={formik.handleChange}
 							value={formik.values.fabric_type}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
 							isTouched={formik.touched.fabric_type}
 							invalidFeedback={formik.errors.fabric_type}
-							validFeedback='Looks good!'
-						/>
+							validFeedback='Looks good!'>
+							
+								<Option value={"dd"}>123</Option>
+								<Option value={"dd"}>1234</Option>
+								<Option value={"dd"}>789</Option>
+							
+						</Select>
 					</FormGroup>
 					
 					<FormGroup id='gsm' label='GSM' className='col-md-6'>
-						<Input
-							type='number'
+						
+						<Select
+							ariaLabel='Default select example'
+							placeholder='Open this select fabric type'
 							onChange={formik.handleChange}
 							value={formik.values.gsm}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
 							isTouched={formik.touched.gsm}
 							invalidFeedback={formik.errors.gsm}
-							validFeedback='Looks good!'
-						/>
+							validFeedback='Looks good!'>
+							
+								<Option value={"dd"}>60</Option>
+								<Option value={"dd"}>70</Option>
+								<Option value={"dd"}>80</Option>
+							
+						</Select>
 					</FormGroup>
 					<FormGroup id='width' label='Width' className='col-md-6'>
 						<Input
@@ -307,18 +328,26 @@ console.log(category)
 							invalidFeedback={formik.errors.width}
 							validFeedback='Looks good!'
 						/>
+					
 					</FormGroup>
 					<FormGroup id='knit_type' label='Knit Type' className='col-md-6'>
-						<Input
-							type='number'
+						
+							<Select
+							ariaLabel='Default select example'
+							placeholder='Open this select knit type'
 							onChange={formik.handleChange}
-							value={formik.values.knit_type}
+							value={formik.values.gsm}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
-							isTouched={formik.touched.knit_type}
-							invalidFeedback={formik.errors.knit_type}
-							validFeedback='Looks good!'
-						/>
+							isTouched={formik.touched.gsm}
+							invalidFeedback={formik.errors.gsm}
+							validFeedback='Looks good!'>
+							
+								<Option value={"dd"}>60</Option>
+								<Option value={"dd"}>70</Option>
+								<Option value={"dd"}>80</Option>
+							
+						</Select>
 					</FormGroup>
 					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
 						<Input
