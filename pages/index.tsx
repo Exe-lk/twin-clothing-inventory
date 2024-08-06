@@ -23,6 +23,7 @@ import PostDataService from '../services/postservice';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { auth, firestore } from '../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import Logo from '../components/Logo';
 interface ILoginHeaderProps {
 	isNewUser?: boolean;
 }
@@ -178,7 +179,7 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 												'text-light': darkModeStatus,
 											},
 										)}>
-										{/* <Logo width={200} /> */}
+										<Logo width={200} />
 									</Link>
 								</div>
 
