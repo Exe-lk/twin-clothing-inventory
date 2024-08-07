@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Card, {
 	CardBody,
 	CardHeader,
@@ -7,37 +7,33 @@ import Card, {
 	CardTitle,
 } from '../components/bootstrap/Card';
 import Chart, { IChartOptions } from '../components/extras/Chart';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { firestore } from '../firebaseConfig';
-
-interface Order {
-	cid: string;
-	amount: string;
-	casheir: string;
-	id: number;
-	orders: [];
-	date: string;
-	time: string;
-	type: string;
-}
 
 const LineWithLabel = () => {
-	const [state, setState] = useState<IChartOptions>({
-		series: [],
+	const [state] = useState<IChartOptions>({
+		series: [
+			{
+				name: 'lot in',
+				data: [28, 29, 33, 36, 32, 32, 33],
+			},
+			{
+				name: 'lot out',
+				data: [12, 11, 14, 18, 17, 13, 13],
+			},
+		],
 		options: {
 			chart: {
 				height: 350,
 				type: 'line',
 				dropShadow: {
-					enabled: false,
+					enabled: true,
 					color: '#000',
-					top: 20,
+					top: 18,
 					left: 7,
 					blur: 10,
 					opacity: 0.2,
 				},
 				toolbar: {
-					show: true,
+					show: false,
 				},
 			},
 			tooltip: {
@@ -50,7 +46,7 @@ const LineWithLabel = () => {
 				curve: 'smooth',
 			},
 			title: {
-				text: 'Daily Order Summary',
+				text: '',
 				align: 'left',
 			},
 			grid: {
@@ -64,16 +60,17 @@ const LineWithLabel = () => {
 				size: 1,
 			},
 			xaxis: {
-				categories: Array.from({ length: 24 }, (_, i) => `${i}:00`),
+				categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
 				title: {
-					text: 'Time',
+					text: 'Month',
 				},
 			},
 			yaxis: {
 				title: {
-					text: 'Amount (Rs)',
+					text: 'Event',
 				},
-				min: 0,
+				min: 5,
+				max: 40,
 			},
 			legend: {
 				position: 'top',
@@ -84,60 +81,13 @@ const LineWithLabel = () => {
 			},
 		},
 	});
-
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const currentDate = new Date();
-				const formattedDate = currentDate.toLocaleDateString();
-				const dataCollection = collection(firestore, 'orders');
-				const q = query(dataCollection, where('date', '==', formattedDate));
-				const querySnapshot = await getDocs(q);
-
-				const todaysOrders = querySnapshot.docs.map((doc) => {
-					const data = doc.data() as Order;
-					return {
-						...data,
-						cid: doc.id,
-					};
-				});
-
-				const hourlySales = Array(24).fill(0);
-
-				todaysOrders.forEach(order => {
-					const hour = parseInt(order.time.split(':')[0], 10); // Extract the hour from the time string
-					hourlySales[hour] += parseFloat(order.amount);
-				});
-
-				setState({
-					series: [
-						{
-							name: 'Order Amount',
-							data: hourlySales,
-						},
-					],
-					options: {
-						...state.options,
-						xaxis: {
-							...state.options.xaxis,
-							categories: Array.from({ length: 24 }, (_, i) => `${i}:00`),
-						},
-					},
-				});
-			} catch (error) {
-				console.error('Error fetching data: ', error);
-			}
-		};
-		fetchData();
-	}, []);
-
 	return (
-		<div className='col-lg-12'>
+		<div className='col-lg-6'>
 			<Card stretch>
 				<CardHeader>
 					<CardLabel icon='ShowChart' iconColor='warning'>
 						<CardTitle>
-                        Sales Summary <small>line</small>
+							Lot in and out  
 						</CardTitle>
 						<CardSubTitle>Chart</CardSubTitle>
 					</CardLabel>

@@ -231,12 +231,12 @@ const Index: NextPage = () => {
 				<PieBasic />
 				<LineWithLabel />
 				<LineWithLabel1 />
-{/* 				
-				<ColumnBasic />
-				<TypeAnalatisk/>
+							 <TypeAnalatisk/>	
+				{/* <ColumnBasic /> */}
+				{/* <TypeAnalatisk/> */}
 				
-				<LineWithLabel />
-				<LineWithLabel1 /> */}
+				{/* <LineWithLabel /> */}
+				{/* <LineWithLabel1 /> */} 
 
 				</div>
 				
