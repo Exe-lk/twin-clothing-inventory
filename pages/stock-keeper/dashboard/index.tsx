@@ -16,6 +16,9 @@ import { getFirstLetter } from '../../../helpers/helpers';
 import PaginationButtons from '../../../components/PaginationButtons';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import StockChart from '../../../components/sock-monthly';
+import LineWithLabel from '../../../components/sells-chart';
+import PieBasic from '../../../components/top-product-chart';
+import TypeAnalatisk from '../../../components/typeAnalatisk';
 // Define interfaces for Seller and Stock
 interface Seller {
   cid: string;
@@ -172,7 +175,9 @@ const Index: NextPage = () => {
      
       <Page>
         <div className='row'>
-         
+        <PieBasic />
+				<LineWithLabel />
+        <TypeAnalatisk/>
         </div>
       </Page>
     </PageWrapper>
