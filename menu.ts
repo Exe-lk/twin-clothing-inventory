@@ -67,6 +67,13 @@ export const addminPagesMenu = {
 		icon: 'SupervisedUserCircle',
 		subMenu: null,
 	},
+	action: {
+		id: 'user',
+		text: 'User Action ',
+		path: 'admin/user-action',
+		icon: 'SupervisedUserCircle',
+		subMenu: null,
+	},
 	
 	singlePages: {
 		id: 'singlePages',
