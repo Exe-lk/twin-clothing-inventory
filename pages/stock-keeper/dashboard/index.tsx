@@ -18,7 +18,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'rec
 import StockChart from '../../../components/sock-monthly';
 import LineWithLabel from '../../../components/sells-chart';
 import PieBasic from '../../../components/top-product-chart';
-import TypeAnalatisk from '../../../components/typeAnalatisk';
+import TypeAnalatisk from '../../../components/TypeAnalatisk';
+
 // Define interfaces for Seller and Stock
 interface Seller {
   cid: string;

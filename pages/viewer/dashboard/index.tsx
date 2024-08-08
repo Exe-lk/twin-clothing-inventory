@@ -31,8 +31,9 @@ import PaginationButtons from '../../../components/PaginationButtons';
 import LineWithLabel from '../../../components/sells-chart';
 import LineWithLabel1 from '../../../components/sock-monthly';
 import ColumnBasic from '../../../components/ColumnBasic';
-import TypeAnalatisk from '../../../components/typeAnalatisk';
+
 import PieBasic from '../../../components/top-product-chart';
+import TypeAnalatisk from '../../../components/TypeAnalatisk';
 
 
 interface Item {
