@@ -138,7 +138,7 @@ const Index: NextPage = () => {
 						<Card stretch>
 							<CardBody isScrollable className='table-responsive'>
 								{/* <table className='table table-modern table-hover'> */}
-								<table className='table table-modern table-hover text-center'>
+								<table className='table table-modern table-bordered border-primary table-hover text-center'>
 									<thead>
 										<tr>
 											<th>Category name</th>

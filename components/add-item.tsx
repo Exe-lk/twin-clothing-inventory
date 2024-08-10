@@ -13,6 +13,8 @@ import { isatty } from 'tty';
 import FormGroup from './bootstrap/forms/FormGroup';
 import Label from './bootstrap/forms/Label';
 import Checks, { ChecksGroup } from './bootstrap/forms/Checks';
+import Carousel from './bootstrap/Carousel';
+import CarouselSlide from './bootstrap/CarouselSlide';
 
 // Define TypeScript interfaces for Category and Item
 interface Category {
@@ -269,7 +271,7 @@ const Index: React.FC<KeyboardProps> = ({
 
 	return (
 		<div>
-			<div>
+			{/* <div>
 				<Button
 					className='btn btn-outline-warning'
 					onClick={() => {
@@ -287,6 +289,71 @@ const Index: React.FC<KeyboardProps> = ({
 						{category.categoryname}
 					</Button>
 				))}
+			</div> */}
+		
+			<div>
+
+				{/* <Carousel
+					isHoverPause
+					isRide
+					height={50}
+					isDark={false}
+					isSlide={false}
+					>
+					<CarouselSlide>
+						<div className='m-5'>
+							<Button
+								className='btn btn-outline-warning ms-5'
+								onClick={() => {
+									setCategory1('');
+								}}>
+								All
+							</Button>
+							{category.slice(0, 2).map((category, index) => (
+								<Button
+									key={index}
+									className='btn btn-outline-warning'
+									onClick={() => {
+										setCategory1(category.categoryname);
+									}}>
+									{category.categoryname}
+								</Button>
+							))}
+						</div>
+					</CarouselSlide>
+					<CarouselSlide>
+						<div className='m-5'>
+							<Button
+								className='btn btn-outline-warning ms-5'
+								onClick={() => {
+									setCategory1('');
+								}}>
+								All
+							</Button>
+							{category.slice(0, 3).map((category, index) => (
+								<Button
+									key={index}
+									className='btn btn-outline-warning'
+									onClick={() => {
+										setCategory1(category.categoryname);
+									}}>
+									{category.categoryname}
+								</Button>
+							))}
+						</div>
+					</CarouselSlide>
+
+				</Carousel> */}
+
+
+
+
+
+
+
+
+
+
 			</div>
 			<div>
 				<Card className='mt-4' style={{ height: '40vh' }}>
@@ -426,9 +493,9 @@ const Index: React.FC<KeyboardProps> = ({
 			</div>
 			{showPopup && (
 				<div
-					className='position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-black bg-opacity-80'
+					className='position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-black bg-opacity-50'
 					style={{ zIndex: 1050 }}>
-					<div className='p-4 rounded border bg-black' style={{ zIndex: 1051 }}>
+					<div className='p-4 rounded-4  bg-black' style={{ zIndex: 1051, width:600 }}>
 						<h4 className='mb-4'>Enter a Quantity</h4>
 						<Input
 							type='number'
@@ -472,7 +539,7 @@ const Index: React.FC<KeyboardProps> = ({
 
 								/>
 								<Checks
-								
+
 									type='radio'
 									key={"part-time"}
 									id={"part-time"}

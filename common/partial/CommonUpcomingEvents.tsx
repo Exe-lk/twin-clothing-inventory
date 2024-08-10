@@ -97,7 +97,7 @@ const CommonUpcomingEvents: FC<ICommonUpcomingEventsProps> = ({ isFluid }) => {
 					</CardActions>
 				</CardHeader>
 				<CardBody className='table-responsive' isScrollable={isFluid}>
-					<table className='table table-modern'>
+					<table className='table table-modern table-bordered border-primary'>
 						<thead>
 							<tr>
 								<td style={{ width: 60 }} />

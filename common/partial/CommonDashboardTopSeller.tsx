@@ -214,7 +214,7 @@ const CommonDashboardTopSeller = () => {
 				</CardActions>
 			</CardHeader>
 			<CardBody className='table-responsive'>
-				<table className='table table-modern table-hover'>
+				<table className='table table-bordered border-primary table-modern table-hover'>
 					<thead>
 						<tr>
 							<th

@@ -286,7 +286,7 @@ const CommonMyWallet = () => {
 							</form>
 						</div>
 						<div className='col-md-6'>
-							<table className='table table-modern table-hover'>
+							<table className='table table-modern table-hover table-bordered border-primary'>
 								<colgroup>
 									<col style={{ width: 25 }} />
 									<col style={{ width: 75 }} />

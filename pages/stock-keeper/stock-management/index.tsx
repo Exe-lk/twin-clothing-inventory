@@ -19,10 +19,10 @@ import Card, {
 } from '../../../components/bootstrap/Card';
 import Input from '../../../components/bootstrap/forms/Input';
 import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
+import Carousel from '../../../components/bootstrap/Carousel';
+import CarouselSlide from '../../../components/bootstrap/CarouselSlide';
 
-interface Category {
-	id: number;
-}
+
 function index() {
 	const [toggleRightPanel, setToggleRightPanel] = useState(false);
 	const [orderedItems, setOrderedItems] = useState<any>([]);
@@ -40,28 +40,28 @@ function index() {
 		minute: '2-digit',
 	});
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const dataCollection = collection(firestore, 'orders');
-				const querySnapshot = await getDocs(dataCollection);
-				const firebaseData = querySnapshot.docs
-					.map((doc) => {
-						const data = doc.data() as Category;
-						return {
-							...data,
-						};
-					})
-					.sort((a, b) => b.id - a.id); // Sort by id in ascending order
-				setId(firebaseData[0].id + 1 || 1500);
-				console.log(firebaseData[0].id + 1);
-			} catch (error) {
-				console.error('Error fetching data: ', error);
-			}
-		};
+	// useEffect(() => {
+	// 	const fetchData = async () => {
+	// 		try {
+	// 			const dataCollection = collection(firestore, 'orders');
+	// 			const querySnapshot = await getDocs(dataCollection);
+	// 			const firebaseData = querySnapshot.docs
+	// 				.map((doc) => {
+	// 					const data = doc.data() as Category;
+	// 					return {
+	// 						...data,
+	// 					};
+	// 				})
+	// 				.sort((a, b) => b.id - a.id); // Sort by id in ascending order
+	// 			setId(firebaseData[0].id + 1 || 1500);
+	// 			console.log(firebaseData[0].id + 1);
+	// 		} catch (error) {
+	// 			console.error('Error fetching data: ', error);
+	// 		}
+	// 	};
 
-		fetchData();
-	}, []);
+	// 	fetchData();
+	// }, []);
 
 	const addbill = async () => {
 		if (
@@ -224,9 +224,79 @@ function index() {
 			setCasher(jsonObject);
 		}
 	}, []);
+	// Define TypeScript interfaces for Category and Item
+interface Category {
+	cid: string;
+	categoryname: string;
+}
+	const cdata = [
+		{ status: true, categoryname: 'Main', cid: '0bc5HUELspDzvrUdt5u6' },
 
+
+		{ status: true, categoryname: 'Embroider', cid: 'LKcV57ThRnHtE9bxBHMb' },
+
+
+		{ status: true, categoryname: 'Painting', cid: 'La1K7XLguIsFPZN19vp4' },
+
+
+		{ categoryname: 'clothes', cid: 'NowdRVU0K7hDZiMRkksn', status: true },
+
+
+		{ categoryname: 'other', status: true, cid: 'irufyXKsbSNPk3z8ziC8' },
+
+
+	]
+	const [category, setCategory] = useState<Category[]>(cdata);
 	return (
 		<PageWrapper className=''>
+			<div>
+			<Carousel
+					isHoverPause
+					isRide
+					height={75}
+					isDark={false}
+					isSlide={false}
+					
+					>
+					<CarouselSlide>
+						<div className='m-5'>
+							<Button
+								className='btn btn-outline-warning ms-5'
+								>
+								All
+							</Button>
+							{category.slice(0, 2).map((category, index) => (
+								<Button
+									key={index}
+									className='btn btn-outline-warning'
+									>
+									{category.categoryname}
+								</Button>
+							))}
+						</div>
+					</CarouselSlide>
+					<CarouselSlide>
+						<div className='m-5'>
+							<Button
+								className='btn btn-outline-warning ms-5'
+							>
+								All
+							</Button>
+							{category.slice(0, 3).map((category, index) => (
+								<Button
+									key={index}
+									className='btn btn-outline-warning'
+									onClick={() => {
+									
+									}}>
+									{category.categoryname}
+								</Button>
+							))}
+						</div>
+					</CarouselSlide>
+					
+				</Carousel>
+			</div>
 			<div className='row m-4'>
 				<div className='col-4 mb-3 mb-sm-0'>
 					<Additem

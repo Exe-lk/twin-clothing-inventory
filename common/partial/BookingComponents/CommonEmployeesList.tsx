@@ -71,7 +71,7 @@ const CommonEmployeesList = () => {
 	return (
 		<>
 			<CardBody className='table-responsive'>
-				<table className='table table-modern table-hover'>
+				<table className='table table-modern table-hover table-bordered border-primary'>
 					<thead>
 						<tr>
 							<th

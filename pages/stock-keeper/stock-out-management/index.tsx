@@ -338,7 +338,7 @@ const Index: NextPage = () => {
 						{/* Table for displaying customer data */}
 						<Card stretch>
 							<CardBody isScrollable className='table-responsive'>
-								<table className='table table-modern table-hover'>
+								<table className='table table-modern table-bordered border-primary table-hover '>
 									<thead>
 										<tr>
 											<th>Code</th>

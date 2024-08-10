@@ -408,6 +408,18 @@ const ItemEditModal: FC<ItemEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 							
 						</Select>
 					</FormGroup>
+					<FormGroup id='GRA_number' label='Price' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							// value={formik.values.GRA_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRA_number}
+							invalidFeedback={formik.errors.GRA_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
 				</div>
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
