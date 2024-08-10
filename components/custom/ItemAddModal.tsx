@@ -417,7 +417,18 @@ console.log(category)
 						/>
 					</FormGroup> */}
 				
-				
+				<FormGroup id='GRA_number' label='Price' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							// value={formik.values.GRA_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRA_number}
+							invalidFeedback={formik.errors.GRA_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
 					<div ref={divRef}>{/* <Barcode value={formik.values.barcode} /> */}</div>
 				</div>
 			</ModalBody>

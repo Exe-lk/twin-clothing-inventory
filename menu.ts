@@ -184,41 +184,47 @@ export const stockkeeperPagesMenu = {
 		icon: 'AssignmentTurnedIn',
 		subMenu: null,
 	},
-	category: {
-		id: 'category',
-		text: 'Category',
-		path: 'stock-keeper/category',
-		icon: 'Category',
-		subMenu: null,
-	},
-	// seller: {
-	// 	id: 'seller',
-	// 	text: 'Supplier Management',
-	// 	path: 'stock-keeper/seller-management',
-	// 	icon: 'Groups',
-	// 	subMenu: null,
-	// },
-	singlePages1: {
+	
+	
+	singlePages: {
 		id: 'singlePages',
-		text: 'Recycle Bin',
+		text: 'Settings',
 		path: 'single-pages',
-		icon: 'DeleteSweep',
+		icon: 'Settings',
 		subMenu: {
-		
-			fluidSingle: {
-				id: 'fluidSingle',
-				text: 'Lot',
-				path: 'stock-keeper/recycle-bin/item',
-				icon: 'HistoryToggleOff',
-			},
 			category: {
-				id: 'boxedSingle',
+				id: 'category',
 				text: 'Category',
-				path: 'stock-keeper/recycle-bin/category',
+				path: 'stock-keeper/category',
 				icon: 'Category',
+				subMenu: null,
+			},
+			singlePages1: {
+				id: 'singlePages',
+				text: 'Recycle Bin',
+				path: 'single-pages',
+				icon: 'DeleteSweep',
+				subMenu: {
+					category: {
+						id: 'boxedSingle',
+						text: 'Category',
+						path: 'admin/setting/recycle-bin/category',
+						icon: 'Category',
+					},
+					
+					fluidSingle: {
+						id: 'fluidSingle',
+						text: 'Lot',
+						path: 'admin/setting/recycle-bin/orders',
+						icon: 'HistoryToggleOff',
+					},
+					
+					
+				},
 			},
 		},
 	},
+	
 
 	
 	
@@ -265,13 +271,13 @@ export const officemenu = {
 	},
 };
 export const viewmenu = {
-	// dashboard: {
-	// 	id: 'dashboard',
-	// 	text: 'Dashboard',
-	// 	path: 'viewer/dashboard',
-	// 	icon: 'Dashboard',
-	// 	subMenu: null,
-	// },
+	dashboard: {
+		id: 'dashboard',
+		text: 'Dashboard',
+		path: 'viewer/dashboard',
+		icon: 'Dashboard',
+		subMenu: null,
+	},
 	order: {
 		id: 'order',
 		text: 'Order History',

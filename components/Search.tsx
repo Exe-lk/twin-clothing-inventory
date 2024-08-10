@@ -93,7 +93,7 @@ const Search = () => {
 					/>
 				</ModalHeader>
 				<ModalBody>
-					<table className='table table-hover table-modern caption-top mb-0'>
+					<table className='table table-hover table-modern caption-top mb-0 table-bordered border-primary'>
 						<caption>Results: {filterResult.length}</caption>
 						<thead className='position-sticky' style={{ top: -13 }}>
 							<tr>
