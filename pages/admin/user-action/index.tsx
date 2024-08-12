@@ -11,7 +11,7 @@ import Icon from '../../../components/icon/Icon';
 import Input from '../../../components/bootstrap/forms/Input';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
-import Card, { CardBody } from '../../../components/bootstrap/Card';
+import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
 import UserAddModal from '../../../components/custom/UserAddModal';
 import UserEditModal from '../../../components/custom/UserEditModal';
 import { doc, deleteDoc, collection, getDocs, updateDoc, query, where } from 'firebase/firestore';
@@ -153,7 +153,7 @@ const Index: NextPage = () => {
 						<DropdownMenu isAlignmentEnd size='lg'>
 							<div className='container py-2'>
 								<div className='row g-3'>
-									<FormGroup label='Category type' className='col-12'>
+									<FormGroup label='User type' className='col-12'>
 										<ChecksGroup>
 											{position.map((category, index) => (
 												<Checks
@@ -186,14 +186,14 @@ const Index: NextPage = () => {
 						</DropdownMenu>
 					</Dropdown>
 
-					<SubheaderSeparator />
-					<Button
+					{/* <SubheaderSeparator /> */}
+					{/* <Button
 						icon='PersonAdd'
 						color='primary'
 						isLight
 						onClick={() => setAddModalStatus(true)}>
 						New User
-					</Button>
+					</Button> */}
 				</SubHeaderRight>
 			</SubHeader>
 			<Page>
@@ -201,34 +201,47 @@ const Index: NextPage = () => {
 					<div className='col-12'>
 						{/* Table for displaying user data */}
 						<Card stretch>
+						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
+								<div className='text-center'>User Action log</div>
+								<Button
+									icon='UploadFile'
+									color='warning'
+									onClick={() => setAddModalStatus(true)}>
+									Export
+								</Button>
+							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-bordered border-primary table-modern table-hover'>
 									<thead>
 										<tr>
 											<th>User</th>
 											<th>Position</th>
-											<th>Email</th>
+											<th>Task</th>
 											<th>Log Time</th>
+											<th>Logout Time</th>
                                             <th>Date </th>
-											<th></th>
+											<th>Duration</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
 											<td>Kalpa Chamathkara</td>
 											<td>Production Codinater</td>
-											<td>kalpa@gmail.com</td>
+											<td>Update</td>
 											<td>12.55</td>
+											<td>01.25</td>
                                             <td>2024/12/03</td>
-                                            <td></td>
+                                            <td>90 min</td>
 											
 										</tr>
 										<tr>
-											<td>Ravidu Idamalgoda</td>
-											<td>Admin</td>
-											<td>ravidu@gmail.com</td>
-											<td>13.20</td>
-                                            <td>2024/12/06</td>
+										<td>Ravindu</td>
+											<td>Production Codinater</td>
+											<td>Delete</td>
+											<td>12.00</td>
+											<td>01.00</td>
+                                            <td>2024/12/03</td>
+                                            <td>60 min</td>
 											
 										</tr>
 										{user

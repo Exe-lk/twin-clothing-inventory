@@ -12,7 +12,7 @@ import Icon from '../../../components/icon/Icon';
 import Input from '../../../components/bootstrap/forms/Input';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
-import Card, { CardBody } from '../../../components/bootstrap/Card';
+import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
 import StockAddModal from '../../../components/custom/ItemAddModal';
 import StockEditModal from '../../../components/custom/ItemEditModal';
 import { doc, deleteDoc, collection, getDocs, updateDoc, query, where } from 'firebase/firestore';
@@ -291,45 +291,26 @@ const Index: NextPage = () => {
 								<div className='row g-3'>
 									<FormGroup label='Category type' className='col-12'>
 										<ChecksGroup>
-											{category.map((category, index) => (
-												<Checks
-													key={category.categoryname}
-													id={category.categoryname}
-													label={category.categoryname}
-													name={category.categoryname}
-													value={category.categoryname}
-													checked={selectedCategories.includes(
-														category.categoryname,
-													)}
-													onChange={(event: any) => {
-														const { checked, value } = event.target;
-														setSelectedCategories(
-															(prevCategories) =>
-																checked
-																	? [...prevCategories, value] // Add category if checked
-																	: prevCategories.filter(
-																			(category) =>
-																				category !== value,
-																	  ), // Remove category if unchecked
-														);
-													}}
-												/>
-											))}
+											<Checks
+												key='check'
+												id='check'
+												label='Outgoing'
+												name='check'
+												value='check'></Checks>
+											<Checks
+												key='check'
+												id='check'
+												label='Return'
+												name='check'
+												value='check'></Checks>
 										</ChecksGroup>
 									</FormGroup>
 								</div>
 							</div>
 						</DropdownMenu>
 					</Dropdown>
-					<SubheaderSeparator />
+
 					{/* Button to open  New Item modal */}
-					<Button
-						icon='AddCircleOutline'
-						color='warning'
-						
-						onClick={() => setAddModalStatus(true)}>
-						Export
-					</Button>
 				</SubHeaderRight>
 			</SubHeader>
 			<Page>
@@ -337,37 +318,39 @@ const Index: NextPage = () => {
 					<div className='col-12'>
 						{/* Table for displaying customer data */}
 						<Card stretch>
+							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
+								<div className='text-center'>Manage Category</div>
+								<Button
+									icon='UploadFile'
+									color='warning'
+									onClick={() => setAddModalStatus(true)}>
+									Export
+								</Button>
+							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-modern table-bordered border-primary table-hover '>
 									<thead>
 										<tr>
 											<th>Code</th>
-											<th>Category</th>
+											<th>Date</th>
 											<th>Type</th>
-											<th>quentity</th>
-											<th>Fabric type</th>
-											<th>GSM</th>
-											<th>GRN number</th>
-											<th>Date/Time</th>
-											<th>Location(company)</th>
-											{/* <th></th> */}
-											{/* <th><Button icon='PersonAdd' color='primary' isLight onClick={() => setAddModalStatus(true)}>
-                        New Item
-                      </Button></th> */}
+											<th>Quentity</th>
+											<th>Location</th>
+											<th>Category</th>
+											<th>Sub cCategory</th>
 										</tr>
 									</thead>
 
 									<tbody>
-										<tr>
-											<td>15368</td>
-											<td>Main</td>
-											<td>outgoing</td>
-											<td>260</td>
-											<td>Fabric</td>
-											<td>90</td>
-											<td>320</td>
-											<td>2024/12/5-20.05</td>
-											<td>ABC company</td>
+										<tr className='text-success'>
+											<td className='text-warning'>15368</td>
+											<td className='text-warning'>2024/08/09</td>
+											<td className='text-warning'>Return</td>
+											<td className='text-warning'>260</td>
+											<td className='text-warning'>Garment</td>
+											<td className='text-warning'>abc</td>
+											<td className='text-warning'>efd</td>
+
 											{/* <td>
 												<Button
 													icon='Edit'
@@ -386,17 +369,15 @@ const Index: NextPage = () => {
 											</td> */}
 										</tr>
 										<tr>
-											<td>15678</td>
-											<td>Main</td>
-											<td>return</td>
-											<td>500</td>
-											<td>Fabric</td>
-											<td>80</td>
-											<td>350</td>
-											<td>2024/12/5-20.05</td>
-											<td>ABC company</td>
+											<td className='text-success'>15368</td>
+											<td className='text-success'>2024/08/09</td>
+											<td className='text-success'>outgoing</td>
+											<td className='text-success'>260</td>
+											<td className='text-success'>Garment</td>
+											<td className='text-success'>abc</td>
+											<td className='text-success'>efd</td>
 											{/* <td> */}
-												{/* <Button
+											{/* <Button
 													icon='Edit'
 													tag='a'
 													color='info'

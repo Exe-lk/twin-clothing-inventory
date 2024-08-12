@@ -12,7 +12,7 @@ import Icon from '../../../components/icon/Icon';
 import Input from '../../../components/bootstrap/forms/Input';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
-import Card, { CardBody } from '../../../components/bootstrap/Card';
+import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
 import StockAddModal from '../../../components/custom/ItemAddModal';
 import StockEditModal from '../../../components/custom/ItemEditModal';
 import { doc, deleteDoc, collection, getDocs, updateDoc, query, where } from 'firebase/firestore';
@@ -322,17 +322,11 @@ const Index: NextPage = () => {
 						</DropdownMenu>
 					</Dropdown>
 					<SubheaderSeparator />
-					<Button
-						icon='AddCircleOutline'
-						color='warning'
-						
-						onClick={() => setAddModalStatus(true)}>
-						Export 
-					</Button>
+					
 					{/* Button to open  New Item modal */}
 					<Button
 						icon='AddCircleOutline'
-						color='primary'
+						color='success'
 						isLight
 						onClick={() => setAddModalStatus(true)}>
 						New Lot
@@ -344,15 +338,25 @@ const Index: NextPage = () => {
 					<div className='col-12'>
 						{/* Table for displaying customer data */}
 						<Card stretch>
+						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
+								<div className='text-center'>Manage Lot</div>
+								<Button
+									icon='UploadFile'
+									color='warning'
+									onClick={() => setAddModalStatus(true)}>
+									Export
+								</Button>
+							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-bordered border-primary table-modern table-hover'>
 									<thead>
 										<tr>
 											<th>Code</th>
 											<th>Category</th>
-											<th>Fabric type</th>
-											<th>GSM</th>
-											<th>GRN number</th>
+											<th>Sub Category</th>
+											<th>Supplier</th>
+											<th>Type</th>
+											<th>Quentity</th>
 											<th></th>
 											{/* <th><Button icon='PersonAdd' color='primary' isLight onClick={() => setAddModalStatus(true)}>
                         New Item
@@ -365,7 +369,8 @@ const Index: NextPage = () => {
 											<td>15368</td>
 											<td>Main</td>
 											<td>Fabric</td>
-											<td>90</td>
+											<td>abc</td>
+											<td>abc</td>
 											<td>320</td>
 											<td>
 												<Button
@@ -378,18 +383,19 @@ const Index: NextPage = () => {
 												<Button
 													className='m-2'
 													icon='Delete'
-													color='warning'
+													color='danger'
 													onClick={() => handleClickDelete(item)}>
 													Delete
 												</Button>
 											</td>
 										</tr>
 										<tr>
-											<td>15678</td>
+										<td>15385</td>
 											<td>Main</td>
 											<td>Fabric</td>
-											<td>80</td>
-											<td>350</td>
+											<td>abc</td>
+											<td>abc</td>
+											<td>320</td>
 											<td>
 												<Button
 													icon='Edit'
@@ -401,7 +407,7 @@ const Index: NextPage = () => {
 												<Button
 													className='m-2'
 													icon='Delete'
-													color='warning'
+													color='danger'
 													onClick={() => handleClickDelete(item)}>
 													Delete
 												</Button>

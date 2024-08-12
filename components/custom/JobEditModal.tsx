@@ -142,9 +142,7 @@ const ItemEditModal: FC<ItemEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 			if (!item.fabric_type) {
 				errors.fabric_type = 'Required';
 			}
-			if (!item.gsm) {
-				errors.gsm = 'Required';
-			}
+			
 			if (!item.width) {
 				errors.width = 'Required';
 			}
@@ -206,38 +204,8 @@ const ItemEditModal: FC<ItemEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>
-					<FormGroup
-						id='code'
-						label='Code'
-						onChange={formik.handleChange}
-						className='col-md-6'>
-						<Input
-							value={item.code}
-							onChange={(e: any) => {
-								item.code = e.target.value;
-							}}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.code}
-							invalidFeedback={formik.errors.code}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
-					<FormGroup id='description' label='Description'onChange={formik.handleChange} className='col-md-6'>
-						<Input
-							type='number'
-							onChange={(e: any) => {
-								item.description = e.target.value;
-							}}
-							value={formik.values.description}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.description}
-							invalidFeedback={formik.errors.description}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
-					<FormGroup id='color' label='Color' onChange={formik.handleChange}className='col-md-6'>
+					
+					<FormGroup id='color' label='Job ID' onChange={formik.handleChange}className='col-md-6'>
 						<Input
 							type='number'
 							onChange={(e: any) => {
@@ -251,7 +219,7 @@ const ItemEditModal: FC<ItemEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='fabric_type' label='Fabric Type'onChange={formik.handleChange} className='col-md-6'>
+					<FormGroup id='fabric_type' label='Description'onChange={formik.handleChange} className='col-md-6'>
 						<Input
 							type='number'
 							onChange={(e: any) => {
@@ -267,7 +235,7 @@ const ItemEditModal: FC<ItemEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 					</FormGroup>
 					
 				
-					<FormGroup id='gsm' label='GSM'onChange={formik.handleChange} className='col-md-6'>
+					<FormGroup id='gsm' label='Client Name'onChange={formik.handleChange} className='col-md-6'>
 						<Input
 							type='number'
 							onChange={(e: any) => {
@@ -281,34 +249,7 @@ const ItemEditModal: FC<ItemEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='width' label='Quentity' onChange={formik.handleChange}className='col-md-6'>
-						<Input
-							type='number'
-							onChange={(e: any) => {
-								item.width = e.target.value;
-							}}
-							value={formik.values.width}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.width}
-							invalidFeedback={formik.errors.width}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
-					<FormGroup id='knit_type' label='Knit Type'onChange={formik.handleChange} className='col-md-6'>
-						<Input
-							type='number'
-							onChange={(e: any) => {
-								item.knit_type = e.target.value;
-							}}
-							value={formik.values.knit_type}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.knit_type}
-							invalidFeedback={formik.errors.knit_type}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
+					
 					{/* <FormGroup id='GRN_number' label='GRN Number'onChange={formik.handleChange} className='col-md-6'>
 						<Input
 							type='number'

@@ -12,7 +12,7 @@ import Icon from '../../../components/icon/Icon';
 import Input from '../../../components/bootstrap/forms/Input';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
-import Card, { CardBody } from '../../../components/bootstrap/Card';
+import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
 import StockAddModal from '../../../components/custom/JobAddModal';
 import StockEditModal from '../../../components/custom/JobEditModal';
 import { doc, deleteDoc, collection, getDocs, updateDoc, query, where } from 'firebase/firestore';
@@ -325,7 +325,7 @@ const Index: NextPage = () => {
 					{/* Button to open  New Item modal */}
 					<Button
 						icon='AddCircleOutline'
-						color='primary'
+						color='success'
 						isLight
 						onClick={() => setAddModalStatus(true)}>
 						New Job
@@ -337,17 +337,23 @@ const Index: NextPage = () => {
 					<div className='col-12'>
 						{/* Table for displaying customer data */}
 						<Card stretch>
+						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
+								<div className='text-center'>Manage Job</div>
+								<Button
+									icon='UploadFile'
+									color='warning'
+									onClick={() => setAddModalStatus(true)}>
+									Export
+								</Button>
+							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-bordered border-primary table-modern table-hover'>
 									<thead>
 										<tr>
-											<th>Code</th>
-											<th>Category</th>
-											<th>Sub Category</th>
-											<th>Code</th>
-											<th>Quentity(Kg)</th>
-											<th>Location</th>
-											<th>status</th>
+											<th>Job ID</th>
+											<th>Client Name</th>
+											<th>Description</th>
+
 											<th></th>
 											{/* <th><Button icon='PersonAdd' color='primary' isLight onClick={() => setAddModalStatus(true)}>
                         New Item
@@ -358,15 +364,12 @@ const Index: NextPage = () => {
 									<tbody>
 										<tr>
 											<td>15368</td>
-											<td>Main</td>
-											<td>Fabric</td>
-											<td>9096</td>
-											<td>500</td>
-											<th>Outsource</th>
-											<th>Approved</th>
+											<td>ABC company</td>
+											<td>500 stock</td>
+											
 											<td>
 												<Button
-													isDisable={true}
+													
 													icon='Edit'
 													tag='a'
 													color='info'
@@ -374,10 +377,10 @@ const Index: NextPage = () => {
 													Edit
 												</Button>
 												<Button
-													isDisable={true}
+													
 													className='m-2'
 													icon='Delete'
-													color='warning'
+													color='danger'
 													onClick={() => handleClickDelete(item)}>
 													Delete
 												</Button>
@@ -385,13 +388,9 @@ const Index: NextPage = () => {
 										</tr>
 										<tr>
 										
-											<td>15369</td>
-											<td>Main</td>
-											<td>Fabric</td>
-											<td>90526</td>
-											<td>50</td>
-											<th>Garment</th>
-											<th>Pending</th>
+										<td>15368</td>
+											<td>ABC company</td>
+											<td>500 stock</td>
 											<td>
 												<Button
 													
@@ -405,7 +404,7 @@ const Index: NextPage = () => {
 													
 													className='m-2'
 													icon='Delete'
-													color='warning'
+													color='danger'
 													onClick={() => handleClickDelete(item)}>
 													Delete
 												</Button>

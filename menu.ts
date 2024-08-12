@@ -87,6 +87,30 @@ export const addminPagesMenu = {
 				path: 'admin/setting/account',
 				icon: 'Groups',
 			},
+			color: {
+				id: 'fluidSingle',
+				text: 'Color',
+				path: 'admin/setting/color',
+				icon: 'ColorLens',
+			},
+			fabric: {
+				id: 'fluidSingle',
+				text: 'fabric',
+				path: 'admin/setting/fabric-type',
+				icon: 'AppSettingsAlt',
+			},
+			gsm: {
+				id: 'fluidSingle',
+				text: 'GSM',
+				path: 'admin/setting/gsm',
+				icon: 'AlignVerticalCenter',
+			},
+			knet: {
+				id: 'fluidSingle',
+				text: 'Knit type',
+				path: 'admin/setting/knit-type',
+				icon: 'AirlineSeatLegroomExtra',
+			},
 			singlePages1: {
 				id: 'singlePages',
 				text: 'Recycle Bin',
@@ -208,14 +232,14 @@ export const stockkeeperPagesMenu = {
 					category: {
 						id: 'boxedSingle',
 						text: 'Category',
-						path: 'admin/setting/recycle-bin/category',
+						path: 'stock-keeper/recycle-bin/category',
 						icon: 'Category',
 					},
 					
 					fluidSingle: {
 						id: 'fluidSingle',
 						text: 'Lot',
-						path: 'admin/setting/recycle-bin/orders',
+						path: 'stock-keeper/recycle-bin/item',
 						icon: 'HistoryToggleOff',
 					},
 					

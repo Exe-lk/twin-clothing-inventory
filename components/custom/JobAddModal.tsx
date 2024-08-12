@@ -130,9 +130,7 @@ console.log(category)
 			if (!values.description) {
 				errors.description = 'Required';
 			}
-			if (!values.color) {
-				errors.color = 'Required';
-			}
+			
 			if (!values.fabric_type) {
 				errors.fabric_type = 'Required';
 			}
@@ -203,40 +201,8 @@ console.log(category)
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>
-				<FormGroup id='category' label='Category' onChange={formik.handleChange}className='col-md-6'>
-						<Select
-							ariaLabel='Default select example'
-							placeholder='Open this select category'
-							// onChange={formik.handleChange}
-							onChange={(e:any)=>(changeSubCategory(e.target.value))}
-							value={formik.values.category}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.category}
-							invalidFeedback={formik.errors.category}
-							validFeedback='Looks good!'>
-							{category.map((item, index) => (
-								<Option value={item.categoryname} >{item.categoryname}</Option>
-							))}
-						</Select>
-					</FormGroup>
-					<FormGroup id='subcategory' label='Sub Category' className='col-md-6'>
-						<Select
-							ariaLabel='Default select example'
-							placeholder='Open this select sub category'
-							onChange={formik.handleChange}
-							value={formik.values.subcategory}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.subcategory}
-							invalidFeedback={formik.errors.subcategory}
-							validFeedback='Looks good!'>
-							{category.map((item, index) => (
-								<Option value={item.categoryname}>{item.categoryname}</Option>
-							))}
-						</Select>
-					</FormGroup>
-					<FormGroup id='code' label='Code' className='col-md-6'>
+				
+					<FormGroup id='code' label='Job ID' className='col-md-6'>
 						<Input
 							onChange={formik.handleChange}
 							value={formik.values.code}
@@ -249,7 +215,7 @@ console.log(category)
 					</FormGroup>
 					<FormGroup id='description' label='Description' className='col-md-6'>
 						<Input
-							type='number'
+							
 							onChange={formik.handleChange}
 							value={formik.values.description}
 							onBlur={formik.handleBlur}
@@ -259,9 +225,9 @@ console.log(category)
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='color' label='Color' className='col-md-6'>
+					<FormGroup id='color' label='Client Name' className='col-md-6'>
 						<Input
-							type='number'
+						
 							onChange={formik.handleChange}
 							value={formik.values.color}
 							onBlur={formik.handleBlur}
@@ -271,55 +237,7 @@ console.log(category)
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='fabric_type' label='Fabric Type' className='col-md-6'>
-						<Input
-							type='number'
-							onChange={formik.handleChange}
-							value={formik.values.fabric_type}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.fabric_type}
-							invalidFeedback={formik.errors.fabric_type}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
 					
-					<FormGroup id='gsm' label='GSM' className='col-md-6'>
-						<Input
-							type='number'
-							onChange={formik.handleChange}
-							value={formik.values.gsm}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.gsm}
-							invalidFeedback={formik.errors.gsm}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
-					<FormGroup id='width' label='Quentity' className='col-md-6'>
-						<Input
-							type='number'
-							onChange={formik.handleChange}
-							value={formik.values.width}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.width}
-							invalidFeedback={formik.errors.width}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
-					<FormGroup id='knit_type' label='Knit Type' className='col-md-6'>
-						<Input
-							type='number'
-							onChange={formik.handleChange}
-							value={formik.values.knit_type}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.knit_type}
-							invalidFeedback={formik.errors.knit_type}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
 					{/* <FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
 						<Input
 							type='number'

@@ -507,6 +507,17 @@ const Index: React.FC<KeyboardProps> = ({
 							className='form-control mb-4 p-2'
 							ref={popupInputRef}
 						/>
+						<h6 className='mb-4'>Job ID</h6>
+						<Input
+							type='number'
+							value={popupInput}
+							onChange={(e: any) => {
+								setPopupInput(e.target.value);
+							}}
+							min={1}
+							className='form-control mb-4 p-2'
+							ref={popupInputRef}
+						/>
 
 						<FormGroup id='membershipDate' className='col-md-6'>
 							<Label htmlFor='ChecksGroup'>Type</Label>

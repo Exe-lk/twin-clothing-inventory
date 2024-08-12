@@ -229,38 +229,8 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 						/>
 					</Popovers>
 				</div>
-				<div className='col-auto mt-4'>
-					<Button
-						{...styledBtn}
-						icon='Notifications'
-						onClick={() => setOffcanvasStatus(true)}
-						aria-label='Notifications'
-					/>
-				</div>
-				<div className='col-auto'>
-					<Button aria-label='Toggle dark mode' >
-						<div className='col d-flex align-items-center'>
-							{user?.imageurl ? (
-								<img
-									src={user.imageurl}
-									className='me-3'
-									alt={user.name}
-									style={{ width: '50px', height: '50px', borderRadius: '50%' }}
-								/>
-							) : (
-								<div className='me-3'>
-									<Avatar src={UserImage2} size={48} color='primary' />
-								</div>
-							)}
-							<div>
-								<div className='fw-bold fs-6 mb-0'>{user?.name}</div>
-								<div className='text-muted'>
-									<small>{user?.role}</small>
-								</div>
-							</div>
-						</div>
-					</Button>
-				</div>
+				
+				
 
 				{afterChildren}
 			</div>

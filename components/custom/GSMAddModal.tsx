@@ -1,16 +1,16 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
-import Modal, {ModalBody,ModalFooter,ModalHeader,ModalTitle,
-} from '../bootstrap/Modal';
+import Modal, {ModalBody,ModalFooter,ModalHeader,ModalTitle,} from '../bootstrap/Modal';
 import showNotification from '../extras/showNotification';
 import Icon from '../icon/Icon';
 import FormGroup from '../bootstrap/forms/FormGroup';
 import Input from '../bootstrap/forms/Input';
 import Button from '../bootstrap/Button';
-import { collection,query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { firestore, storage } from '../../firebaseConfig';
 import Swal from 'sweetalert2';
+import { NULL } from 'sass';
 
 // Define the props for the CategoryEditModal component
 interface CategoryEditModalProps {
@@ -18,62 +18,29 @@ interface CategoryEditModalProps {
 	isOpen: boolean;
 	setIsOpen(...args: unknown[]): unknown;
 }
-interface Category{
-	cid: string;
-	categoryname: string;
-	status:boolean
-}
 // CategoryEditModal component definition
 const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }) => {
-	const data: Category = {
-		cid: "",
-		categoryname: "",
-		status:true
-	}
-	const [stock, setStock] = useState<Category>(data);
-    //fetch data from database
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const dataCollection = collection(firestore, 'category');
-				const q = query(dataCollection, where('__name__', '==', id));
-				const querySnapshot = await getDocs(q);
-				const firebaseData: any = querySnapshot.docs.map((doc) => {
-					const data = doc.data() as Category;
-					return {
-						...data,
-						cid: doc.id,
-					};
-				});
-				await setStock(firebaseData[0])
-                console.log('Firebase Data:', stock);
-			} catch (error) {
-				console.error('Error fetching data: ', error);
-			}
-		};
-        fetchData();
-	}, [id]);
     // Initialize formik for form management
 	const formik = useFormik({
-		initialValues: {
+        initialValues: {
 			categoryname: '',
+			status:true
 		},
 		validate: (values) => {
 			const errors: {
 				categoryname?: string;
 			} = {};
-			if (!stock.categoryname) {
+			if (!values.categoryname) {
 				errors.categoryname = 'Required';
 			}
 			return errors;
 		},
 		onSubmit: async (values) => {
 			try {
-                let data: any = stock
-				const docRef = doc(firestore, "category", id);
-				// Update the data
-				updateDoc(docRef, data).then(() => {
-                   setIsOpen(false);
+				values.status=true
+                const collectionRef = collection(firestore, 'category');
+				addDoc(collectionRef, values).then(() => {
+					
 					showNotification(
 						<span className='d-flex align-items-center'>
 							<Icon icon='Info' size='lg' className='me-1' />
@@ -82,6 +49,8 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 						'category has been added successfully',
 					);
 					Swal.fire('Added!', 'category has been add successfully.', 'success');
+					formik.resetForm()
+					setIsOpen(false);
 				}).catch((error) => {
 					console.error('Error adding document: ', error);
 					alert('An error occurred while adding the document. Please try again later.');
@@ -93,19 +62,18 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 		},
 	});
-
-	return (
+    return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
 			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
-				<ModalTitle id="">{'Edit Color'}</ModalTitle>
+				<ModalTitle id="">{'New GSM'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>
-					<FormGroup id='categoryname' label='Color name' onChange={formik.handleChange} className='col-md-6'>
+					<FormGroup id='categoryname' label='GSM Name' className='col-md-6'>
 						<Input
-							onChange={(e: any) => { stock.categoryname = e.target.value }}
-							value={stock?.categoryname}
-							onBlur={formik.handleBlur}
+							onChange={formik.handleChange}
+							value={formik.values.categoryname}
+                            onBlur={formik.handleBlur}
 							isValid={formik.isValid}
 							isTouched={formik.touched.categoryname}
 							invalidFeedback={formik.errors.categoryname}
@@ -123,10 +91,12 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 		</Modal>
 	);
 }
-// Prop types definition for CustomerEditModal component
 CategoryEditModal.propTypes = {
 	id: PropTypes.string.isRequired,
 	isOpen: PropTypes.bool.isRequired,
 	setIsOpen: PropTypes.func.isRequired,
 };
 export default CategoryEditModal;
+
+
+
