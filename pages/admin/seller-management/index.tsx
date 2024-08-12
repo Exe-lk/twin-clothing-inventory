@@ -12,7 +12,7 @@ import Icon from '../../../components/icon/Icon';
 import Input from '../../../components/bootstrap/forms/Input';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
-import Card, { CardBody } from '../../../components/bootstrap/Card';
+import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
 import SellerAddModal from '../../../components/custom/SellerAddModal';
 import SellerEditModal from '../../../components/custom/SellerEditModal';
 import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
@@ -137,7 +137,7 @@ const Index: NextPage = () => {
 					{/* Button to open the Add Seller modal */}
 					<Button
 						icon='AddCircleOutline'
-						color='primary'
+						color='success'
 						isLight
 						onClick={() => setAddModalStatus(true)}>
 						Add Seller
@@ -149,6 +149,15 @@ const Index: NextPage = () => {
 					<div className='col-12'>
 						{/* Table for displaying customer data */}
 						<Card stretch>
+						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
+								<div className='text-center'>Manage Supplier</div>
+								<Button
+									icon='UploadFile'
+									color='warning'
+									onClick={() => setAddModalStatus(true)}>
+									Export
+								</Button>
+							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-bordered border-primary table-modern table-hover'>
 									<thead>
@@ -175,7 +184,7 @@ const Index: NextPage = () => {
 																View Products
 															</Button>
 														</DropdownToggle>
-														<DropdownMenu isAlignmentEnd size='md'>
+														<DropdownMenu isAlignmentEnd size='md' className='ps-4'>
 															<div>abc</div>
 															<div>efg</div>
 														</DropdownMenu>
@@ -195,7 +204,7 @@ const Index: NextPage = () => {
 														<Button
 															className='m-2'
 															icon='Delete'
-															color='warning'
+															color='danger'
 															onClick={() => handleClickDelete(seller)}
 															>
 															Delete
@@ -214,7 +223,7 @@ const Index: NextPage = () => {
 																View Products
 															</Button>
 														</DropdownToggle>
-														<DropdownMenu isAlignmentEnd size='md'>
+														<DropdownMenu isAlignmentEnd size='md'className='ps-4' >
 															<div>abc</div>
 															<div>efg</div>
 														</DropdownMenu>
@@ -234,7 +243,7 @@ const Index: NextPage = () => {
 														<Button
 															className='m-2'
 															icon='Delete'
-															color='warning'
+															color='danger'
 															onClick={() => handleClickDelete(seller)}
 															>
 															Delete

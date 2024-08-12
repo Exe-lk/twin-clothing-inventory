@@ -11,7 +11,7 @@ import Icon from '../../../components/icon/Icon';
 import Input from '../../../components/bootstrap/forms/Input';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
-import Card, { CardBody } from '../../../components/bootstrap/Card';
+import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
 import UserAddModal from '../../../components/custom/UserAddModal';
 import UserEditModal from '../../../components/custom/UserEditModal';
 import { doc, deleteDoc, collection, getDocs, updateDoc, query, where } from 'firebase/firestore';
@@ -189,7 +189,7 @@ const Index: NextPage = () => {
 					<SubheaderSeparator />
 					<Button
 						icon='PersonAdd'
-						color='primary'
+						color='success'
 						isLight
 						onClick={() => setAddModalStatus(true)}>
 						New User
@@ -201,6 +201,10 @@ const Index: NextPage = () => {
 					<div className='col-12'>
 						{/* Table for displaying user data */}
 						<Card stretch>
+						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
+								<div className='text-center'>User Management</div>
+								
+							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-bordered border-primary table-modern table-hover'>
 									<thead>
@@ -232,10 +236,10 @@ const Index: NextPage = () => {
 														</Button>
 														<Button
 															className='m-2'
-															icon=''
-															color='warning'
+															icon='Delete'
+															color='danger'
 															onClick={() => handleClickDelete(user)}>
-															Deactivate
+															Delete
 														</Button>
 													</td>
 											</td>
@@ -259,10 +263,10 @@ const Index: NextPage = () => {
 														</Button>
 														<Button
 															className='m-2'
-															icon=''
-															color='warning'
+															icon='Delete'
+															color='danger'
 															onClick={() => handleClickDelete(user)}>
-															Activate
+															Delete
 														</Button>
 											</td>
 										</tr>

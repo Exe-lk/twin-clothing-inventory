@@ -13,7 +13,7 @@ import Icon from '../../../components/icon/Icon';
 import Input from '../../../components/bootstrap/forms/Input';
 import Dropdown, { DropdownMenu, DropdownToggle } from '../../../components/bootstrap/Dropdown';
 import Button from '../../../components/bootstrap/Button';
-import Card, { CardBody } from '../../../components/bootstrap/Card';
+import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
 import { collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import CategoryAddModal from '../../../components/custom/CategoryAddModal';
 import CategoryEditModal from '../../../components/custom/CategoryEditModal';
@@ -124,7 +124,7 @@ const Index: NextPage = () => {
 					{/* Button to open New category */}
 					<Button
 						icon='AddCircleOutline'
-						color='primary'
+						color='success'
 						isLight
 						onClick={() => setAddModalStatus(true)}>
 						New category
@@ -136,13 +136,23 @@ const Index: NextPage = () => {
 					<div className='col-12'>
 						{/* Table for displaying customer data */}
 						<Card stretch>
+							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
+								<div className='text-center'>Manage Category</div>
+								<Button
+									icon='UploadFile'
+									color='warning'
+									onClick={() => setAddModalStatus(true)}>
+									Export
+								</Button>
+							</CardTitle>
+
 							<CardBody isScrollable className='table-responsive'>
 								{/* <table className='table table-modern table-hover'> */}
 								<table className='table table-modern table-bordered border-primary table-hover text-center'>
 									<thead>
 										<tr>
 											<th>Category name</th>
-											<th></th>
+											<th>Sub Category</th>
 											<th></th>
 										</tr>
 									</thead>
@@ -150,17 +160,9 @@ const Index: NextPage = () => {
 										<tr>
 											<td>Main</td>
 											<td>
-												<Dropdown>
-													<DropdownToggle hasIcon={false}>
-														<Button icon='List' color='primary'>
-															View Sub Category
-														</Button>
-													</DropdownToggle>
-													<DropdownMenu isAlignmentEnd size='md'>
-														<div className='p-2'>abc</div>
-														<div  className='p-2'>efg</div>
-													</DropdownMenu>
-												</Dropdown>
+												<p>abc</p>
+												<p>abc</p>
+												<p>abc</p>
 											</td>
 											<td>
 												<Button
@@ -173,7 +175,7 @@ const Index: NextPage = () => {
 												<Button
 													className='m-2'
 													icon='Delete'
-													color='warning'
+													color='danger'
 													onClick={() => handleClickDelete(category)}>
 													Delete
 												</Button>
@@ -182,17 +184,9 @@ const Index: NextPage = () => {
 										<tr>
 											<td>Embroider</td>
 											<td>
-												<Dropdown>
-													<DropdownToggle hasIcon={false}>
-														<Button icon='List' color='primary'>
-															View Sub Category
-														</Button>
-													</DropdownToggle>
-													<DropdownMenu isAlignmentEnd size='md'>
-													<div className='p-2'>abc</div>
-													<div  className='p-2'>efg</div>
-													</DropdownMenu>
-												</Dropdown>
+												<p>abc</p>
+												<p>abc</p>
+												<p>abc</p>
 											</td>
 											<td>
 												<Button
@@ -205,7 +199,7 @@ const Index: NextPage = () => {
 												<Button
 													className='m-2'
 													icon='Delete'
-													color='warning'
+													color='danger'
 													onClick={() => handleClickDelete(category)}>
 													Delete
 												</Button>

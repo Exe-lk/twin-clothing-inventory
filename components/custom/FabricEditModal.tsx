@@ -97,11 +97,11 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
 			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
-				<ModalTitle id="">{'Edit Color'}</ModalTitle>
+				<ModalTitle id="">{'Edit Fabric'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>
-					<FormGroup id='categoryname' label='Color name' onChange={formik.handleChange} className='col-md-6'>
+					<FormGroup id='categoryname' label='Fabric name' onChange={formik.handleChange} className='col-md-6'>
 						<Input
 							onChange={(e: any) => { stock.categoryname = e.target.value }}
 							value={stock?.categoryname}
