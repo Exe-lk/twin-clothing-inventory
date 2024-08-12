@@ -250,22 +250,14 @@ interface Category {
 	return (
 		<PageWrapper className=''>
 			<div>
-			<Carousel
-					isHoverPause
-					isRide
-					height={75}
-					isDark={false}
-					isSlide={false}
-					
-					>
-					<CarouselSlide>
-						<div className='m-5'>
+		
+				<div className='mt-5'>
 							<Button
-								className='btn btn-outline-warning ms-5'
+								className='btn btn-outline-warning '
 								>
 								All
 							</Button>
-							{category.slice(0, 2).map((category, index) => (
+							{category.map((category, index) => (
 								<Button
 									key={index}
 									className='btn btn-outline-warning'
@@ -274,31 +266,9 @@ interface Category {
 								</Button>
 							))}
 						</div>
-					</CarouselSlide>
-					<CarouselSlide>
-						<div className='m-5'>
-							<Button
-								className='btn btn-outline-warning ms-5'
-							>
-								All
-							</Button>
-							{category.slice(0, 3).map((category, index) => (
-								<Button
-									key={index}
-									className='btn btn-outline-warning'
-									onClick={() => {
-									
-									}}>
-									{category.categoryname}
-								</Button>
-							))}
-						</div>
-					</CarouselSlide>
-					
-				</Carousel>
 			</div>
-			<div className='row m-4'>
-				<div className='col-4 mb-3 mb-sm-0'>
+			<div className='row'>
+				<div className='col-4  mb-sm-0'>
 					<Additem
 						orderedItems={orderedItems}
 						setOrderedItems={setOrderedItems}
@@ -307,7 +277,7 @@ interface Category {
 						
 					/>{' '}
 				</div>
-				<div className='col-4 mt-5'>
+				<div className='col-4 '>
 					<Edit
 						orderedItems={orderedItems}
 						setOrderedItems={setOrderedItems}
@@ -315,9 +285,9 @@ interface Category {
 						setActiveComponent={setActiveComponent}
 					/>{' '}
 				</div>
-				<div className='col-4 mt-5'>
+				<div className='col-4 mt-4 '>
 					
-					<Card stretch className='mt-4 p-4' style={{ height: '75vh' }}>
+					<Card stretch className=' p-4' style={{ height: '75vh' }}>
 						<CardBody isScrollable>
 							
 							<Button

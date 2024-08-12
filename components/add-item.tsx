@@ -494,8 +494,8 @@ const Index: React.FC<KeyboardProps> = ({
 			{showPopup && (
 				<div
 					className='position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-black bg-opacity-50'
-					style={{ zIndex: 1050 }}>
-					<div className='p-4 rounded-4  bg-black' style={{ zIndex: 1051, width:600 }}>
+					style={{ zIndex: 1050, }}>
+					<div className='p-4 rounded-4  ' style={{ zIndex: 1051, width:600,backgroundColor:"#1D1F27" }}>
 						<h4 className='mb-4'>Enter a Quantity</h4>
 						<Input
 							type='number'
