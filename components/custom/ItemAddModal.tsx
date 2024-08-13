@@ -199,7 +199,7 @@ console.log(category)
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
 			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
-				<ModalTitle id=''>{'New Stock'}</ModalTitle>
+				<ModalTitle id=''>{'New LOT'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>
@@ -377,6 +377,30 @@ console.log(category)
 					<FormGroup id='GRA_number' label='Job ID' className='col-md-6'>
 						<Input
 							type='text'
+							onChange={formik.handleChange}
+							// value={formik.values.GRA_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRA_number}
+							invalidFeedback={formik.errors.GRA_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='GRA_number' label='UOM' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							// value={formik.values.GRA_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRA_number}
+							invalidFeedback={formik.errors.GRA_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='GRA_number' label='Bales' className='col-md-6'>
+						<Input
+							type='number'
 							onChange={formik.handleChange}
 							// value={formik.values.GRA_number}
 							onBlur={formik.handleBlur}

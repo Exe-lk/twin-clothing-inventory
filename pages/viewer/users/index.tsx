@@ -141,60 +141,7 @@ const Index: NextPage = () => {
 						value={searchTerm}
 					/>
 				</SubHeaderLeft>
-				<SubHeaderRight>
-					<Dropdown>
-						<DropdownToggle hasIcon={false}>
-							<Button
-								icon='FilterAlt'
-								color='dark'
-								isLight
-								className='btn-only-icon position-relative'></Button>
-						</DropdownToggle>
-						<DropdownMenu isAlignmentEnd size='lg'>
-							<div className='container py-2'>
-								<div className='row g-3'>
-									<FormGroup label='User type' className='col-12'>
-										<ChecksGroup>
-											{position.map((category, index) => (
-												<Checks
-													key={category.position}
-													id={category.position}
-													label={category.position}
-													name={category.position}
-													value={category.position}
-													checked={selectedCategories.includes(
-														category.position,
-													)}
-													onChange={(event: any) => {
-														const { checked, value } = event.target;
-														setSelectedCategories(
-															(prevCategories) =>
-																checked
-																	? [...prevCategories, value] // Add category if checked
-																	: prevCategories.filter(
-																			(category) =>
-																				category !== value,
-																	  ), // Remove category if unchecked
-														);
-													}}
-												/>
-											))}
-										</ChecksGroup>
-									</FormGroup>
-								</div>
-							</div>
-						</DropdownMenu>
-					</Dropdown>
-
-					{/* <SubheaderSeparator /> */}
-					{/* <Button
-						icon='PersonAdd'
-						color='primary'
-						isLight
-						onClick={() => setAddModalStatus(true)}>
-						New User
-					</Button> */}
-				</SubHeaderRight>
+				
 			</SubHeader>
 			<Page>
 				<div className='row h-100'>
@@ -202,13 +149,8 @@ const Index: NextPage = () => {
 						{/* Table for displaying user data */}
 						<Card stretch>
 						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
-								<div className='flex-grow-1 text-center text-info'>User Action log</div>
-								<Button
-									icon='UploadFile'
-									color='warning'
-									onClick={() => setAddModalStatus(true)}>
-									Export
-								</Button>
+								<div className='flex-grow-1 text-center text-info'>User Management</div>
+								
 							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-bordered border-primary table-modern table-hover'>
@@ -216,32 +158,24 @@ const Index: NextPage = () => {
 										<tr>
 											<th>User</th>
 											<th>Position</th>
-											<th>Task</th>
-											<th>Log Time</th>
-											<th>Logout Time</th>
-                                            <th>Date </th>
-											<th>Duration</th>
+											<th>Email</th>
+											<th>Mobile number</th>
+											
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
 											<td>Kalpa Chamathkara</td>
 											<td>Production Codinater</td>
-											<td>Update user</td>
-											<td>12.55</td>
-											<td>01.25</td>
-                                            <td>2024/12/03</td>
-                                            <td>90 min</td>
+											<td>kalpa@gmail.com</td>
+											<td>0772369745</td>
 											
 										</tr>
 										<tr>
-										<td>Ravindu</td>
-											<td>Production Codinater</td>
-											<td>Delete category</td>
-											<td>12.00</td>
-											<td>01.00</td>
-                                            <td>2024/12/03</td>
-                                            <td>60 min</td>
+											<td>Ravidu Idamalgoda</td>
+											<td>Admin</td>
+											<td>ravidu@gmail.com</td>
+											<td>0772369745</td>
 											
 										</tr>
 										{user

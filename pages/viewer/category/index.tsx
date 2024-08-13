@@ -119,17 +119,7 @@ const Index: NextPage = () => {
 						value={searchTerm}
 					/>
 				</SubHeaderLeft>
-				<SubHeaderRight>
-					<SubheaderSeparator />
-					{/* Button to open New category */}
-					<Button
-						icon='AddCircleOutline'
-						color='success'
-						isLight
-						onClick={() => setAddModalStatus(true)}>
-						New category
-					</Button>
-				</SubHeaderRight>
+				
 			</SubHeader>
 			<Page>
 				<div className='row h-100'>
@@ -153,7 +143,7 @@ const Index: NextPage = () => {
 										<tr>
 											<th>Category name</th>
 											<th>Sub Category</th>
-											<th></th>
+											
 										</tr>
 									</thead>
 									<tbody>
@@ -164,22 +154,7 @@ const Index: NextPage = () => {
 												<p>abc</p>
 												<p>abc</p>
 											</td>
-											<td>
-												<Button
-													icon='Edit'
-													tag='a'
-													color='info'
-													onClick={() => setEditModalStatus(true)}>
-													Edit
-												</Button>
-												<Button
-													className='m-2'
-													icon='Delete'
-													color='danger'
-													onClick={() => handleClickDelete(category)}>
-													Delete
-												</Button>
-											</td>
+											
 										</tr>
 										<tr>
 											<td>Embroider</td>
@@ -188,22 +163,7 @@ const Index: NextPage = () => {
 												<p>abc</p>
 												<p>abc</p>
 											</td>
-											<td>
-												<Button
-													icon='Edit'
-													tag='a'
-													color='info'
-													onClick={() => setEditModalStatus(true)}>
-													Edit
-												</Button>
-												<Button
-													className='m-2'
-													icon='Delete'
-													color='danger'
-													onClick={() => handleClickDelete(category)}>
-													Delete
-												</Button>
-											</td>
+											
 										</tr>
 										{category
 											.filter((values) => {
@@ -245,8 +205,12 @@ const Index: NextPage = () => {
 											))}
 									</tbody>
 								</table>
+								
+								
 							</CardBody>
 						</Card>
+						
+			
 					</div>
 				</div>
 			</Page>
