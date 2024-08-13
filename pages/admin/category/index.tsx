@@ -137,7 +137,7 @@ const Index: NextPage = () => {
 						{/* Table for displaying customer data */}
 						<Card stretch>
 							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
-								<div className='text-center'>Manage Category</div>
+								<div className='flex-grow-1 text-center text-info'>Manage Category</div>
 								<Button
 									icon='UploadFile'
 									color='warning'
@@ -245,8 +245,12 @@ const Index: NextPage = () => {
 											))}
 									</tbody>
 								</table>
+								<Button icon='' className='mb-5'>Recycle Bin</Button> 
+								
 							</CardBody>
 						</Card>
+						
+			
 					</div>
 				</div>
 			</Page>

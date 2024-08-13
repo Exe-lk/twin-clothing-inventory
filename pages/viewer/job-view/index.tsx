@@ -13,8 +13,8 @@ import Input from '../../../components/bootstrap/forms/Input';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
 import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
-import StockAddModal from '../../../components/custom/ItemAddModal';
-import StockEditModal from '../../../components/custom/ItemEditModal';
+import StockAddModal from '../../../components/custom/JobAddModal';
+import StockEditModal from '../../../components/custom/JobEditModal';
 import { doc, deleteDoc, collection, getDocs, updateDoc, query, where } from 'firebase/firestore';
 import { firestore } from '../../../firebaseConfig';
 import Dropdown, { DropdownToggle, DropdownMenu } from '../../../components/bootstrap/Dropdown';
@@ -277,49 +277,15 @@ const Index: NextPage = () => {
 						value={searchTerm}
 					/>
 				</SubHeaderLeft>
-				<SubHeaderRight>
-					<Dropdown>
-						<DropdownToggle hasIcon={false}>
-							<Button
-								icon='FilterAlt'
-								color='dark'
-								isLight
-								className='btn-only-icon position-relative'></Button>
-						</DropdownToggle>
-						<DropdownMenu isAlignmentEnd size='lg'>
-							<div className='container py-2'>
-								<div className='row g-3'>
-									<FormGroup label='Category type' className='col-12'>
-										<ChecksGroup>
-											<Checks
-												key='check'
-												id='check'
-												label='Outgoing'
-												name='check'
-												value='check'></Checks>
-											<Checks
-												key='check'
-												id='check'
-												label='Return'
-												name='check'
-												value='check'></Checks>
-										</ChecksGroup>
-									</FormGroup>
-								</div>
-							</div>
-						</DropdownMenu>
-					</Dropdown>
-
-					{/* Button to open  New Item modal */}
-				</SubHeaderRight>
+				
 			</SubHeader>
 			<Page>
 				<div className='row h-100'>
 					<div className='col-12'>
 						{/* Table for displaying customer data */}
 						<Card stretch>
-							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
-								<div className='flex-grow-1 text-center text-info'>Manage Category</div>
+						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
+								<div className='flex-grow-1 text-center text-info'>Manage Job</div>
 								<Button
 									icon='UploadFile'
 									color='warning'
@@ -328,70 +294,34 @@ const Index: NextPage = () => {
 								</Button>
 							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
-								<table className='table table-modern table-bordered border-primary table-hover '>
+								<table className='table table-bordered border-primary table-modern table-hover'>
 									<thead>
 										<tr>
-											<th>Code</th>
-											<th>Date</th>
-											<th>Type</th>
-											<th>Quentity</th>
-											<th>Location</th>
-											<th>Category</th>
-											<th>Sub cCategory</th>
+											<th>Job ID</th>
+											<th>Client Name</th>
+											<th>Description</th>
+
+											
+											{/* <th><Button icon='PersonAdd' color='primary' isLight onClick={() => setAddModalStatus(true)}>
+                        New Item
+                      </Button></th> */}
 										</tr>
 									</thead>
 
 									<tbody>
-										<tr className='text-success'>
-											<td className='text-warning'>15368</td>
-											<td className='text-warning'>2024/08/09</td>
-											<td className='text-warning'>Return</td>
-											<td className='text-warning'>260</td>
-											<td className='text-warning'>Garment</td>
-											<td className='text-warning'>abc</td>
-											<td className='text-warning'>efd</td>
-
-											{/* <td>
-												<Button
-													icon='Edit'
-													tag='a'
-													color='info'
-													onClick={() => setEditModalStatus(true)}>
-													Edit
-												</Button>
-												<Button
-													className='m-2'
-													icon='Delete'
-													color='warning'
-													onClick={() => handleClickDelete(item)}>
-													Delete
-												</Button>
-											</td> */}
+										<tr>
+											<td>15368</td>
+											<td>ABC company</td>
+											<td>500 stock</td>
+											
+											
 										</tr>
 										<tr>
-											<td className='text-success'>15368</td>
-											<td className='text-success'>2024/08/09</td>
-											<td className='text-success'>outgoing</td>
-											<td className='text-success'>260</td>
-											<td className='text-success'>Garment</td>
-											<td className='text-success'>abc</td>
-											<td className='text-success'>efd</td>
-											{/* <td> */}
-											{/* <Button
-													icon='Edit'
-													tag='a'
-													color='info'
-													onClick={() => setEditModalStatus(true)}>
-													Edit
-												</Button>
-												<Button
-													className='m-2'
-													icon='Delete'
-													color='warning'
-													onClick={() => handleClickDelete(item)}>
-													Delete
-												</Button> */}
-											{/* </td> */}
+										
+										<td>15368</td>
+											<td>ABC company</td>
+											<td>500 stock</td>
+											
 										</tr>
 										{item
 											.filter((val) => {

@@ -99,6 +99,7 @@ const Index: React.FC<KeyboardProps> = ({
 	const keyboard = useRef<any>(null);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
 	const [popupInput, setPopupInput] = useState<any>("");
+	const [popupInput1, setPopupInput1] = useState<any>("");
 	const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const popupInputRef = useRef<HTMLInputElement>(null);
@@ -510,9 +511,9 @@ const Index: React.FC<KeyboardProps> = ({
 						<h6 className='mb-4'>Job ID</h6>
 						<Input
 							type='number'
-							value={popupInput}
+							value={popupInput1}
 							onChange={(e: any) => {
-								setPopupInput(e.target.value);
+								setPopupInput1(e.target.value);
 							}}
 							min={1}
 							className='form-control mb-4 p-2'

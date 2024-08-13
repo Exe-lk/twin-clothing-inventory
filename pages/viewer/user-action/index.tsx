@@ -227,7 +227,7 @@ const Index: NextPage = () => {
 										<tr>
 											<td>Kalpa Chamathkara</td>
 											<td>Production Codinater</td>
-											<td>Update user</td>
+											<td>Update</td>
 											<td>12.55</td>
 											<td>01.25</td>
                                             <td>2024/12/03</td>
@@ -237,7 +237,7 @@ const Index: NextPage = () => {
 										<tr>
 										<td>Ravindu</td>
 											<td>Production Codinater</td>
-											<td>Delete category</td>
+											<td>Delete</td>
 											<td>12.00</td>
 											<td>01.00</td>
                                             <td>2024/12/03</td>

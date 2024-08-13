@@ -218,7 +218,7 @@ const Index: NextPage = () => {
 						{/* Table for displaying customer data */}
 						<Card stretch>
 						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
-								<div className='text-center'>GSM management</div>
+								<div className='flex-grow-1 text-center text-info'>GSM management</div>
 								
 							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>

@@ -279,13 +279,13 @@ export const supperaddminmenu = {
 };
 
 export const officemenu = {
-	dashboard: {
-		id: 'dashboard',
-		text: 'Dashboard',
-		path: 'production-coordinator/dashboard',
-		icon: 'Dashboard',
-		subMenu: null,
-	},
+	// dashboard: {
+	// 	id: 'dashboard',
+	// 	text: 'Dashboard',
+	// 	path: 'production-coordinator/dashboard',
+	// 	icon: 'Dashboard',
+	// 	subMenu: null,
+	// },
 	seller: {
 		id: 'seller',
 		text: 'Job Management',
@@ -302,38 +302,52 @@ export const viewmenu = {
 		icon: 'Dashboard',
 		subMenu: null,
 	},
-	order: {
-		id: 'order',
-		text: 'Order History',
-		path: 'viewer/order-history',
-		icon: 'StarBorderPurple500',
+	category: {
+		id: 'category',
+		text: 'Category',
+		path: 'viewer/category',
+		icon: 'Category',
 		subMenu: null,
 	},
-	purchasing: {
-		id: 'order',
-		text: 'Purchasing History',
-		path: 'viewer/purchasing-history',
-		icon: 'Money',
-		subMenu: null,
-	},
-	restore: {
-		id: 'restore',
-		text: 'Transaction History',
-		path: 'viewer/restore-history',
+	seller: {
+		id: 'seller',
+		text: 'Job History',
+		path: 'viewer/job-view',
 		icon: 'Groups',
 		subMenu: null,
 	},
-	// stock: {
-	// 	id: 'restore',
-	// 	text: 'Stock in History',
-	// 	path: 'viewer/stock-in-history',
-	// 	icon: 'ScatterPlot',
-	// 	subMenu: null,
-	// },
+	item: {
+		id: 'item',
+		text: 'Lot History',
+		path: 'viewer/lot-history',
+		icon: 'AssignmentTurnedIn',
+		subMenu: null,
+	},
 	stockout: {
 		id: 'restore',
-		text: 'supplier History',
+		text: 'suppliers',
 		path: 'viewer/supplier-history',
+		icon: 'SupervisedUserCircle',
+		subMenu: null,
+	},
+	transaction: {
+		id: 'stockout',
+		text: 'Transaction History',
+		path: 'viewer/transaction-history',
+		icon: 'CallMissedOutgoing',
+		subMenu: null,
+	},
+	user: {
+		id: 'user',
+		text: 'Users',
+		path: 'viewer/users',
+		icon: 'SupervisedUserCircle',
+		subMenu: null,
+	},
+	action: {
+		id: 'user',
+		text: 'User Action ',
+		path: 'viewer/user-action',
 		icon: 'SupervisedUserCircle',
 		subMenu: null,
 	},
