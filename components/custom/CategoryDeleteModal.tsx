@@ -84,12 +84,12 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 			subcategory: newSubcategories,
 		});
 	};
-    interface Category {
-        cid: string;
-        categoryname: string;
-        status:boolean
-    }
-    const { darkModeStatus } = useDarkMode(); // Dark mode
+	interface Category {
+		cid: string;
+		categoryname: string;
+		status: boolean;
+	}
+	const { darkModeStatus } = useDarkMode(); // Dark mode
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const [category, setcategory] = useState<Category[]>([]); // State for category data
 	// State for current category ID
@@ -125,49 +125,48 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 				<ModalTitle id=''>{'New Category'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
-			<table className='table table-bordered border-primary table-modern table-hover text-center'>
-									<thead>
-										<tr>
-											<th>Category name</th>
-											<th></th>
-										</tr>
-									</thead>
-									<tbody>
-										{category
-											.filter((values) => {
-												if (searchTerm == '') {
-													return values;
-												} else if (
-													values.categoryname
-														.toLowerCase()
-														.includes(searchTerm.toLowerCase())
-												) {
-													return values;
-												}
-											})
-											.map((category, index) => (
-												<tr key={category.cid}>
-													<td>{category.categoryname}</td>
-													<td>
-														<Button
-															icon='Restore'
-															tag='a'
-															color='info'
-															>
-															Restore
-														</Button>
-                                                        <Button
-															className='m-2'
-															icon='Delete'
-															color='danger'
-															>
-															Delete
-														</Button>
-													</td>
-												</tr>
-											))}
-									</tbody>
-								</table>
+				<table className='table table-bordered border-primary table-modern table-hover text-center'>
+					<thead>
+						<tr>
+							<th>Category name</th>
+							<th>
+								<Button icon='Delete' color='primary' isLight>
+									Delete All
+								</Button>
+								<Button icon='Restore' className='ms-3' color='primary'>
+									Restore All
+								</Button>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						{category
+							.filter((values) => {
+								if (searchTerm == '') {
+									return values;
+								} else if (
+									values.categoryname
+										.toLowerCase()
+										.includes(searchTerm.toLowerCase())
+								) {
+									return values;
+								}
+							})
+							.map((category, index) => (
+								<tr key={category.cid}>
+									<td>{category.categoryname}</td>
+									<td>
+										<Button icon='Restore' tag='a' color='info'>
+											Restore
+										</Button>
+										<Button className='m-2' icon='Delete' color='danger'>
+											Delete
+										</Button>
+									</td>
+								</tr>
+							))}
+					</tbody>
+				</table>
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
 				<Button color='info' onClick={formik.handleSubmit}>
