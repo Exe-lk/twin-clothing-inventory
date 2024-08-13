@@ -25,6 +25,8 @@ import Swal from 'sweetalert2';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
 import showNotification from '../../../components/extras/showNotification';
+import JobDeleteModal from '../../../components/custom/JobDeleteModal';
+
 // Define interfaces for data objects
 interface Item {
 	cid: string;
@@ -44,6 +46,8 @@ interface stock {
 	item_id: string;
 }
 const Index: NextPage = () => {
+	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
+
 	const { darkModeStatus } = useDarkMode(); // Dark mode
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
@@ -413,12 +417,20 @@ const Index: NextPage = () => {
 										
 									</tbody>
 								</table>
+								<Button icon='Delete' className='mb-5'
+								onClick={() => (
+									setDeleteModalStatus(true)
+									
+								)}>
+								Recycle Bin</Button> 
 							</CardBody>
 						</Card>
 					</div>
 				</div>
 			</Page>
 			<StockAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id={id1} />
+			<JobDeleteModal setIsOpen={setDeleteModalStatus} isOpen={deleteModalStatus} id='' />
+
 			<StockEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
 		</PageWrapper>
 	);

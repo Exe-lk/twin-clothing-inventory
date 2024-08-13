@@ -11,6 +11,7 @@ import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { firestore } from '../../firebaseConfig';
 import Swal from 'sweetalert2';
 import useDarkMode from '../../hooks/useDarkMode';
+import Dropdown, { DropdownMenu, DropdownToggle } from '../bootstrap/Dropdown';
 
 interface CategoryEditModalProps {
 	id: string;
@@ -21,43 +22,52 @@ interface CategoryEditModalProps {
 const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const handleClickDelete = async () => {
 		try {
-		  const { value: inputText } = await Swal.fire({
-			title: 'Are you sure?',
-			text: 'Please type "DELETE" to confirm ',
-			input: 'text',
-			icon: 'warning',
-			inputValidator: (value) => {
-			  if (value !== 'DELETE') {
-				return 'You need to type "DELETE" to confirm!';
-			  }
-			},
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes, delete it!',
-		  });
-	
-		  if (inputText === 'DELETE') {
-			// Perform delete action here
-			console.log('Delete confirmed');
-		  }
+			const { value: inputText } = await Swal.fire({
+				title: 'Are you sure?',
+				text: 'Please type "DELETE" to confirm ',
+				input: 'text',
+				icon: 'warning',
+				inputValidator: (value) => {
+					if (value !== 'DELETE') {
+						return 'You need to type "DELETE" to confirm!';
+					}
+				},
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes, delete it!',
+			});
+
+			if (inputText === 'DELETE') {
+				// Perform delete action here
+				console.log('Delete confirmed');
+			}
 		} catch (error) {
-		  console.error('Error deleting document: ', error);
-		  Swal.fire('Error', 'Failed to delete category.', 'error');
+			console.error('Error deleting document: ', error);
+			Swal.fire('Error', 'Failed to delete category.', 'error');
 		}
-	  };
+	};
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
 			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
-				<ModalTitle id=''>{'New Category'}</ModalTitle>
+				<ModalTitle id=''>{'Recycle Bin'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
-				<table className='table table-bordered border-primary table-modern table-hover text-center'>
+				<table className='table table-bordered border-primary table-modern table-hover'>
 					<thead>
 						<tr>
-							<th>Category name</th>
+							<th>Seller name</th>
+							<th>Company name</th>
+							<th>Company email</th>
+							<th>Phone number</th>
+
+							<th>Product</th>
 							<th>
-								<Button icon='Delete'onClick={handleClickDelete} color='primary' isLight>
+								<Button
+									icon='Delete'
+									onClick={handleClickDelete}
+									color='primary'
+									isLight>
 									Delete All
 								</Button>
 								<Button icon='Restore' className='ms-3' color='primary'>
@@ -68,23 +78,38 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					</thead>
 					<tbody>
 						<tr>
+							<td>malinka</td>
 							<td>ABC</td>
+							<td>abc@gmail.com</td>
+							<td>0778965412</td>
+
 							<td>
-								<Button icon='Restore' tag='a' color='info'>
-									Restore
-								</Button>
-								<Button className='m-2' icon='Delete' color='danger' onClick={handleClickDelete}>
-									Delete
-								</Button>
+								<Dropdown>
+									<DropdownToggle hasIcon={false}>
+										<Button icon='List' color='primary'>
+											View Products
+										</Button>
+									</DropdownToggle>
+									<DropdownMenu isAlignmentEnd size='md' className='ps-4'>
+										<div>abc</div>
+										<div>efg</div>
+									</DropdownMenu>
+								</Dropdown>
 							</td>
-						</tr>
-						<tr>
-							<td>ABC</td>
 							<td>
 								<Button icon='Restore' tag='a' color='info'>
+									{' '}
 									Restore
 								</Button>
-								<Button className='m-2' icon='Delete' color='danger' onClick={handleClickDelete}>
+								<Button
+									className='m-2'
+									icon='Delete'
+									color='danger'
+									onClick={handleClickDelete}
+									// onClick={() =>
+									// 	handleClickDelete(stock.cid)
+									// }
+								>
 									Delete
 								</Button>
 							</td>

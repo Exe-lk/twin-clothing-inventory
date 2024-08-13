@@ -117,24 +117,8 @@ export const addminPagesMenu = {
 				path: 'single-pages',
 				icon: 'DeleteSweep',
 				subMenu: {
-					category: {
-						id: 'boxedSingle',
-						text: 'Category',
-						path: 'admin/setting/recycle-bin/category',
-						icon: 'Category',
-					},
-					users: {
-						id: 'fluidSingle',
-						text: 'Users',
-						path: 'admin/setting/recycle-bin/users',
-						icon: 'SupervisedUserCircle',
-					},
-					fluidSingle: {
-						id: 'fluidSingle',
-						text: 'Lot',
-						path: 'admin/setting/recycle-bin/orders',
-						icon: 'HistoryToggleOff',
-					},
+					
+					
 					color: {
 						id: 'fluidSingle',
 						text: 'Color',
@@ -230,29 +214,7 @@ export const stockkeeperPagesMenu = {
 				icon: 'QrCode',
 				subMenu: null,
 			},
-			singlePages1: {
-				id: 'singlePages',
-				text: 'Recycle Bin',
-				path: 'single-pages',
-				icon: 'DeleteSweep',
-				subMenu: {
-					category: {
-						id: 'boxedSingle',
-						text: 'Category',
-						path: 'stock-keeper/recycle-bin/category',
-						icon: 'Category',
-					},
-					
-					fluidSingle: {
-						id: 'fluidSingle',
-						text: 'Lot',
-						path: 'stock-keeper/recycle-bin/item',
-						icon: 'HistoryToggleOff',
-					},
-					
-					
-				},
-			},
+			
 		},
 	},
 	
