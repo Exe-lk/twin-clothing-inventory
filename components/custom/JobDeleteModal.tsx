@@ -11,6 +11,7 @@ import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { firestore } from '../../firebaseConfig';
 import Swal from 'sweetalert2';
 import useDarkMode from '../../hooks/useDarkMode';
+import Dropdown, { DropdownMenu, DropdownToggle } from '../bootstrap/Dropdown';
 
 interface CategoryEditModalProps {
 	id: string;
@@ -49,15 +50,20 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
 			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
-				<ModalTitle id=''>{'New Category'}</ModalTitle>
+				<ModalTitle id=''>{'Recycle Bin'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
-				<table className='table table-bordered border-primary table-modern table-hover text-center'>
+				<table className='table table-bordered border-primary table-modern table-hover'>
 					<thead>
 						<tr>
-							<th>Category name</th>
+							<th>Job ID</th>
+							<th>Client Name</th>
+							<th>Description</th>
+							
+						
+							
 							<th>
-								<Button icon='Delete'onClick={handleClickDelete} color='primary' isLight>
+								<Button onClick={handleClickDelete} icon='Delete' color='primary' isLight>
 									Delete All
 								</Button>
 								<Button icon='Restore' className='ms-3' color='primary'>
@@ -68,23 +74,24 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					</thead>
 					<tbody>
 						<tr>
+							<td>12658</td>
 							<td>ABC</td>
+							<td>500Kg fabric stock</td>
+					
 							<td>
 								<Button icon='Restore' tag='a' color='info'>
+									{' '}
 									Restore
 								</Button>
-								<Button className='m-2' icon='Delete' color='danger' onClick={handleClickDelete}>
-									Delete
-								</Button>
-							</td>
-						</tr>
-						<tr>
-							<td>ABC</td>
-							<td>
-								<Button icon='Restore' tag='a' color='info'>
-									Restore
-								</Button>
-								<Button className='m-2' icon='Delete' color='danger' onClick={handleClickDelete}>
+								<Button
+									className='m-2'
+									icon='Delete'
+									color='danger'
+									// onClick={() =>
+									// 	handleClickDelete(stock.cid)
+									// }onClick={handleClickDelete}
+									onClick={handleClickDelete}
+								>
 									Delete
 								</Button>
 							</td>

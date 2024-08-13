@@ -21,6 +21,7 @@ import Dropdown, { DropdownToggle, DropdownMenu } from '../../../components/boot
 import { getColorNameWithIndex } from '../../../common/data/enumColors';
 import { getFirstLetter } from '../../../helpers/helpers';
 import Swal from 'sweetalert2';
+import SellerDeleteModal from '../../../components/custom/SellerDeleteModal';
 // Define interfaces for Seller
 interface Seller {
 	cid: string;
@@ -40,6 +41,8 @@ const Index: NextPage = () => {
 	const [seller, setStock] = useState<Seller[]>([]); // State to store the seller data fetched from Firestore
 	const [id, setId] = useState<string>(''); // State to store the ID of the seller being edited
 	const [status, setStatus] = useState(true);
+	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
+
 	// Effect hook to fetch data from Firestore when addModalStatus or editModalStatus changes
 	useEffect(() => {
 		const fetchData = async () => {
@@ -251,91 +254,15 @@ const Index: NextPage = () => {
 													</td>
 
 										</tr>
-										{seller.map((seller, index) => (
-											<tr key={seller.cid}>
-												<td>
-													{/* Displaying seller name with first letter icon */}
-													<div className='d-flex align-items-center'>
-														<div className='flex-shrink-0'>
-															<div
-																className='ratio ratio-1x1 me-3'
-																style={{ width: 48 }}>
-																<div
-																	className={`bg-l${
-																		darkModeStatus
-																			? 'o25'
-																			: '25'
-																	}-${getColorNameWithIndex(
-																		index,
-																	)} text-${getColorNameWithIndex(
-																		index,
-																	)} rounded-2 d-flex align-items-center justify-content-center`}>
-																	<span className='fw-bold'>
-																		{getFirstLetter(
-																			seller.name,
-																		)}
-																	</span>
-																</div>
-															</div>
-														</div>
-														<div className='flex-grow-1'>
-															<div className='fs-6 fw-bold'>
-																{seller.name}
-															</div>
-														</div>
-													</div>
-												</td>
-												<td>{seller.company_name}</td>
-												<td>{seller.company_email}</td>
-												<td>{seller.phone}</td>
-												<td>{seller.email}</td>
-												<td>
-													{/* Dropdown to view seller's products */}
-													<Dropdown>
-														<DropdownToggle hasIcon={false}>
-															<Button icon='List' color='primary'>
-																View Products
-															</Button>
-														</DropdownToggle>
-														<DropdownMenu isAlignmentEnd size='md'>
-															{Array.isArray(seller.product) &&
-																seller.product.map(
-																	(product, index) => (
-																		<div
-																			key={index}
-																			className='ps-2'>
-																			{product.name}
-																		</div>
-																	),
-																)}
-														</DropdownMenu>
-													</Dropdown>
-												</td>
-												<td>
-														<Button
-															icon='Edit'
-															tag='a'
-															color='info'
-															onClick={() => (
-																setEditModalStatus(true),
-																setId(seller.cid)
-															)}
-															>
-															Edit
-														</Button>
-														<Button
-															className='m-2'
-															icon='Delete'
-															color='warning'
-															onClick={() => handleClickDelete(seller)}
-															>
-															Delete
-														</Button>
-													</td>
-											</tr>
-										))}
+										
 									</tbody>
 								</table>
+								<Button icon='Delete' className='mb-5'
+								onClick={() => (
+									setDeleteModalStatus(true)
+									
+								)}>
+								Recycle Bin</Button> 
 							</CardBody>
 						</Card>
 					</div>
@@ -344,6 +271,7 @@ const Index: NextPage = () => {
 			{/* Add Seller modal */}
 			<SellerAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id='' />
 			<SellerEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
+			<SellerDeleteModal setIsOpen={setDeleteModalStatus} isOpen={deleteModalStatus} id='' />
 
 		</PageWrapper>
 	);

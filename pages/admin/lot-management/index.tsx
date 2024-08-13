@@ -25,6 +25,8 @@ import Swal from 'sweetalert2';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
 import showNotification from '../../../components/extras/showNotification';
+import StockDeleteModal from '../../../components/custom/ItemDeleteModal';
+
 // Define interfaces for data objects
 interface Item {
 	cid: string;
@@ -52,6 +54,8 @@ const Index: NextPage = () => {
 	const [category, setcategory] = useState<Category[]>([]);
 	const [orderData, setOrdersData] = useState([]);
 	const [stockData, setStockData] = useState([]);
+	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
+
 	const [id, setId] = useState<string>(''); // State for current stock item ID
 	const [id1, setId1] = useState<string>('12356'); // State for new item ID
 	const [status, setStatus] = useState(true);
@@ -416,12 +420,20 @@ const Index: NextPage = () => {
 										
 									</tbody>
 								</table>
+								<Button icon='Delete' className='mb-5'
+								onClick={() => (
+									setDeleteModalStatus(true)
+									
+								)}>
+								Recycle Bin</Button> 
 							</CardBody>
 						</Card>
 					</div>
 				</div>
 			</Page>
 			<StockAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id={id1} />
+			<StockDeleteModal setIsOpen={setDeleteModalStatus} isOpen={deleteModalStatus} id='' />
+
 			<StockEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
 		</PageWrapper>
 	);

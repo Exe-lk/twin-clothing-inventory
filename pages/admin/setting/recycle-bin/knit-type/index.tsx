@@ -95,33 +95,33 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete category.', 'error');
 		}
 	};
-	const handleClickDelete = async (id: string) => {
+	const handleClickDelete = async () => {
 		try {
-			const result = await Swal.fire({
-				title: 'Are you sure?',
-				text: 'You will not be able to recover this category!',
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonColor: '#3085d6',
-				cancelButtonColor: '#d33',
-				confirmButtonText: 'Yes, delete it!',
-			});
-			if (result.isConfirmed) {
-				const docRef = doc(firestore, 'category', id);
-				await deleteDoc(docRef);
-				Swal.fire('Deleted!', 'category has been deleted.', 'success');
-				// Toggle status to trigger data re-fetch from Firestore
-				if (status) {
-					setStatus(false);
-				} else {
-					setStatus(true);
-				}
-			}
+		  const { value: inputText } = await Swal.fire({
+			title: 'Are you sure?',
+			text: 'Please type "DELETE" to confirm ',
+			input: 'text',
+			icon: 'warning',
+			inputValidator: (value) => {
+			  if (value !== 'DELETE') {
+				return 'You need to type "DELETE" to confirm!';
+			  }
+			},
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!',
+		  });
+	
+		  if (inputText === 'DELETE') {
+			// Perform delete action here
+			console.log('Delete confirmed');
+		  }
 		} catch (error) {
-			console.error('Error deleting document: ', error);
-			Swal.fire('Error', 'Failed to delete category.', 'error');
+		  console.error('Error deleting document: ', error);
+		  Swal.fire('Error', 'Failed to delete category.', 'error');
 		}
-	};
+	  };
 	const handleDeleteAll = async () => {
 		try {
 			const result = await Swal.fire({
@@ -249,9 +249,9 @@ const Index: NextPage = () => {
 												<Button
 													className='m-2'
 													icon='Delete'
-													color='warning'
+													color='danger'
 													onClick={() =>
-														handleClickDelete("23")
+														handleClickDelete()
 													}>
 													Delete
 												</Button>
@@ -272,9 +272,9 @@ const Index: NextPage = () => {
 												<Button
 													className='m-2'
 													icon='Delete'
-													color='warning'
+													color='danger'
 													onClick={() =>
-														handleClickDelete("23")
+														handleClickDelete()
 													}>
 													Delete
 												</Button>

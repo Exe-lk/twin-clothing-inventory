@@ -19,118 +19,55 @@ interface CategoryEditModalProps {
 }
 
 const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }) => {
-	const formik = useFormik({
-		initialValues: {
-			categoryname: '',
-			status: true,
-			subcategory: [''],
-		},
-		validate: (values) => {
-			const errors: {
-				categoryname?: string;
-				subcategory?: string;
-			} = {};
-			if (!values.categoryname) {
-				errors.categoryname = 'Required';
-			}
-			if (values.subcategory) {
-				errors.subcategory = 'Required';
-			}
-			return errors;
-		},
-		onSubmit: async (values) => {
-			try {
-				console.log(values);
-				values.status = true;
-				const collectionRef = collection(firestore, 'category');
-				addDoc(collectionRef, values)
-					.then(() => {
-						showNotification(
-							<span className='d-flex align-items-center'>
-								<Icon icon='Info' size='lg' className='me-1' />
-								<span>Successfully Added</span>
-							</span>,
-							'category has been added successfully',
-						);
-						Swal.fire('Added!', 'Category has been added successfully.', 'success');
-						formik.resetForm();
-						setIsOpen(false);
-					})
-					.catch((error) => {
-						console.error('Error adding document: ', error);
-						alert(
-							'An error occurred while adding the document. Please try again later.',
-						);
-					});
-			} catch (error) {
-				console.error('Error during handleUpload: ', error);
-				alert('An error occurred during file upload. Please try again later.');
-			}
-		},
-	});
+	const handleClickDelete = async () => {
+		try {
+			const { value: inputText } = await Swal.fire({
+				title: 'Are you sure?',
+				text: 'Please type "DELETE" to confirm ',
+				input: 'text',
+				icon: 'warning',
+				inputValidator: (value) => {
+					if (value !== 'DELETE') {
+						return 'You need to type "DELETE" to confirm!';
+					}
+				},
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes, delete it!',
+			});
 
-	const addSubcategoryField = () => {
-		formik.setValues({
-			...formik.values,
-			subcategory: [...formik.values.subcategory, ''],
-		});
-	};
-
-	const removeSubcategoryField = (index: number) => {
-		const newSubcategories = [...formik.values.subcategory];
-		newSubcategories.splice(index, 1);
-		formik.setValues({
-			...formik.values,
-			subcategory: newSubcategories,
-		});
-	};
-	interface Category {
-		cid: string;
-		categoryname: string;
-		status: boolean;
-	}
-	const { darkModeStatus } = useDarkMode(); // Dark mode
-	const [searchTerm, setSearchTerm] = useState(''); // State for search term
-	const [category, setcategory] = useState<Category[]>([]); // State for category data
-	// State for current category ID
-	const [status, setStatus] = useState(true); // State for managing data fetching status
-	// Fetch category data from Firestore on component mount or when add/edit modals are toggled
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const dataCollection = collection(firestore, 'category');
-				const q = query(dataCollection, where('status', '==', false));
-				const querySnapshot = await getDocs(q);
-				const firebaseData = querySnapshot.docs.map((doc) => {
-					const data = doc.data() as Category;
-					return {
-						...data,
-						cid: doc.id,
-					};
-				});
-				setcategory(firebaseData);
-			} catch (error) {
-				console.error('Error fetching data: ', error);
+			if (inputText === 'DELETE') {
+				// Perform delete action here
+				console.log('Delete confirmed');
 			}
-		};
-		fetchData();
-	}, []);
-	const customOptions = {
-		width: 3,
-		color: '#FF0000',
+		} catch (error) {
+			console.error('Error deleting document: ', error);
+			Swal.fire('Error', 'Failed to delete category.', 'error');
+		}
 	};
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
 			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
-				<ModalTitle id=''>{'New Category'}</ModalTitle>
+				<ModalTitle id=''>{'Recycle Bin'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
-				<table className='table table-bordered border-primary table-modern table-hover text-center'>
+				<table className='table table-bordered border-primary table-modern table-hover'>
 					<thead>
 						<tr>
-							<th>Category name</th>
+							<th>Code</th>
+							<th>Color</th>
+							<th>Description</th>
+							<th>GSM</th>
+							<th>Knit Type</th>
+							<th>GRN number</th>
+
 							<th>
-								<Button icon='Delete' color='primary' isLight>
+								<Button
+									icon='Delete'
+									color='primary'
+									isLight
+									onClick={handleClickDelete}>
 									Delete All
 								</Button>
 								<Button icon='Restore' className='ms-3' color='primary'>
@@ -140,39 +77,36 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 						</tr>
 					</thead>
 					<tbody>
-						{category
-							.filter((values) => {
-								if (searchTerm == '') {
-									return values;
-								} else if (
-									values.categoryname
-										.toLowerCase()
-										.includes(searchTerm.toLowerCase())
-								) {
-									return values;
-								}
-							})
-							.map((category, index) => (
-								<tr key={category.cid}>
-									<td>{category.categoryname}</td>
-									<td>
-										<Button icon='Restore' tag='a' color='info'>
-											Restore
-										</Button>
-										<Button className='m-2' icon='Delete' color='danger'>
-											Delete
-										</Button>
-									</td>
-								</tr>
-							))}
+						<tr>
+							<td>5641</td>
+							<td>green</td>
+							<td>abc</td>
+							<td>70</td>
+							<td>123</td>
+							<td>785</td>
+
+							<td>
+								<Button icon='Restore' tag='a' color='info'>
+									{' '}
+									Restore
+								</Button>
+								<Button
+									className='m-2'
+									icon='Delete'
+									color='danger'
+									onClick={handleClickDelete}
+									// onClick={() =>
+									// 	handleClickDelete(stock.cid)
+									// }
+								>
+									Delete
+								</Button>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</ModalBody>
-			<ModalFooter className='px-4 pb-4'>
-				<Button color='info' onClick={formik.handleSubmit}>
-					Save
-				</Button>
-			</ModalFooter>
+			
 		</Modal>
 	);
 };

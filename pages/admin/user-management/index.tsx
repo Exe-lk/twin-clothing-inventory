@@ -22,6 +22,7 @@ import { getFirstLetter } from '../../../helpers/helpers';
 import Swal from 'sweetalert2';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
+import SellerDeleteModal from '../../../components/custom/UserDeleteModal';
 
 interface User {
 	cid: string;
@@ -41,6 +42,7 @@ const Index: NextPage = () => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
 	const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
+	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
 	const [user, setuser] = useState<User[]>([]);
 	const [id, setId] = useState<string>('');
 	const [status, setStatus] = useState(true);
@@ -360,6 +362,12 @@ const Index: NextPage = () => {
 											))}
 									</tbody>
 								</table>
+								<Button icon='Delete' className='mb-5'
+								onClick={() => (
+									setDeleteModalStatus(true)
+									
+								)}>
+								Recycle Bin</Button> 
 							</CardBody>
 						</Card>
 					</div>
@@ -367,6 +375,7 @@ const Index: NextPage = () => {
 			</Page>
 			<UserAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id='' />
 			<UserEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
+			<SellerDeleteModal setIsOpen={setDeleteModalStatus} isOpen={deleteModalStatus} id='' />
 		</PageWrapper>
 	);
 };
