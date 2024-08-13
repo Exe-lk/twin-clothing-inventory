@@ -257,6 +257,18 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
+					<FormGroup id='code' label='date' className='col-md-6'>
+						<Input
+							type='date'
+							onChange={formik.handleChange}
+							value={formik.values.code}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.code}
+							invalidFeedback={formik.errors.code}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
 					<FormGroup id='description' label='Description' className='col-md-6'>
 						<Input
 							type='number'
@@ -283,6 +295,34 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							<Option value={'dd'}>Green</Option>
 							<Option value={'dd'}>Red</Option>
 							<Option value={'dd'}>Blue</Option>
+						</Select>
+					</FormGroup>
+					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							value={formik.values.GRN_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRN_number}
+							invalidFeedback={formik.errors.GRN_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='GRA_number' label='supplier Name' className='col-md-6'>
+						<Select
+							ariaLabel='Default select example'
+							placeholder='Open this select knit type'
+							onChange={formik.handleChange}
+							value={formik.values.gsm}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.gsm}
+							invalidFeedback={formik.errors.gsm}
+							validFeedback='Looks good!'>
+							<Option value={'dd'}>abc</Option>
+							<Option value={'dd'}>efg</Option>
+							<Option value={'dd'}>ijk</Option>
 						</Select>
 					</FormGroup>
 					<FormGroup id='fabric_type' label='Fabric Type' className='col-md-6'>
@@ -346,18 +386,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							<Option value={'dd'}>80</Option>
 						</Select>
 					</FormGroup>
-					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
-						<Input
-							type='number'
-							onChange={formik.handleChange}
-							value={formik.values.GRN_number}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.GRN_number}
-							invalidFeedback={formik.errors.GRN_number}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
+					
 
 					<FormGroup id='GRA_number' label='Order Name' className='col-md-6'>
 						<Input
@@ -407,22 +436,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='GRA_number' label='supplier Name' className='col-md-6'>
-						<Select
-							ariaLabel='Default select example'
-							placeholder='Open this select knit type'
-							onChange={formik.handleChange}
-							value={formik.values.gsm}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.gsm}
-							invalidFeedback={formik.errors.gsm}
-							validFeedback='Looks good!'>
-							<Option value={'dd'}>abc</Option>
-							<Option value={'dd'}>efg</Option>
-							<Option value={'dd'}>ijk</Option>
-						</Select>
-					</FormGroup>
+					
 
 					{/* <FormGroup label='Profile Picture' className='col-md-6'>
 						<Input

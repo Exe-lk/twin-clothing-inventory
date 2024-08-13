@@ -140,31 +140,28 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 						</tr>
 					</thead>
 					<tbody>
-						{category
-							.filter((values) => {
-								if (searchTerm == '') {
-									return values;
-								} else if (
-									values.categoryname
-										.toLowerCase()
-										.includes(searchTerm.toLowerCase())
-								) {
-									return values;
-								}
-							})
-							.map((category, index) => (
-								<tr key={category.cid}>
-									<td>{category.categoryname}</td>
-									<td>
-										<Button icon='Restore' tag='a' color='info'>
-											Restore
-										</Button>
-										<Button className='m-2' icon='Delete' color='danger'>
-											Delete
-										</Button>
-									</td>
-								</tr>
-							))}
+						<tr>
+							<td>ABC</td>
+							<td>
+								<Button icon='Restore' tag='a' color='info'>
+									Restore
+								</Button>
+								<Button className='m-2' icon='Delete' color='danger'>
+									Delete
+								</Button>
+							</td>
+						</tr>
+						<tr>
+							<td>ABC</td>
+							<td>
+								<Button icon='Restore' tag='a' color='info'>
+									Restore
+								</Button>
+								<Button className='m-2' icon='Delete' color='danger'>
+									Delete
+								</Button>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</ModalBody>
