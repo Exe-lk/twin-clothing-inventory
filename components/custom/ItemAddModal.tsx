@@ -257,6 +257,18 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
+					<FormGroup id='code' label='date' className='col-md-6'>
+						<Input
+							type='date'
+							onChange={formik.handleChange}
+							value={formik.values.code}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.code}
+							invalidFeedback={formik.errors.code}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
 					<FormGroup id='description' label='Description' className='col-md-6'>
 						<Input
 							type='number'
@@ -285,6 +297,59 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							<Option value={'dd'}>Blue</Option>
 						</Select>
 					</FormGroup>
+					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							value={formik.values.GRN_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRN_number}
+							invalidFeedback={formik.errors.GRN_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='GRA_number' label='supplier Name' className='col-md-6'>
+						<Select
+							ariaLabel='Default select example'
+							placeholder='Open this select knit type'
+							onChange={formik.handleChange}
+							value={formik.values.gsm}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.gsm}
+							invalidFeedback={formik.errors.gsm}
+							validFeedback='Looks good!'>
+							<Option value={'dd'}>abc</Option>
+							<Option value={'dd'}>efg</Option>
+							<Option value={'dd'}>ijk</Option>
+						</Select>
+					</FormGroup>
+					<FormGroup id='GRA_number' label='Order Details' className='col-md-6'>
+						<Input
+							type='text'
+							onChange={formik.handleChange}
+							// value={formik.values.GRA_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRA_number}
+							invalidFeedback={formik.errors.GRA_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<FormGroup id='GRA_number' label='UOM' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							// value={formik.values.GRA_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRA_number}
+							invalidFeedback={formik.errors.GRA_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+					<p>Fabric</p>
 					<FormGroup id='fabric_type' label='Fabric Type' className='col-md-6'>
 						<Select
 							ariaLabel='Default select example'
@@ -346,31 +411,9 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							<Option value={'dd'}>80</Option>
 						</Select>
 					</FormGroup>
-					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
-						<Input
-							type='number'
-							onChange={formik.handleChange}
-							value={formik.values.GRN_number}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.GRN_number}
-							invalidFeedback={formik.errors.GRN_number}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
+					
 
-					<FormGroup id='GRA_number' label='Order Name' className='col-md-6'>
-						<Input
-							type='text'
-							onChange={formik.handleChange}
-							// value={formik.values.GRA_number}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.GRA_number}
-							invalidFeedback={formik.errors.GRA_number}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
+					
 					<FormGroup id='GRA_number' label='Job ID' className='col-md-6'>
 						<Input
 							type='text'
@@ -383,18 +426,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='GRA_number' label='UOM' className='col-md-6'>
-						<Input
-							type='number'
-							onChange={formik.handleChange}
-							// value={formik.values.GRA_number}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.GRA_number}
-							invalidFeedback={formik.errors.GRA_number}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
+					
 					<FormGroup id='GRA_number' label='Bales' className='col-md-6'>
 						<Input
 							type='number'
@@ -407,35 +439,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='GRA_number' label='supplier Name' className='col-md-6'>
-						<Select
-							ariaLabel='Default select example'
-							placeholder='Open this select knit type'
-							onChange={formik.handleChange}
-							value={formik.values.gsm}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.gsm}
-							invalidFeedback={formik.errors.gsm}
-							validFeedback='Looks good!'>
-							<Option value={'dd'}>abc</Option>
-							<Option value={'dd'}>efg</Option>
-							<Option value={'dd'}>ijk</Option>
-						</Select>
-					</FormGroup>
-
-					{/* <FormGroup label='Profile Picture' className='col-md-6'>
-						<Input
-							type='file'
-							onChange={(e: any) => {
-								setImageurl(e.target.files[0]);
-								// Display the selected image
-								setSelectedImage(URL.createObjectURL(e.target.files[0]));
-							}}
-						/>
-					</FormGroup> */}
-
-					<FormGroup id='GRA_number' label='Price' className='col-md-6'>
+					<p>Thread</p>
+					<FormGroup id='GRA_number' label='Yrds per cone' className='col-md-6'>
 						<Input
 							type='number'
 							onChange={formik.handleChange}
@@ -447,6 +452,21 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
+					<FormGroup id='GRA_number' label='Qty' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							// value={formik.values.GRA_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRA_number}
+							invalidFeedback={formik.errors.GRA_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
+
+				
+
 					<div ref={divRef}>{/* <Barcode value={formik.values.barcode} /> */}</div>
 				</div>
 			</ModalBody>
