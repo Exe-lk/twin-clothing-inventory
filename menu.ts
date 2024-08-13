@@ -223,6 +223,13 @@ export const stockkeeperPagesMenu = {
 				icon: 'Category',
 				subMenu: null,
 			},
+			QR: {
+				id: 'category',
+				text: 'QR Code',
+				path: 'stock-keeper/qr-code',
+				icon: 'QrCode',
+				subMenu: null,
+			},
 			singlePages1: {
 				id: 'singlePages',
 				text: 'Recycle Bin',

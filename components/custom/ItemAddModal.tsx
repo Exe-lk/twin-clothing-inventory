@@ -22,7 +22,7 @@ interface ItemAddModalProps {
 }
 interface Category {
 	categoryname: string;
-	subcategory:string[];
+	subcategory: string[];
 }
 // ItemAddModal component definition
 const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
@@ -51,10 +51,10 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 		fetchData();
 	}, []);
 	//change subcategory
-	const changeSubCategory= async(category:any)=>{
-		console.log("hi")
-console.log(category)
-	}
+	const changeSubCategory = async (category: any) => {
+		console.log('hi');
+		console.log(category);
+	};
 	//image upload
 	const handleUploadimage = async () => {
 		if (imageurl) {
@@ -107,8 +107,8 @@ console.log(category)
 			GRN_number: '',
 			GRA_number: '',
 			status: true,
-			category:'',
-			subcategory:"",
+			category: '',
+			subcategory: '',
 		},
 		validate: (values) => {
 			const errors: {
@@ -121,8 +121,8 @@ console.log(category)
 				knit_type?: string;
 				GRN_number?: string;
 				GRA_number?: string;
-				category?:string;
-				subcategory?:string
+				category?: string;
+				subcategory?: string;
 			} = {};
 			if (!values.code) {
 				errors.code = 'Required';
@@ -140,7 +140,7 @@ console.log(category)
 				errors.gsm = 'Required';
 			}
 			if (!values.width) {
-				errors.width= 'Required';
+				errors.width = 'Required';
 			}
 			if (!values.knit_type) {
 				errors.knit_type = 'Required';
@@ -163,7 +163,7 @@ console.log(category)
 					showConfirmButton: false,
 				});
 				const imgurl: any = await handleUploadimage();
-				
+
 				values.status = true;
 				const documentId = '11005';
 				const collectionRef = doc(firestore, 'item', id);
@@ -203,20 +203,27 @@ console.log(category)
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>
-				<FormGroup id='category' label='Category' onChange={formik.handleChange}className='col-md-6'>
+					<FormGroup
+						id='category'
+						label='Category'
+						onChange={formik.handleChange}
+						className='col-md-6'>
 						<Select
 							ariaLabel='Default select example'
 							placeholder='Open this select category'
 							// onChange={formik.handleChange}
-							onChange={(e:any)=>(changeSubCategory(e.target.value))}
+							onChange={(e: any) => changeSubCategory(e.target.value)}
 							value={formik.values.category}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
 							isTouched={formik.touched.category}
 							invalidFeedback={formik.errors.category}
 							validFeedback='Looks good!'>
+							<Option value={'dd'}>abc</Option>
+							<Option value={'dd'}>efg</Option>
+							<Option value={'dd'}>xyz</Option>
 							{category.map((item, index) => (
-								<Option value={item.categoryname} >{item.categoryname}</Option>
+								<Option value={item.categoryname}>{item.categoryname}</Option>
 							))}
 						</Select>
 					</FormGroup>
@@ -231,6 +238,9 @@ console.log(category)
 							isTouched={formik.touched.subcategory}
 							invalidFeedback={formik.errors.subcategory}
 							validFeedback='Looks good!'>
+							<Option value={'dd'}>abc</Option>
+							<Option value={'dd'}>efg</Option>
+							<Option value={'dd'}>xyz</Option>
 							{category.map((item, index) => (
 								<Option value={item.categoryname}>{item.categoryname}</Option>
 							))}
@@ -260,7 +270,6 @@ console.log(category)
 						/>
 					</FormGroup>
 					<FormGroup id='color' label='Color' className='col-md-6'>
-						
 						<Select
 							ariaLabel='Default select example'
 							placeholder='Open this select color'
@@ -271,15 +280,12 @@ console.log(category)
 							isTouched={formik.touched.color}
 							invalidFeedback={formik.errors.color}
 							validFeedback='Looks good!'>
-							
-								<Option value={"dd"}>Green</Option>
-								<Option value={"dd"}>Red</Option>
-								<Option value={"dd"}>Blue</Option>
-							
+							<Option value={'dd'}>Green</Option>
+							<Option value={'dd'}>Red</Option>
+							<Option value={'dd'}>Blue</Option>
 						</Select>
 					</FormGroup>
 					<FormGroup id='fabric_type' label='Fabric Type' className='col-md-6'>
-						
 						<Select
 							ariaLabel='Default select example'
 							placeholder='Open this select fabric type'
@@ -290,16 +296,13 @@ console.log(category)
 							isTouched={formik.touched.fabric_type}
 							invalidFeedback={formik.errors.fabric_type}
 							validFeedback='Looks good!'>
-							
-								<Option value={"dd"}>123</Option>
-								<Option value={"dd"}>1234</Option>
-								<Option value={"dd"}>789</Option>
-							
+							<Option value={'dd'}>123</Option>
+							<Option value={'dd'}>1234</Option>
+							<Option value={'dd'}>789</Option>
 						</Select>
 					</FormGroup>
-					
+
 					<FormGroup id='gsm' label='GSM' className='col-md-6'>
-						
 						<Select
 							ariaLabel='Default select example'
 							placeholder='Open this select fabric type'
@@ -310,11 +313,9 @@ console.log(category)
 							isTouched={formik.touched.gsm}
 							invalidFeedback={formik.errors.gsm}
 							validFeedback='Looks good!'>
-							
-								<Option value={"dd"}>60</Option>
-								<Option value={"dd"}>70</Option>
-								<Option value={"dd"}>80</Option>
-							
+							<Option value={'dd'}>60</Option>
+							<Option value={'dd'}>70</Option>
+							<Option value={'dd'}>80</Option>
 						</Select>
 					</FormGroup>
 					<FormGroup id='width' label='Width' className='col-md-6'>
@@ -328,11 +329,9 @@ console.log(category)
 							invalidFeedback={formik.errors.width}
 							validFeedback='Looks good!'
 						/>
-					
 					</FormGroup>
 					<FormGroup id='knit_type' label='Knit Type' className='col-md-6'>
-						
-							<Select
+						<Select
 							ariaLabel='Default select example'
 							placeholder='Open this select knit type'
 							onChange={formik.handleChange}
@@ -342,11 +341,9 @@ console.log(category)
 							isTouched={formik.touched.gsm}
 							invalidFeedback={formik.errors.gsm}
 							validFeedback='Looks good!'>
-							
-								<Option value={"dd"}>60</Option>
-								<Option value={"dd"}>70</Option>
-								<Option value={"dd"}>80</Option>
-							
+							<Option value={'dd'}>60</Option>
+							<Option value={'dd'}>70</Option>
+							<Option value={'dd'}>80</Option>
 						</Select>
 					</FormGroup>
 					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
@@ -361,7 +358,7 @@ console.log(category)
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					
+
 					<FormGroup id='GRA_number' label='Order Name' className='col-md-6'>
 						<Input
 							type='text'
@@ -411,7 +408,7 @@ console.log(category)
 						/>
 					</FormGroup>
 					<FormGroup id='GRA_number' label='supplier Name' className='col-md-6'>
-					<Select
+						<Select
 							ariaLabel='Default select example'
 							placeholder='Open this select knit type'
 							onChange={formik.handleChange}
@@ -421,15 +418,12 @@ console.log(category)
 							isTouched={formik.touched.gsm}
 							invalidFeedback={formik.errors.gsm}
 							validFeedback='Looks good!'>
-							
-								<Option value={"dd"}>abc</Option>
-								<Option value={"dd"}>efg</Option>
-								<Option value={"dd"}>ijk</Option>
-							
+							<Option value={'dd'}>abc</Option>
+							<Option value={'dd'}>efg</Option>
+							<Option value={'dd'}>ijk</Option>
 						</Select>
 					</FormGroup>
-					
-					
+
 					{/* <FormGroup label='Profile Picture' className='col-md-6'>
 						<Input
 							type='file'
@@ -440,8 +434,8 @@ console.log(category)
 							}}
 						/>
 					</FormGroup> */}
-				
-				<FormGroup id='GRA_number' label='Price' className='col-md-6'>
+
+					<FormGroup id='GRA_number' label='Price' className='col-md-6'>
 						<Input
 							type='number'
 							onChange={formik.handleChange}
@@ -475,4 +469,3 @@ export default ItemAddModal;
 function async() {
 	throw new Error('Function not implemented.');
 }
-

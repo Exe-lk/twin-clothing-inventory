@@ -16,6 +16,7 @@ import Button from '../../../components/bootstrap/Button';
 import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
 import { collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import CategoryAddModal from '../../../components/custom/CategoryAddModal';
+import CategoryDeleteModal from '../../../components/custom/CategoryDeleteModal';
 import CategoryEditModal from '../../../components/custom/CategoryEditModal';
 import Swal from 'sweetalert2';
 // Define the interface for category data
@@ -29,6 +30,7 @@ const Index: NextPage = () => {
 	const { darkModeStatus } = useDarkMode(); // Dark mode
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
+	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
 	const [editModalStatus, setEditModalStatus] = useState<boolean>(false); // State for edit modal status
 	const [category, setcategory] = useState<Category[]>([]); // State for category data
 	const [id, setId] = useState<string>(''); // State for current category ID
@@ -245,7 +247,12 @@ const Index: NextPage = () => {
 											))}
 									</tbody>
 								</table>
-								<Button icon='' className='mb-5'>Recycle Bin</Button> 
+								<Button icon='Delete' className='mb-5'
+								onClick={() => (
+									setDeleteModalStatus(true)
+									
+								)}>
+								Recycle Bin</Button> 
 								
 							</CardBody>
 						</Card>
@@ -255,6 +262,7 @@ const Index: NextPage = () => {
 				</div>
 			</Page>
 			<CategoryAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id='' />
+			<CategoryDeleteModal setIsOpen={setDeleteModalStatus} isOpen={deleteModalStatus} id='' />
 			<CategoryEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
 		</PageWrapper>
 	);
