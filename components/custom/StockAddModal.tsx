@@ -58,9 +58,6 @@ const StockAddModal: FC<StockAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	}, []);
 
 	// Logic for filtering options based on search term
-	const filteredOptions = item.filter((item) =>
-		item.name.toLowerCase().includes(searchTerm.toLowerCase()),
-	);
 
 	// Initialize formik for form management
 	const formik = useFormik({
