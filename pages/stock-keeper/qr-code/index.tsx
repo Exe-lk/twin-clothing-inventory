@@ -3,7 +3,7 @@ import type { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../layout/Page/Page';
 import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
-import QRCode  from 'qrcode.react';
+// import QRCode  from 'qrcode.react';
 import Qr from '../../../assets/img/QR.png'
 const Index: NextPage = () => {
 
