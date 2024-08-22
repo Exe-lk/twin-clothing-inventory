@@ -11,38 +11,41 @@ import { collection, addDoc, doc, setDoc, getDocs, query, where } from 'firebase
 import { firestore, storage } from '../../firebaseConfig';
 import Swal from 'sweetalert2';
 import Select from '../bootstrap/forms/Select';
-import Option, { Options } from '../bootstrap/Option';
+import Option from '../bootstrap/Option';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 
-// Define the props for the ItemAddModal component
 interface ItemAddModalProps {
 	id: string;
 	isOpen: boolean;
 	setIsOpen(...args: unknown[]): unknown;
 }
+
 interface Category {
 	categoryname: string;
 	subcategory: string[];
 }
-// ItemAddModal component definition
+
+interface SelectOption {
+	value: string;
+	label: string;
+}
+
 const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
-	const [imageurl, setImageurl] = useState<any>(null);
+	const [imageurl, setImageurl] = useState<File | null>(null);
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 	const [category, setCategory] = useState<Category[]>([]);
-	const [subcategory, setSubcategory] = useState<[]>([]);
-	//get data from database
+	const [subcategories, setSubcategories] = useState<SelectOption[]>([]);
+	const [isAddingNewColor, setIsAddingNewColor] = useState(false);
+	const [isAddingNewFabric, setIsAddingNewFabric] = useState(false);
+	const [isAddingNewGSM, setIsAddingNewGSM] = useState(false);
+	const [isAddingNewKnitType, setIsAddingNewKnitType] = useState(false); //
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const dataCollection = collection(firestore, 'category');
 				const q = query(dataCollection, where('status', '==', true));
 				const querySnapshot = await getDocs(q);
-				const firebaseData = querySnapshot.docs.map((doc) => {
-					const data = doc.data() as Category;
-					return {
-						...data,
-					};
-				});
+				const firebaseData = querySnapshot.docs.map((doc) => doc.data() as Category);
 				setCategory(firebaseData);
 			} catch (error) {
 				console.error('Error fetching data: ', error);
@@ -50,23 +53,17 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 		};
 		fetchData();
 	}, []);
-	//change subcategory
-	const changeSubCategory = async (category: any) => {
-		console.log('hi');
-		console.log(category);
-	};
-	//image upload
-	const handleUploadimage = async () => {
+
+	const handleUploadImage = async () => {
 		if (imageurl) {
-			// Assuming generatePDF returns a Promise
-			const pdfFile = imageurl;
-			const storageRef = ref(storage, `item/${pdfFile.name}`);
-			const uploadTask = uploadBytesResumable(storageRef, pdfFile);
+			const storageRef = ref(storage, `item/${imageurl.name}`);
+			const uploadTask = uploadBytesResumable(storageRef, imageurl);
+
 			return new Promise((resolve, reject) => {
 				uploadTask.on(
 					'state_changed',
 					(snapshot) => {
-						const progress1 = Math.round(
+						const progress = Math.round(
 							(snapshot.bytesTransferred / snapshot.totalBytes) * 100,
 						);
 					},
@@ -77,10 +74,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					() => {
 						getDownloadURL(uploadTask.snapshot.ref)
 							.then((url) => {
-								console.log('File uploaded successfully. URL:', url);
-
-								console.log(url);
-								resolve(url); // Resolve the Promise with the URL
+								resolve(url);
 							})
 							.catch((error) => {
 								console.error(error.message);
@@ -93,8 +87,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			return '';
 		}
 	};
-	const divRef: any = useRef(null);
-	// Initialize formik for form management
+
 	const formik = useFormik({
 		initialValues: {
 			code: '',
@@ -111,46 +104,16 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			subcategory: '',
 		},
 		validate: (values) => {
-			const errors: {
-				code?: string;
-				description?: string;
-				color?: string;
-				fabric_type?: string;
-				gsm?: string;
-				width?: string;
-				knit_type?: string;
-				GRN_number?: string;
-				GRA_number?: string;
-				category?: string;
-				subcategory?: string;
-			} = {};
-			if (!values.code) {
-				errors.code = 'Required';
-			}
-			if (!values.description) {
-				errors.description = 'Required';
-			}
-			if (!values.color) {
-				errors.color = 'Required';
-			}
-			if (!values.fabric_type) {
-				errors.fabric_type = 'Required';
-			}
-			if (!values.gsm) {
-				errors.gsm = 'Required';
-			}
-			if (!values.width) {
-				errors.width = 'Required';
-			}
-			if (!values.knit_type) {
-				errors.knit_type = 'Required';
-			}
-			if (!values.GRA_number) {
-				errors.GRA_number = 'Required';
-			}
-			if (!values.GRN_number) {
-				errors.GRN_number = 'Required';
-			}
+			const errors: Record<string, string> = {};
+			if (!values.code) errors.code = 'Required';
+			if (!values.description) errors.description = 'Required';
+			if (!values.color) errors.color = 'Required';
+			if (!values.fabric_type) errors.fabric_type = 'Required';
+			if (!values.gsm) errors.gsm = 'Required';
+			if (!values.width) errors.width = 'Required';
+			if (!values.knit_type) errors.knit_type = 'Required';
+			if (!values.GRA_number) errors.GRA_number = 'Required';
+			if (!values.GRN_number) errors.GRN_number = 'Required';
 			return errors;
 		},
 		onSubmit: async (values) => {
@@ -162,39 +125,56 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					showCancelButton: false,
 					showConfirmButton: false,
 				});
-				const imgurl: any = await handleUploadimage();
 
+				const imgurl = await handleUploadImage();
 				values.status = true;
-				const documentId = '11005';
+
 				const collectionRef = doc(firestore, 'item', id);
-				setDoc(collectionRef, values)
-					.then(() => {
-						setIsOpen(false);
-						showNotification(
-							<span className='d-flex align-items-center'>
-								<Icon icon='Info' size='lg' className='me-1' />
-								<span>Successfully Added</span>
-							</span>,
-							'Stock has been added successfully',
-						);
-						Swal.fire('Added!', 'Stock has been add successfully.', 'success');
-						formik.resetForm();
-						setSelectedImage(null);
-					})
-					.catch((error) => {
-						console.error('Error adding document: ', error);
-						Swal.close;
-						alert(
-							'An error occurred while adding the document. Please try again later.',
-						);
-					});
+				await setDoc(collectionRef, { ...values, imageUrl: imgurl });
+
+				setIsOpen(false);
+				showNotification(
+					<span className='d-flex align-items-center'>
+						<Icon icon='Info' size='lg' className='me-1' />
+						<span>Successfully Added</span>
+					</span>,
+					'Stock has been added successfully',
+				);
+				Swal.fire('Added!', 'Stock has been added successfully.', 'success');
+				formik.resetForm();
+				setSelectedImage(null);
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
-				Swal.close;
+				Swal.close();
 				alert('An error occurred during file upload. Please try again later.');
 			}
 		},
 	});
+
+	const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		const selectedCategory = e.target.value;
+		formik.handleChange(e);
+
+		const selectedCategoryData = category.find((cat) => cat.categoryname === selectedCategory);
+		if (selectedCategoryData) {
+			const options = selectedCategoryData.subcategory.map((subcat) => ({
+				value: subcat,
+				label: subcat,
+			}));
+			setSubcategories(options);
+		} else {
+			setSubcategories([]);
+		}
+	};
+
+	const handleResetForm = () => {
+		formik.resetForm();
+		setSelectedImage(null);
+		setIsAddingNewColor(false);
+		setIsAddingNewFabric(false);
+		setIsAddingNewGSM(false);
+		setIsAddingNewKnitType(false);
+	};
 
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
@@ -211,8 +191,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 						<Select
 							ariaLabel='Default select example'
 							placeholder='Open this select category'
-							// onChange={formik.handleChange}
-							onChange={(e: any) => changeSubCategory(e.target.value)}
+							onChange={formik.handleChange}
 							value={formik.values.category}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
@@ -282,20 +261,41 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 						/>
 					</FormGroup>
 					<FormGroup id='color' label='Color' className='col-md-6'>
-						<Select
-							ariaLabel='Default select example'
-							placeholder='Open this select color'
-							onChange={formik.handleChange}
-							value={formik.values.color}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.color}
-							invalidFeedback={formik.errors.color}
-							validFeedback='Looks good!'>
-							<Option value={'dd'}>Green</Option>
-							<Option value={'dd'}>Red</Option>
-							<Option value={'dd'}>Blue</Option>
-						</Select>
+						{!isAddingNewColor ? (
+							<Select
+								ariaLabel='Default select example'
+								placeholder='Open this select color'
+								onChange={(e: any) => {
+									if (e.target.value === 'Add new') {
+										setIsAddingNewColor(true); // Switch to input field
+									} else {
+										formik.handleChange(e);
+									}
+								}}
+								value={formik.values.color}
+								onBlur={formik.handleBlur}
+								isValid={formik.isValid}
+								isTouched={formik.touched.color}
+								invalidFeedback={formik.errors.color}
+								validFeedback='Looks good!'>
+								<Option value='Green'>Green</Option>
+								<Option value='Red'>Red</Option>
+								<Option value='Blue'>Blue</Option>
+								<Option value='Add new'>Add new</Option>
+							</Select>
+						) : (
+							<Input
+								type='text'
+								placeholder='Enter new color'
+								onChange={formik.handleChange}
+								value={formik.values.color}
+								onBlur={formik.handleBlur}
+								isValid={formik.isValid}
+								isTouched={formik.touched.color}
+								invalidFeedback={formik.errors.color}
+								validFeedback='Looks good!'
+							/>
+						)}
 					</FormGroup>
 					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
 						<Input
@@ -351,37 +351,59 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					</FormGroup>
 					<p>Fabric</p>
 					<FormGroup id='fabric_type' label='Fabric Type' className='col-md-6'>
-						<Select
-							ariaLabel='Default select example'
-							placeholder='Open this select fabric type'
-							onChange={formik.handleChange}
-							value={formik.values.fabric_type}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.fabric_type}
-							invalidFeedback={formik.errors.fabric_type}
-							validFeedback='Looks good!'>
-							<Option value={'dd'}>123</Option>
-							<Option value={'dd'}>1234</Option>
-							<Option value={'dd'}>789</Option>
-						</Select>
+						{isAddingNewFabric ? (
+							<Input
+								placeholder='Add new fabric type'
+								onChange={(e: any) =>
+									formik.setFieldValue('fabric_type', e.target.value)
+								}
+								value={formik.values.fabric_type}
+							/>
+						) : (
+							<Select
+								ariaLabel='Fabric type select'
+								onChange={(e: any) => {
+									if (e.target.value === 'Add new') {
+										setIsAddingNewFabric(true);
+									} else {
+										formik.handleChange(e);
+									}
+								}}
+								value={formik.values.fabric_type}>
+								<Option value=''>Select Fabric Type</Option>
+								<Option value='Add new'>Add New</Option>
+								{/* Existing fabric type options can be dynamically loaded here */}
+								<Option value='Cotton'>Cotton</Option>
+								<Option value='Polyester'>Polyester</Option>
+							</Select>
+						)}
 					</FormGroup>
 
 					<FormGroup id='gsm' label='GSM' className='col-md-6'>
-						<Select
-							ariaLabel='Default select example'
-							placeholder='Open this select fabric type'
-							onChange={formik.handleChange}
-							value={formik.values.gsm}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.gsm}
-							invalidFeedback={formik.errors.gsm}
-							validFeedback='Looks good!'>
-							<Option value={'dd'}>60</Option>
-							<Option value={'dd'}>70</Option>
-							<Option value={'dd'}>80</Option>
-						</Select>
+						{isAddingNewGSM ? (
+							<Input
+								placeholder='Add new GSM'
+								onChange={(e: any) => formik.setFieldValue('gsm', e.target.value)}
+								value={formik.values.gsm}
+							/>
+						) : (
+							<Select
+								ariaLabel='GSM select'
+								onChange={(e: any) => {
+									if (e.target.value === 'Add new') {
+										setIsAddingNewGSM(true);
+									} else {
+										formik.handleChange(e);
+									}
+								}}
+								value={formik.values.gsm}>
+								<Option value=''>Select GSM</Option>
+								<Option value='Add new'>Add New</Option>
+								{/* Existing GSM options can be dynamically loaded here */}
+								<Option value='150'>150 GSM</Option>
+								<Option value='180'>180 GSM</Option>
+							</Select>
+						)}
 					</FormGroup>
 					<FormGroup id='width' label='Width' className='col-md-6'>
 						<Input
@@ -395,25 +417,42 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
+					{/* Knit Type FormGroup with Dynamic Input */}
 					<FormGroup id='knit_type' label='Knit Type' className='col-md-6'>
-						<Select
-							ariaLabel='Default select example'
-							placeholder='Open this select knit type'
-							onChange={formik.handleChange}
-							value={formik.values.gsm}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.gsm}
-							invalidFeedback={formik.errors.gsm}
-							validFeedback='Looks good!'>
-							<Option value={'dd'}>60</Option>
-							<Option value={'dd'}>70</Option>
-							<Option value={'dd'}>80</Option>
-						</Select>
+						{isAddingNewKnitType ? (
+							<Input
+								placeholder='Add new knit type'
+								onChange={(e: any) =>
+									formik.setFieldValue('knit_type', e.target.value)
+								}
+								value={formik.values.knit_type}
+							/>
+						) : (
+							<Select
+								ariaLabel='Default select example'
+								placeholder='Open this select knit type'
+								onChange={(e: any) => {
+									if (e.target.value === 'Add new') {
+										setIsAddingNewKnitType(true);
+									} else {
+										formik.handleChange(e);
+									}
+								}}
+								value={formik.values.knit_type}
+								onBlur={formik.handleBlur}
+								isValid={formik.isValid}
+								isTouched={formik.touched.knit_type}
+								invalidFeedback={formik.errors.knit_type}
+								validFeedback='Looks good!'>
+								<Option value=''>Select Knit Type</Option>
+								<Option value='60'>60</Option>
+								<Option value='70'>70</Option>
+								<Option value='80'>80</Option>
+								<Option value='Add new'>Add new</Option>
+							</Select>
+						)}
 					</FormGroup>
-					
 
-					
 					<FormGroup id='GRA_number' label='Job ID' className='col-md-6'>
 						<Input
 							type='text'
@@ -426,7 +465,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					
+
 					<FormGroup id='GRA_number' label='Bales' className='col-md-6'>
 						<Input
 							type='number'
@@ -464,14 +503,13 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-
-				
-
-					<div ref={divRef}>{/* <Barcode value={formik.values.barcode} /> */}</div>
 				</div>
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
 				{/* Save button to submit the form */}
+				<Button color='warning' onClick={handleResetForm}>
+          Reset
+        </Button>
 				<Button color='info' onClick={formik.handleSubmit}>
 					Save
 				</Button>
