@@ -17,7 +17,7 @@ import PaginationButtons from '../../../components/PaginationButtons';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import StockChart from '../../../components/sock-monthly';
 import LineWithLabel from '../../../components/sells-chart';
-import PieBasic from '../../../components/top-product-chart';
+import PieBasic from './top-product-chart';
 import TypeAnalatisk from '../../../components/TypeAnalatisk';
 
 // Define interfaces for Seller and Stock
