@@ -5,15 +5,14 @@ import { getStorage } from "firebase/storage";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDDEguvQ-zLVmUSmKXDcc4Qs7G9Id1hsIM",
-  authDomain: "smarttelescope.firebaseapp.com",
-  databaseURL: "https://smarttelescope-default-rtdb.firebaseio.com",
-  projectId: "smarttelescope",
-  storageBucket: "smarttelescope.appspot.com",
-  messagingSenderId: "193247300076",
-  appId: "1:193247300076:web:585be986a4466a88f698c9",
-  measurementId: "G-GKHFRHZTJ7"
-};
+  apiKey: "AIzaSyCio3bKDF184Zw8QaCugMuHsfcz_97H0V8",
+  authDomain: "twin-clothing-a0c4d.firebaseapp.com",
+  projectId: "twin-clothing-a0c4d",
+  storageBucket: "twin-clothing-a0c4d.appspot.com",
+  messagingSenderId: "396009247464",
+  appId: "1:396009247464:web:8247a236e0eae83c172f5d",
+  measurementId: "G-9CTYY1RLZ7"
+};;
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const firestore = getFirestore(app);
@@ -23,19 +22,3 @@ const database = getDatabase(app);
 
 export { app, auth, firestore, storage,database };
 
-// import firebase from 'firebase/app';
-// import 'firebase/database';
-
-// const firebaseConfig = {
-//   apiKey: "AIzaSyDDEguvQ-zLVmUSmKXDcc4Qs7G9Id1hsIM",
-//   authDomain: "smarttelescope.firebaseapp.com",
-//   databaseURL: "https://smarttelescope-default-rtdb.firebaseio.com",
-//   projectId: "smarttelescope",
-//   storageBucket: "smarttelescope.appspot.com",
-//   messagingSenderId: "193247300076",
-//   appId: "1:193247300076:web:585be986a4466a88f698c9",
-//   measurementId: "G-GKHFRHZTJ7"
-// };
-// firebase.initializeApp(firebaseConfig);
-
-// export default firebase;

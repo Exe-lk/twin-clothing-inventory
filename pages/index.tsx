@@ -19,7 +19,7 @@ import Input from '../components/bootstrap/forms/Input';
 import Select from '../components/bootstrap/forms/Select';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import PostDataService from '../services/postservice';
+import PostDataService from '../route/postservice';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { auth, firestore } from '../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -51,18 +51,6 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 	const [users, setUsers] = useState<User[]>([]);
 	const { setUser } = useContext(AuthContext);
 
-	const signInUser = async (email: string, password: string) => {
-		try {
-			const userCredential = await signInWithEmailAndPassword(auth, email, password);
-			const user = userCredential.user;
-
-			return user;
-		} catch (error) {
-			console.error('Error signing in:', error);
-			return null;
-		}
-	};
-
 	//login
 	const formik = useFormik({
 		enableReinitialize: true,
@@ -86,68 +74,31 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 
 		onSubmit: async (values) => {
 			try {
-				const user = await signInUser(values.email, values.password);
+				try {
+					const baseURL = `http://localhost:3000/api/user/route`;
+					const response = await axios.post(baseURL, values);
+					if (response.data.user) {
+						await Swal.fire({
+							icon: 'success',
+							title: 'Login Successful',
+							text: 'You have successfully logged in!',
+						});
+						// switch (userData.position) {
+						// 			case 'Admin':
+						// 				router.push('/admin/dashboard');
+						// 				break;
 
-				if (user) {
-					if (setUser) {
-						setUser(values.email);
+						// 		}
+						router.push('/admin/dashboard');
+					} else {
+						await Swal.fire({
+							icon: 'error',
+							title: 'Invalid Credentials',
+							text: 'Username and password do not match. Please try again.',
+						});
 					}
-					await Swal.fire({
-						icon: 'success',
-						title: 'Login Successful',
-						text: 'You have successfully logged in!',
-					});
-
-					// Store user information in session
-
-					const usersCollection = collection(firestore, 'user');
-
-					const q = query(usersCollection, where('email', '==', values.email));
-
-					const querySnapshot = await getDocs(q);
-
-					const firebaseData = querySnapshot.docs.map((doc) => {
-						const data = doc.data();
-						return {
-							...data,
-							_id: doc.id,
-						};
-					});
-
-					if (!querySnapshot.empty) {
-						const userData = querySnapshot.docs[0].data();
-						localStorage.setItem('user', JSON.stringify(userData));
-						console.log(userData.position);
-						switch (userData.position) {
-							case 'Admin':
-								router.push('/admin/dashboard');
-								break;
-							case 'Cashier':
-								router.push('/cashier/bills');
-								break;
-
-							case 'Stock keeper':
-								router.push('/stock-keeper/dashboard');
-								break;
-							case 'Accountant':
-								router.push('/accountant/dashboard');
-								break;
-							case 'Owner':
-								router.push('/Owner/dashboard');
-								break;
-							case 'Data entry operator':
-								router.push('/dataentry-operater/dashboard');
-								break;
-						}
-					}
-
-					// router.push('/employeepages/dashboard');
-				} else {
-					await Swal.fire({
-						icon: 'error',
-						title: 'Invalid Credentials',
-						text: 'Username and password do not match. Please try again.',
-					});
+				} catch (error) {
+					console.error('Error fetching data: ', error);
 				}
 			} catch (error) {
 				console.error('Error occurred:', error);
