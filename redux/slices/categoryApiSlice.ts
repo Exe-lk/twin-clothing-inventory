@@ -22,16 +22,17 @@ export const categoryApiSlice = createApi({
     }),
     // Update: Update an existing category
     updateCategory: builder.mutation({
-      query: ({ id, ...updatedCategory }) => ({
-        url: `category/route/${id}`,
+      query: ( updatedCategory ) => ({
+        url: `category/${ updatedCategory.id}`,
         method: 'PUT',
-        body: updatedCategory,
+        body: updatedCategory, // Send the updated fields, like setting status to false
       }),
+      invalidatesTags: ['Category'], // Invalidate cache to refetch the list
     }),
     // Delete: Delete a category
     deleteCategory: builder.mutation({
       query: (id) => ({
-        url: `category/route/${id}`,
+        url: `category/${id}`,
         method: 'DELETE',
       }),
     }),
