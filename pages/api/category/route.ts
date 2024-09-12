@@ -11,12 +11,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     switch (req.method) {
       case 'POST': {
-        const { name,subcategory } = req.body;
-        if (!name) {
+        const { categoryname,subcategory } = req.body;
+        if (!categoryname) {
           res.status(400).json({ error: 'Category name is required' });
           return;
         }
-        const id = await createCategory(name);
+        const id = await createCategory(categoryname,subcategory);
         res.status(201).json({ message: 'Category created', id });
         break;
       }
@@ -28,12 +28,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       case 'PUT': {
-        const { id, name } = req.body;
+        const { id, name,status,subcategory } = req.body;
         if (!id || !name) {
           res.status(400).json({ error: 'Category ID and name are required' });
           return;
         }
-        await updateCategory(id, name);
+        await updateCategory(id, name,subcategory,status);
         res.status(200).json({ message: 'Category updated' });
         break;
       }
