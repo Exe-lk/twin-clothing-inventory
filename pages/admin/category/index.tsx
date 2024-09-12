@@ -18,7 +18,7 @@ import CategoryAddModal from '../../../components/custom/CategoryAddModal';
 import CategoryDeleteModal from '../../../components/custom/CategoryDeleteModal';
 import CategoryEditModal from '../../../components/custom/CategoryEditModal';
 import Swal from 'sweetalert2';
-
+import { useUpdateCategoryMutation } from '../../../redux/slices/categoryApiSlice';
 // Define the functional component for the index page
 const Index: NextPage = () => {
 	const { darkModeStatus } = useDarkMode();
@@ -30,6 +30,8 @@ const Index: NextPage = () => {
 
 	// Fetch categories using RTK Query from the custom API
 	const { data: categories, error, isLoading } = useGetCategoriesQuery(undefined);
+	const [updateCategory] = useUpdateCategoryMutation();
+
 	const handleClickDelete = async (category: any) => {
 		try {
 			const result = await Swal.fire({
@@ -42,7 +44,16 @@ const Index: NextPage = () => {
 				confirmButtonText: 'Yes, delete it!',
 			});
 			if (result.isConfirmed) {
-				// Implement the delete logic here
+				const values = await {
+					id: category.id,
+					name: category.name,
+					status: false,
+					subcategory: category.subcategory,
+				};
+
+				await updateCategory(values);
+
+				Swal.fire('Deleted!', 'The category has been deleted.', 'success');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
@@ -160,6 +171,12 @@ const Index: NextPage = () => {
 												))}
 									</tbody>
 								</table>
+								<Button
+									icon='Delete'
+									className='mb-5'
+									onClick={() => setDeleteModalStatus(true)}>
+									Recycle Bin
+								</Button>
 							</CardBody>
 						</Card>
 					</div>

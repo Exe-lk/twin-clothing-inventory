@@ -24,6 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       case 'PUT': {
         const { name, subcategory, status } = req.body;
+        console.log(req.body)
         if (!name) {
           res.status(400).json({ error: 'Category name is required' });
           return;
