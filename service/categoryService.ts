@@ -18,6 +18,17 @@ export const getCategories = async () => {
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
+export const getDeleteCategories = async () => {
+  // Create a query to get categories where status == true
+  const q = query(collection(firestore, 'categories'), where('status', '==', false));
+
+  // Execute the query and get the documents
+  const querySnapshot = await getDocs(q);
+
+  // Map over the documents and return the data
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
 export const getCategoryById = async (id: string) => {
   const categoryRef = doc(firestore, 'categories', id); // Get the document reference
   const categorySnap = await getDoc(categoryRef); // Get the document snapshot
