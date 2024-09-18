@@ -1,4 +1,3 @@
-// redux/slices/categoryApiSlice.ts
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const categoryApiSlice = createApi({
@@ -9,9 +8,17 @@ export const categoryApiSlice = createApi({
     // Read: Fetch all categories
     getCategories: builder.query({
       query: () => 'category/route',
-      providesTags: ['Category'], // The endpoint to fetch all categories
+      providesTags: ['Category'],
     }),
-    // Create: Add a new category
+    // Fetch a single category by ID
+    getCategoryById: builder.query({
+      query: (id) => `category/${id}`,
+      providesTags: ['Category'],
+    }),
+    getDeleteCategories: builder.query({
+      query: () => 'category/bin',
+      providesTags: ['Category'],
+    }),
     addCategory: builder.mutation({
       query: (newCategory) => ({
         url: 'category/route',
@@ -20,16 +27,14 @@ export const categoryApiSlice = createApi({
       }),
       invalidatesTags: ['Category'],
     }),
-    // Update: Update an existing category
     updateCategory: builder.mutation({
-      query: ( updatedCategory ) => ({
-        url: `category/${ updatedCategory.id}`,
+      query: (updatedCategory) => ({
+        url: `category/${updatedCategory.id}`,
         method: 'PUT',
-        body: updatedCategory, // Send the updated fields, like setting status to false
+        body: updatedCategory,
       }),
-      invalidatesTags: ['Category'], // Invalidate cache to refetch the list
+      invalidatesTags: ['Category'],
     }),
-    // Delete: Delete a category
     deleteCategory: builder.mutation({
       query: (id) => ({
         url: `category/${id}`,
@@ -41,6 +46,8 @@ export const categoryApiSlice = createApi({
 
 export const {
   useGetCategoriesQuery,
+  useGetCategoryByIdQuery, // New hook to fetch single category
+  useGetDeleteCategoriesQuery,
   useAddCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,

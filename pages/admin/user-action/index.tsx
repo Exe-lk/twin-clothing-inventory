@@ -320,7 +320,7 @@ const Index: NextPage = () => {
 				</div>
 			</Page>
 			<UserAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id='' />
-			<UserEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
+			{/* <UserEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} /> */}
 		</PageWrapper>
 	);
 };

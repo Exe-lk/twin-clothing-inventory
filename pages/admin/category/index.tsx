@@ -152,8 +152,9 @@ const Index: NextPage = () => {
 															<Button
 																icon='Edit'
 																color='info'
-																onClick={() =>
-																	setEditModalStatus(true)
+																onClick={() =>(
+																	setEditModalStatus(true),
+																	setId(category.id))
 																}>
 																Edit
 															</Button>
