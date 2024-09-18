@@ -19,10 +19,14 @@ import Input from '../components/bootstrap/forms/Input';
 import Select from '../components/bootstrap/forms/Select';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { auth, firestore } from '../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import Logo from '../components/Logo';
+import {useAddUserMutation}  from '../redux/slices/userApiSlice'
+import { useGetUsersQuery } from '../redux/slices/userApiSlice';
+
 interface ILoginHeaderProps {
 	isNewUser?: boolean;
 }
@@ -49,6 +53,7 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 	const { darkModeStatus } = useDarkMode();
 	const [users, setUsers] = useState<User[]>([]);
 	const { setUser } = useContext(AuthContext);
+	const [addUser] = useAddUserMutation();
 
 	//login
 	const formik = useFormik({
@@ -73,39 +78,47 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 
 		onSubmit: async (values) => {
 			try {
-				try {
-					const baseURL = `http://localhost:3000/api/user/route`;
-					const response = await axios.post(baseURL, values);
-					if (response.data.user) {
-						await Swal.fire({
-							icon: 'success',
-							title: 'Login Successful',
-							text: 'You have successfully logged in!',
-						});
-						// switch (userData.position) {
-						// 			case 'Admin':
-						// 				router.push('/admin/dashboard');
-						// 				break;
-
-						// 		}
-						router.push('/admin/dashboard');
-					} else {
-						await Swal.fire({
-							icon: 'error',
-							title: 'Invalid Credentials',
-							text: 'Username and password do not match. Please try again.',
-						});
-					}
-				} catch (error) {
-					console.error('Error fetching data: ', error);
+			  const response = await addUser(values).unwrap();
+			  const email = response.user.email;
+			  localStorage.setItem('email', email);
+			  console.log(response)
+			  if (response.user) {
+				await Swal.fire({
+				  icon: 'success',
+				  title: 'Login Successful',
+				  text: 'You have successfully logged in!',
+				});
+				switch (response.user.position) {
+				  case 'admin':
+					router.push('/admin/dashboard');
+					break;
+				  case 'Viewer':
+					router.push('/viewer/dashboard');
+					break;
+				  case 'production-coordinator':
+					router.push('/production-coordinator/dashboard');
+					break;
+				  case 'stock-keeper':
+					router.push('/stock-keeper/dashboard');
+					break;
+				 
+				  default:
+					break;
 				}
+			  } else {
+				await Swal.fire({
+				  icon: 'error',
+				  title: 'Invalid Credentials',
+				  text: 'Username and password do not match. Please try again.',
+				});
+			  }
 			} catch (error) {
-				console.error('Error occurred:', error);
-				Swal.fire('Error', 'An unexpected error occurred', 'error');
+			  console.error('Error occurred:', error);
+			  Swal.fire('Error', 'An unexpected error occurred', 'error');
 			}
-		},
-	});
-
+		  },
+		});
+		
 	return (
 		<PageWrapper
 			isProtected={false}
@@ -169,7 +182,7 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 										</div>
 										<div className='col-12'>
 											<Button
-												color='info'
+												color='warning'
 												className='w-100 py-3'
 												onClick={formik.handleSubmit}>
 												Login
