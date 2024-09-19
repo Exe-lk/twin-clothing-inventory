@@ -18,10 +18,10 @@ import SellerEditModal from '../../../components/custom/SellerEditModal';
 import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { firestore } from '../../../firebaseConfig';
 import Dropdown, { DropdownToggle, DropdownMenu } from '../../../components/bootstrap/Dropdown';
-import { getColorNameWithIndex } from '../../../common/data/enumColors';
-import { getFirstLetter } from '../../../helpers/helpers';
 import Swal from 'sweetalert2';
 import SellerDeleteModal from '../../../components/custom/SellerDeleteModal';
+import { useUpdateSupplierMutation, useGetSuppliersQuery } from '../../../redux/slices/supplierAPISlice';
+
 // Define interfaces for Seller
 interface Seller {
 	cid: string;
@@ -42,7 +42,8 @@ const Index: NextPage = () => {
 	const [id, setId] = useState<string>(''); // State to store the ID of the seller being edited
 	const [status, setStatus] = useState(true);
 	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
-
+	const { data: supplier, error, isLoading } = useGetSuppliersQuery(undefined);
+	const [updatesupplier] = useUpdateSupplierMutation();
 	const handleClickDelete = async (item: any) => {
 		try {
 			const result = await Swal.fire({
@@ -56,26 +57,13 @@ const Index: NextPage = () => {
 			});
 			if (result.isConfirmed) {
 				try {
-					item.status = false;
-					const docRef = doc(firestore, 'seller', item.cid);
-					// Update the data
-					updateDoc(docRef, item)
-						.then(() => {
-							Swal.fire('Deleted!', 'seller has been deleted.', 'success');
-							if (status) {
-								// Toggle status to trigger data refetch
-								setStatus(false);
-							} else {
-								setStatus(true);
-							}
-						})
-						.catch((error) => {
-							console.error('Error adding document: ', error);
+					const values = await {
+						...item,status:false
+					};
+					await updatesupplier(values);
 
-							alert(
-								'An error occurred while adding the document. Please try again later.',
-							);
-						});
+					Swal.fire('Deleted!', 'The supplier has been deleted.', 'success');
+				
 				} catch (error) {
 					console.error('Error during deleting: ', error);
 					Swal.close;
@@ -195,45 +183,56 @@ const Index: NextPage = () => {
 												</Button>
 											</td>
 										</tr>
-										<tr>
-											<td>malinka</td>
-											<td>ABC</td>
-											<td>abc@gmail.com</td>
-											<td>0778965412</td>
-											<td>malinka@gmail.com</td>
-											<td>
-												<Dropdown>
-													<DropdownToggle hasIcon={false}>
-														<Button icon='List' color='primary'>
-															View Products
-														</Button>
-													</DropdownToggle>
-													<DropdownMenu
-														isAlignmentEnd
-														size='md'
-														className='ps-4'>
-														<div>abc</div>
-														<div>efg</div>
-													</DropdownMenu>
-												</Dropdown>
-											</td>
-											<td>
-												<Button
-													icon='Edit'
-													tag='a'
-													color='info'
-													onClick={() => setEditModalStatus(true)}>
-													Edit
-												</Button>
-												<Button
-													className='m-2'
-													icon='Delete'
-													color='danger'
-													onClick={() => handleClickDelete(seller)}>
-													Delete
-												</Button>
-											</td>
-										</tr>
+										{isLoading && (
+											<tr>
+												<td>Loading...</td>
+											</tr>
+										)}
+										{error && (
+											<tr>
+												<td>Error fetching categories.</td>
+											</tr>
+										)}
+										{supplier &&
+											supplier
+												.filter((supplier: any) =>
+													searchTerm
+														? supplier.name
+																.toLowerCase()
+																.includes(searchTerm.toLowerCase())
+														: true,
+												)
+												.map((supplier: any) => (
+													<tr key={supplier.id}>
+														<td>{supplier.name}</td>
+														<td>{supplier.company_name}</td>
+														<td>{supplier.company_email}</td>
+														<td>{supplier.phone}</td>
+														<td>{supplier.email}</td>
+														<td>{supplier.qty}</td>
+
+														<td>
+															<Button
+																icon='Edit'
+																color='info'
+																onClick={() => (
+																	setEditModalStatus(true),
+																	setId(supplier.id)
+																)}>
+																Edit
+															</Button>
+															<Button
+																className='m-2'
+																icon='Delete'
+																color='danger'
+																onClick={() =>
+																	handleClickDelete(supplier)
+																}>
+																Delete
+															</Button>
+														</td>
+													</tr>
+												))}
 									</tbody>
 								</table>
 								<Button
