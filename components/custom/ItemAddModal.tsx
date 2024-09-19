@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import Select from '../bootstrap/forms/Select';
 import Option from '../bootstrap/Option';
 import { useGetLotsQuery, useAddLotMutation } from '../../redux/slices/lotAPISlice'; // Import the query
+import Checks, { ChecksGroup } from '../bootstrap/forms/Checks';
 
 interface ItemAddModalProps {
 	id: string;
@@ -34,7 +35,10 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const [isAddingNewColor, setIsAddingNewColor] = useState(false);
 	const [isAddingNewFabric, setIsAddingNewFabric] = useState(false);
 	const [isAddingNewGSM, setIsAddingNewGSM] = useState(false);
-	const [isAddingNewKnitType, setIsAddingNewKnitType] = useState(false); //
+	const [isAddingNewKnitType, setIsAddingNewKnitType] = useState(false);
+
+	// state to manage selected option between Fabric and Thread
+	const [selectedOption, setSelectedOption] = useState('Fabric');
 
 	const [addLot, { isLoading }] = useAddLotMutation();
 	const { refetch } = useGetLotsQuery(undefined);
@@ -127,6 +131,11 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 		setIsAddingNewKnitType(false);
 	};
 
+	//  function to handle option change between Fabric and Thread
+	const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setSelectedOption(event.target.value);
+	};
+
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
 			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
@@ -134,6 +143,31 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>
+					{/*checked buttons for Fabric and Thread */}
+					<FormGroup id='typeSelection' className='col-md-12'>
+						<ChecksGroup isInline>
+							<Checks
+								type='radio'
+								id='fabricOption'
+								label='Fabric'
+								name='type'
+								value='Fabric'
+								onChange={handleOptionChange}
+								checked={selectedOption}
+							/>
+							<Checks
+								type='radio'
+								id='threadOption'
+								label='Thread'
+								name='type'
+								value='Thread'
+								onChange={handleOptionChange}
+								checked={selectedOption}
+							/>
+						</ChecksGroup>
+					</FormGroup>
+
+					{/* Common input fields */}
 					<FormGroup
 						id='category'
 						label='Category'
@@ -262,7 +296,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					<FormGroup id='supplier' label='supplier Name' className='col-md-6'>
 						<Select
 							ariaLabel='Default select example'
-							placeholder='Open this select knit type'
+							placeholder='Open this select supplier'
 							onChange={formik.handleChange}
 							value={formik.values.supplier}
 							onBlur={formik.handleBlur}
@@ -299,162 +333,174 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<p>Fabric</p>
-					<FormGroup id='fabric_type' label='Fabric Type' className='col-md-6'>
-						{isAddingNewFabric ? (
-							<Input
-								onChange={formik.handleChange}
-								value={formik.values.fabric_type}
-								onBlur={formik.handleBlur}
-								isValid={formik.isValid}
-								isTouched={formik.touched.fabric_type}
-								invalidFeedback={formik.errors.fabric_type}
-								validFeedback='Looks good!'
-							/>
-						) : (
-							<Select
-								ariaLabel='Fabric type select'
-								onChange={(e: any) => {
-									if (e.target.value === 'Add new') {
-										setIsAddingNewFabric(true);
-									} else {
-										formik.handleChange(e);
-									}
-								}}
-								value={formik.values.fabric_type}>
-								<Option value=''>Select Fabric Type</Option>
-								<Option value='Add new'>Add New</Option>
-								{/* Existing fabric type options can be dynamically loaded here */}
-								<Option value='Cotton'>Cotton</Option>
-								<Option value='Polyester'>Polyester</Option>
-							</Select>
-						)}
-					</FormGroup>
 
-					<FormGroup id='gsm' label='GSM' className='col-md-6'>
-						{isAddingNewGSM ? (
-							<Input
-								placeholder='Add new GSM'
-								onChange={(e: any) => formik.setFieldValue('gsm', e.target.value)}
-								value={formik.values.gsm}
-							/>
-						) : (
-							<Select
-								ariaLabel='GSM select'
-								onChange={(e: any) => {
-									if (e.target.value === 'Add new') {
-										setIsAddingNewGSM(true);
-									} else {
-										formik.handleChange(e);
-									}
-								}}
-								value={formik.values.gsm}>
-								<Option value=''>Select GSM</Option>
-								<Option value='Add new'>Add New</Option>
-								{/* Existing GSM options can be dynamically loaded here */}
-								<Option value='150'>150 GSM</Option>
-								<Option value='180'>180 GSM</Option>
-							</Select>
-						)}
-					</FormGroup>
-					<FormGroup id='width' label='Width' className='col-md-6'>
-						<Input
-							type='number'
-							onChange={formik.handleChange}
-							value={formik.values.width}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.width}
-							invalidFeedback={formik.errors.width}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
-					{/* Knit Type FormGroup with Dynamic Input */}
-					<FormGroup id='knit_type' label='Knit Type' className='col-md-6'>
-						{isAddingNewKnitType ? (
-							<Input
-								placeholder='Add new knit type'
-								onChange={(e: any) =>
-									formik.setFieldValue('knit_type', e.target.value)
-								}
-								value={formik.values.knit_type}
-							/>
-						) : (
-							<Select
-								ariaLabel='Default select example'
-								placeholder='Open this select knit type'
-								onChange={(e: any) => {
-									if (e.target.value === 'Add new') {
-										setIsAddingNewKnitType(true);
-									} else {
-										formik.handleChange(e);
-									}
-								}}
-								value={formik.values.knit_type}
-								onBlur={formik.handleBlur}
-								isValid={formik.isValid}
-								isTouched={formik.touched.knit_type}
-								invalidFeedback={formik.errors.knit_type}
-								validFeedback='Looks good!'>
-								<Option value=''>Select Knit Type</Option>
-								<Option value='60'>60</Option>
-								<Option value='70'>70</Option>
-								<Option value='80'>80</Option>
-								<Option value='Add new'>Add new</Option>
-							</Select>
-						)}
-					</FormGroup>
+					{/* when Fabric selected */}
+					{selectedOption === 'Fabric' && (
+						<>
+							<p>Fabric</p>
+							<FormGroup id='fabric_type' label='Fabric Type' className='col-md-6'>
+								{isAddingNewFabric ? (
+									<Input
+										onChange={formik.handleChange}
+										value={formik.values.fabric_type}
+										onBlur={formik.handleBlur}
+										isValid={formik.isValid}
+										isTouched={formik.touched.fabric_type}
+										invalidFeedback={formik.errors.fabric_type}
+										validFeedback='Looks good!'
+									/>
+								) : (
+									<Select
+										ariaLabel='Fabric type select'
+										onChange={(e: any) => {
+											if (e.target.value === 'Add new') {
+												setIsAddingNewFabric(true);
+											} else {
+												formik.handleChange(e);
+											}
+										}}
+										value={formik.values.fabric_type}>
+										<Option value=''>Select Fabric Type</Option>
+										<Option value='Add new'>Add New</Option>
+										{/* Existing fabric type options can be dynamically loaded here */}
+										<Option value='Cotton'>Cotton</Option>
+										<Option value='Polyester'>Polyester</Option>
+									</Select>
+								)}
+							</FormGroup>
 
-					<FormGroup id='Job_ID' label='Job ID' className='col-md-6'>
-						<Input
-							type='text'
-							onChange={formik.handleChange}
-							value={formik.values.Job_ID}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.Job_ID}
-							invalidFeedback={formik.errors.Job_ID}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
+							<FormGroup id='gsm' label='GSM' className='col-md-6'>
+								{isAddingNewGSM ? (
+									<Input
+										placeholder='Add new GSM'
+										onChange={(e: any) => formik.setFieldValue('gsm', e.target.value)}
+										value={formik.values.gsm}
+									/>
+								) : (
+									<Select
+										ariaLabel='GSM select'
+										onChange={(e: any) => {
+											if (e.target.value === 'Add new') {
+												setIsAddingNewGSM(true);
+											} else {
+												formik.handleChange(e);
+											}
+										}}
+										value={formik.values.gsm}>
+										<Option value=''>Select GSM</Option>
+										<Option value='Add new'>Add New</Option>
+										{/* Existing GSM options can be dynamically loaded here */}
+										<Option value='150'>150 GSM</Option>
+										<Option value='180'>180 GSM</Option>
+									</Select>
+								)}
+							</FormGroup>
+							<FormGroup id='width' label='Width' className='col-md-6'>
+								<Input
+									type='number'
+									onChange={formik.handleChange}
+									value={formik.values.width}
+									onBlur={formik.handleBlur}
+									isValid={formik.isValid}
+									isTouched={formik.touched.width}
+									invalidFeedback={formik.errors.width}
+									validFeedback='Looks good!'
+								/>
+							</FormGroup>
+							{/* Knit Type FormGroup with Dynamic Input */}
+							<FormGroup id='knit_type' label='Knit Type' className='col-md-6'>
+								{isAddingNewKnitType ? (
+									<Input
+										placeholder='Add new knit type'
+										onChange={(e: any) =>
+											formik.setFieldValue('knit_type', e.target.value)
+										}
+										value={formik.values.knit_type}
+									/>
+								) : (
+									<Select
+										ariaLabel='Default select example'
+										placeholder='Open this select knit type'
+										onChange={(e: any) => {
+											if (e.target.value === 'Add new') {
+												setIsAddingNewKnitType(true);
+											} else {
+												formik.handleChange(e);
+											}
+										}}
+										value={formik.values.knit_type}
+										onBlur={formik.handleBlur}
+										isValid={formik.isValid}
+										isTouched={formik.touched.knit_type}
+										invalidFeedback={formik.errors.knit_type}
+										validFeedback='Looks good!'>
+										<Option value=''>Select Knit Type</Option>
+										<Option value='60'>60</Option>
+										<Option value='70'>70</Option>
+										<Option value='80'>80</Option>
+										<Option value='Add new'>Add new</Option>
+									</Select>
+								)}
+							</FormGroup>
 
-					<FormGroup id='bales' label='Bales' className='col-md-6'>
-						<Input
-							type='number'
-							onChange={formik.handleChange}
-							value={formik.values.bales}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.bales}
-							invalidFeedback={formik.errors.bales}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
-					<p>Thread</p>
-					<FormGroup id='Yrds' label='Yrds per cone' className='col-md-6'>
-						<Input
-							type='number'
-							onChange={formik.handleChange}
-							value={formik.values.Yrds}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.Yrds}
-							invalidFeedback={formik.errors.Yrds}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
-					<FormGroup id='qty' label='Qty' className='col-md-6'>
-						<Input
-							type='number'
-							onChange={formik.handleChange}
-							value={formik.values.qty}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.qty}
-							invalidFeedback={formik.errors.qty}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
+							<FormGroup id='Job_ID' label='Job ID' className='col-md-6'>
+								<Input
+									type='text'
+									onChange={formik.handleChange}
+									value={formik.values.Job_ID}
+									onBlur={formik.handleBlur}
+									isValid={formik.isValid}
+									isTouched={formik.touched.Job_ID}
+									invalidFeedback={formik.errors.Job_ID}
+									validFeedback='Looks good!'
+								/>
+							</FormGroup>
+
+							<FormGroup id='bales' label='Bales' className='col-md-6'>
+								<Input
+									type='number'
+									onChange={formik.handleChange}
+									value={formik.values.bales}
+									onBlur={formik.handleBlur}
+									isValid={formik.isValid}
+									isTouched={formik.touched.bales}
+									invalidFeedback={formik.errors.bales}
+									validFeedback='Looks good!'
+								/>
+							</FormGroup>
+						</>
+					)}
+
+					{/*  when Thread selected */}
+					{selectedOption === 'Thread' && (
+						<>
+							<p>Thread</p>
+							<FormGroup id='Yrds' label='Yrds per cone' className='col-md-6'>
+								<Input
+									type='number'
+									onChange={formik.handleChange}
+									value={formik.values.Yrds}
+									onBlur={formik.handleBlur}
+									isValid={formik.isValid}
+									isTouched={formik.touched.Yrds}
+									invalidFeedback={formik.errors.Yrds}
+									validFeedback='Looks good!'
+								/>
+							</FormGroup>
+							<FormGroup id='qty' label='Qty' className='col-md-6'>
+								<Input
+									type='number'
+									onChange={formik.handleChange}
+									value={formik.values.qty}
+									onBlur={formik.handleBlur}
+									isValid={formik.isValid}
+									isTouched={formik.touched.qty}
+									invalidFeedback={formik.errors.qty}
+									validFeedback='Looks good!'
+								/>
+							</FormGroup>
+						</>
+					)}
 				</div>
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
