@@ -43,5 +43,5 @@ export const updateLot = async (id: string,values:any) => {
 // Delete (soft delete) a specific lot by changing its status
 export const deleteLot = async (id: string) => {
   const lotRef = doc(firestore, 'lots', id);
-  await updateDoc(lotRef, { status: false });
+  await deleteDoc(lotRef);
 };

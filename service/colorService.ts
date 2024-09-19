@@ -43,5 +43,5 @@ export const updateColor = async (id: string, values: any) => {
 // Delete (soft delete) a specific color by changing its status
 export const deleteColor = async (id: string) => {
   const colorRef = doc(firestore, 'color', id);
-  await updateDoc(colorRef, { status: false });
+  await deleteDoc(colorRef);
 };

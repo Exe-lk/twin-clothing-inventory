@@ -44,5 +44,5 @@ export const updateGsm = async (id: string, values: any) => {
 // Delete (soft delete) a specific GSM by changing its status
 export const deleteGsm = async (id: string) => {
   const gsmRef = doc(firestore, 'gsm', id);
-  await updateDoc(gsmRef, { status: false });
+  await deleteDoc(gsmRef);
 };
