@@ -6,6 +6,10 @@ import { userManagementApiSlice } from './slices/userManagementApiSlice';
 import { userApiSlice } from './slices/userApiSlice';
 import {lotApiSlice} from './slices/lotAPISlice';
 import {supplierApiSlice } from './slices/supplierAPISlice';
+import {colorApiSlice } from './slices/colorApiSlice';
+import {fabricApiSlice } from './slices/fabricApiSlice';
+import {gsmApiSlice } from './slices/gsmApiSlice';
+import {knitTypeApiSlice } from './slices/knitTypeApiSlice';
 
 const store = configureStore({
   reducer: {
@@ -13,7 +17,11 @@ const store = configureStore({
     [userManagementApiSlice.reducerPath]: userManagementApiSlice.reducer,
     [userApiSlice.reducerPath]: userApiSlice.reducer, // Both now have unique reducerPaths
     [lotApiSlice.reducerPath]: lotApiSlice.reducer, 
-    [supplierApiSlice.reducerPath]: supplierApiSlice.reducer, 
+    [supplierApiSlice.reducerPath]: supplierApiSlice.reducer,
+    [colorApiSlice.reducerPath]: colorApiSlice.reducer,
+    [fabricApiSlice.reducerPath]: fabricApiSlice.reducer,
+    [gsmApiSlice.reducerPath]: gsmApiSlice.reducer,
+    [knitTypeApiSlice.reducerPath]: knitTypeApiSlice.reducer, 
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -21,7 +29,12 @@ const store = configureStore({
       userManagementApiSlice.middleware, 
       userApiSlice.middleware,
       lotApiSlice.middleware,
-      supplierApiSlice.middleware),
+      supplierApiSlice.middleware,
+      colorApiSlice.middleware,
+      fabricApiSlice.middleware,
+      gsmApiSlice.middleware,
+      knitTypeApiSlice.middleware,
+    ),
 });
 
 setupListeners(store.dispatch);

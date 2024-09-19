@@ -183,7 +183,7 @@ const Index: NextPage = () => {
 											lot
 												.filter((lot: any) =>
 													searchTerm
-														? lot.name
+														? lot.code
 																.toLowerCase()
 																.includes(searchTerm.toLowerCase())
 														: true,

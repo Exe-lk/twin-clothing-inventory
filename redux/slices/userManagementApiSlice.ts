@@ -12,8 +12,12 @@ export const userManagementApiSlice = createApi({
     }),
     // Get a user by ID
     getUserById: builder.query({
-      query: (id) => `User_management/route/${id}`, // Call endpoint with ID
+      query: (id) => `User_management/${id}`, // Call endpoint with ID
       providesTags: (result, error, id) => [{ type: 'User', id }], // Cache invalidation
+    }),
+    getDeleteUsers: builder.query({
+      query: () => 'User_management/bin',
+      providesTags: ['User'],
     }),
     // Create: Add a new user
     addUser: builder.mutation({
@@ -27,16 +31,16 @@ export const userManagementApiSlice = createApi({
     // Update: Update an existing user
     updateUser: builder.mutation({
       query: ({ id, ...updatedUser }) => ({
-        url: `User_management/route/${id}`,
+        url: `User_management/${id}`,
         method: 'PUT',
         body: updatedUser,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: 'User', id }],
-    }),
+      invalidatesTags: ['User'],
+        }),
     // Delete: Delete a user
     deleteUser: builder.mutation({
       query: (id) => ({
-        url: `User_management/route/${id}`,
+        url: `User_management/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: (result, error, id) => [{ type: 'User', id }],
@@ -46,7 +50,8 @@ export const userManagementApiSlice = createApi({
 
 export const {
   useGetUsersQuery,
-  useGetUserByIdQuery,  // Export the hook for fetching by ID
+  useGetUserByIdQuery,
+  useGetDeleteUsersQuery,
   useAddUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,

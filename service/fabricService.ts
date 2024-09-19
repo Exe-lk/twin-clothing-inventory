@@ -43,5 +43,5 @@ export const updateFabric = async (id: string, values: any) => {
 // Soft delete a specific fabric by changing its status
 export const deleteFabric = async (id: string) => {
   const fabricRef = doc(firestore, 'fabric', id);
-  await updateDoc(fabricRef, { status: false });
+  await deleteDoc(fabricRef);
 };

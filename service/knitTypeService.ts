@@ -44,5 +44,5 @@ export const updateKnitType = async (id: string, values: any) => {
 // Delete (soft delete) a specific knit type by changing its status
 export const deleteKnitType = async (id: string) => {
   const knitTypeRef = doc(firestore, 'knittype', id);
-  await updateDoc(knitTypeRef, { status: false });
+  await deleteDoc(knitTypeRef);
 };

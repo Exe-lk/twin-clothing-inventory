@@ -43,7 +43,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 			if (inputText === 'DELETE') {
 				await deleteSupplier(supplier.id).unwrap();
-				Swal.fire('Deleted!', 'The category has been deleted.', 'success');
+				Swal.fire('Deleted!', 'The supplier has been deleted.', 'success');
 
 				// Perform delete action here
 				console.log('Delete confirmed');
