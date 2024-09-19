@@ -12,6 +12,7 @@ import { firestore, storage } from '../../firebaseConfig';
 import Swal from 'sweetalert2';
 import Select from '../bootstrap/forms/Select';
 import Option, { Options } from '../bootstrap/Option';
+import { useGetSuppliersQuery, useAddSupplierMutation } from '../../redux/slices/supplierAPISlice'; // Import the query
 
 interface Category {
 	categoryId: string;
@@ -28,56 +29,15 @@ interface SellerAddModalProps {
 	isOpen: boolean;
 	setIsOpen(...args: unknown[]): unknown;
 }
-interface Product {
-	category: string;
-	name: string;
-}
+
 // SellerAddModal component definition
 const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [items, setItems] = useState<Item[]>([]);
-	useEffect(() => {
-		const fetchCategories = async () => {
-			try {
-				const querySnapshot = await getDocs(collection(firestore, 'category'));
-				const fetchedCategories: Category[] = [];
-				querySnapshot.forEach((doc) => {
-					const data = doc.data();
-					fetchedCategories.push({
-						categoryId: doc.id,
-						categoryname: data.categoryname,
-					});
-				});
-				setCategories(fetchedCategories);
-			} catch (error) {
-				console.error('Error fetching categories:', error);
-			}
-		};
+	
 
-		fetchCategories();
-	}, []);
-
-	useEffect(() => {
-		const fetchItems = async () => {
-			try {
-				const querySnapshot = await getDocs(collection(firestore, 'item'));
-				const fetchedItems: Item[] = [];
-				querySnapshot.forEach((doc) => {
-					const data = doc.data();
-					fetchedItems.push({
-						itemId: doc.id,
-						name: data.name,
-						category: data.category,
-					});
-				});
-				setItems(fetchedItems);
-			} catch (error) {
-				console.error('Error fetching Items:', error);
-			}
-		};
-
-		fetchItems();
-	}, []);
+	const [addsupplier, { isLoading }] = useAddSupplierMutation();
+	const { refetch } = useGetSuppliersQuery(undefined);
 
 	// Initialize formik for form management
 	const formik = useFormik({
@@ -121,29 +81,24 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 		},
 		onSubmit: async (values) => {
 			try {
-				console.log(values);
-				values.status=true
-				const collectionRef = collection(firestore, 'seller');
-				addDoc(collectionRef, values)
-					.then(() => {
-						
-						setIsOpen(false);
-						showNotification(
-							<span className='d-flex align-items-center'>
-								<Icon icon='Info' size='lg' className='me-1' />
-								<span>Successfully Added</span>
-							</span>,
-							'Seller has been added successfully',
-						);
-						Swal.fire('Added!', 'Seller has been add successfully.', 'success');
-						formik.resetForm()
-					})
-					.catch((error) => {
-						console.error('Error adding document: ', error);
-						alert(
-							'An error occurred while adding the document. Please try again later.',
-						);
-					});
+				Swal.fire({
+					title: 'Processing...',
+					html: 'Please wait while the data is being processed.<br><div class="spinner-border" role="status"></div>',
+					allowOutsideClick: false,
+					showCancelButton: false,
+					showConfirmButton: false,
+				});
+				const response: any = await addsupplier(values).unwrap();
+				console.log(response);
+
+				// Refetch categories to update the list
+				refetch();
+
+				setIsOpen(false);
+
+				Swal.fire('Added!', 'supplier has been added successfully.', 'success');
+				formik.resetForm();
+				
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
 				alert('An error occurred during file upload. Please try again later.');
