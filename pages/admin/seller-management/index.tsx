@@ -263,7 +263,7 @@ const Index: NextPage = () => {
 						{/* Table for displaying customer data */}
 						<Card stretch>
 						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
-							<div className='flex-grow-1 text-center text-info '>Manage Lot</div>
+							<div className='flex-grow-1 text-center text-info '>Manage Suppler</div>
 							{/* dropdown for export */}
 							<Dropdown>
 								<DropdownToggle hasIcon={false}>
@@ -290,50 +290,12 @@ const Index: NextPage = () => {
 											<th>Company email</th>
 											<th>Phone number</th>
 											<th>Seller email</th>
-											<th>Product</th>
+											
 											<th></th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<td>malinka</td>
-											<td>ABC</td>
-											<td>abc@gmail.com</td>
-											<td>0778965412</td>
-											<td>malinka@gmail.com</td>
-											<td>
-												<Dropdown>
-													<DropdownToggle hasIcon={false}>
-														<Button icon='List' color='primary'>
-															View Products
-														</Button>
-													</DropdownToggle>
-													<DropdownMenu
-														isAlignmentEnd
-														size='md'
-														className='ps-4'>
-														<div>abc</div>
-														<div>efg</div>
-													</DropdownMenu>
-												</Dropdown>
-											</td>
-											<td>
-												<Button
-													icon='Edit'
-													tag='a'
-													color='info'
-													onClick={() => setEditModalStatus(true)}>
-													Edit
-												</Button>
-												<Button
-													className='m-2'
-													icon='Delete'
-													color='danger'
-													onClick={() => handleClickDelete(seller)}>
-													Delete
-												</Button>
-											</td>
-										</tr>
+										
 										{isLoading && (
 											<tr>
 												<td>Loading...</td>
@@ -360,7 +322,7 @@ const Index: NextPage = () => {
 														<td>{supplier.company_email}</td>
 														<td>{supplier.phone}</td>
 														<td>{supplier.email}</td>
-														<td>{supplier.qty}</td>
+														
 
 														<td>
 															<Button
