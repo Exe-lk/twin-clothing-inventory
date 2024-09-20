@@ -16,6 +16,11 @@ import StockEditModal from '../../../components/custom/ItemEditModal';
 import Swal from 'sweetalert2';
 import StockDeleteModal from '../../../components/custom/ItemDeleteModal';
 import { useUpdateLotMutation, useGetLotsQuery } from '../../../redux/slices/lotAPISlice';
+import Dropdown from '../../../components/bootstrap/Dropdown';
+import { DropdownToggle } from '../../../components/bootstrap/Dropdown';
+import { DropdownMenu } from '../../../components/bootstrap/Dropdown';
+import { DropdownItem }from '../../../components/bootstrap/Dropdown';
+import { toPng, toSvg } from 'html-to-image';
 
 const Index: NextPage = () => {
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
@@ -59,6 +64,78 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete employee.', 'error');
 		}
 	};
+
+	// Function to handle the download in different formats
+	const handleExport = (format: string) => {
+		const table = document.querySelector('table'); 
+		
+		if (!table) return;
+		// // Clone the table 
+		// const clonedTable = table.cloneNode(true) as HTMLElement;
+		// // Remove Edit/Delete buttons from cloned table
+		// const buttons = clonedTable.querySelectorAll('td button');
+		// buttons.forEach(button => button.remove());
+		switch (format) {
+			case 'svg':
+				downloadTableAsSVG(table);
+				break;
+			case 'png':
+				downloadTableAsPNG(table);
+				break;
+			case 'csv':
+				downloadTableAsCSV(table);
+				break;
+			default:
+				console.warn('Unsupported export format: ', format);
+		}
+	};
+
+	// function to export the table data in CSV format
+		const downloadTableAsCSV = (table: any) => {
+			let csvContent = '';
+			const rows = table.querySelectorAll('tr');
+			rows.forEach((row: any) => {
+				const cols = row.querySelectorAll('td, th');
+				const rowData = Array.from(cols)
+					.map((col: any) => `"${col.innerText}"`)
+					.join(',');
+				csvContent += rowData + '\n';
+			});
+
+			const blob = new Blob([csvContent], { type: 'text/csv' });
+			const link = document.createElement('a');
+			link.href = URL.createObjectURL(blob);
+			link.download = 'table_data.csv';
+			link.click();
+		};
+		// Function to export the table data in PNG format using library html-to-image
+		const downloadTableAsPNG = (table: any) => {
+			toPng(table)
+				.then((dataUrl) => {
+					const link = document.createElement('a');
+					link.href = dataUrl;
+					link.download = 'table_data.png';
+					link.click();
+				})
+				.catch((error) => {
+					console.error('Error generating PNG: ', error);
+				});
+		};
+		// Function to export the table data in SVG format using library html-to-image
+		const downloadTableAsSVG = (table: any) => {
+			toSvg(table)
+				.then((dataUrl) => {
+					const link = document.createElement('a');
+					link.href = dataUrl;
+					link.download = 'table_data.svg';
+					link.click();
+				})
+				.catch((error) => {
+					console.error('Error generating SVG: ', error);
+				});
+		};
+
+
 	// Return the JSX for rendering the page
 	return (
 		<PageWrapper>
@@ -142,15 +219,24 @@ const Index: NextPage = () => {
 					<div className='col-12'>
 						{/* Table for displaying customer data */}
 						<Card stretch>
-							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
-								<div className='flex-grow-1 text-center text-info '>Manage Lot</div>
-								<Button
-									icon='UploadFile'
-									color='warning'
-									onClick={() => setAddModalStatus(true)}>
-									Export
-								</Button>
-							</CardTitle>
+						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
+							<div className='flex-grow-1 text-center text-info '>Manage Lot</div>
+							{/* dropdown for export */}
+							<Dropdown>
+								<DropdownToggle hasIcon={false}>
+									<Button
+										icon='UploadFile'
+										color='warning'>
+										Export
+									</Button>
+								</DropdownToggle>
+								<DropdownMenu isAlignmentEnd>
+									<DropdownItem onClick={() => handleExport('svg')}>Download SVG</DropdownItem>
+									<DropdownItem onClick={() => handleExport('png')}>Download PNG</DropdownItem>
+									<DropdownItem onClick={() => handleExport('csv')}>Download CSV</DropdownItem>
+								</DropdownMenu>
+							</Dropdown>
+						</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-bordered border-primary table-modern table-hover'>
 									<thead>
