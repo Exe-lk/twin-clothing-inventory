@@ -16,11 +16,14 @@ import StockEditModal from '../../../components/custom/ItemEditModal';
 import Swal from 'sweetalert2';
 import StockDeleteModal from '../../../components/custom/ItemDeleteModal';
 import { useUpdateLotMutation, useGetLotsQuery } from '../../../redux/slices/lotAPISlice';
+import { toPng, toSvg } from 'html-to-image';
 import Dropdown from '../../../components/bootstrap/Dropdown';
 import { DropdownToggle } from '../../../components/bootstrap/Dropdown';
 import { DropdownMenu } from '../../../components/bootstrap/Dropdown';
 import { DropdownItem }from '../../../components/bootstrap/Dropdown';
-import { toPng, toSvg } from 'html-to-image';
+import jsPDF from 'jspdf'; 
+import autoTable from 'jspdf-autotable';
+
 
 const Index: NextPage = () => {
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
@@ -64,77 +67,145 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete employee.', 'error');
 		}
 	};
-
-	// Function to handle the download in different formats
-	const handleExport = (format: string) => {
-		const table = document.querySelector('table'); 
-		
+    // Function to handle the download in different formats
+	const handleExport = async (format: string) => {
+		const table = document.querySelector('table');
 		if (!table) return;
-		// // Clone the table 
-		// const clonedTable = table.cloneNode(true) as HTMLElement;
-		// // Remove Edit/Delete buttons from cloned table
-		// const buttons = clonedTable.querySelectorAll('td button');
-		// buttons.forEach(button => button.remove());
-		switch (format) {
-			case 'svg':
-				downloadTableAsSVG(table);
-				break;
-			case 'png':
-				downloadTableAsPNG(table);
-				break;
-			case 'csv':
-				downloadTableAsCSV(table);
-				break;
-			default:
-				console.warn('Unsupported export format: ', format);
+
+		const clonedTable = table.cloneNode(true) as HTMLElement;
+
+		// Remove Edit/Delete buttons column from cloned table
+		const rows = clonedTable.querySelectorAll('tr');
+		rows.forEach((row) => {
+			const lastCell = row.querySelector('td:last-child, th:last-child');
+			if (lastCell) {
+				lastCell.remove();
+			}
+		});
+	
+		
+		const clonedTableStyles = getComputedStyle(table);
+		clonedTable.setAttribute('style', clonedTableStyles.cssText);
+	
+		
+		try {
+			switch (format) {
+				case 'svg':
+					await downloadTableAsSVG(clonedTable);
+					break;
+				case 'png':
+					await downloadTableAsPNG(clonedTable);
+					break;
+				case 'csv':
+					downloadTableAsCSV(clonedTable);
+					break;
+				case 'pdf': 
+					await downloadTableAsPDF(clonedTable);
+					break;
+				default:
+					console.warn('Unsupported export format: ', format);
+			}
+		} catch (error) {
+			console.error('Error exporting table: ', error);
 		}
 	};
 
 	// function to export the table data in CSV format
-		const downloadTableAsCSV = (table: any) => {
-			let csvContent = '';
-			const rows = table.querySelectorAll('tr');
-			rows.forEach((row: any) => {
-				const cols = row.querySelectorAll('td, th');
-				const rowData = Array.from(cols)
-					.map((col: any) => `"${col.innerText}"`)
-					.join(',');
-				csvContent += rowData + '\n';
+	const downloadTableAsCSV = (table: any) => {
+				let csvContent = '';
+				const rows = table.querySelectorAll('tr');
+				rows.forEach((row: any) => {
+					const cols = row.querySelectorAll('td, th');
+					const rowData = Array.from(cols)
+						.map((col: any) => `"${col.innerText}"`)
+						.join(',');
+					csvContent += rowData + '\n';
+				});
+
+				const blob = new Blob([csvContent], { type: 'text/csv' });
+				const link = document.createElement('a');
+				link.href = URL.createObjectURL(blob);
+				link.download = 'table_data.csv';
+				link.click();
+	};
+	//  function for PDF export
+	const downloadTableAsPDF = (table: HTMLElement) => {
+		try {
+		  const pdf = new jsPDF('p', 'pt', 'a4');
+		  const rows: any[] = [];
+		  const headers: any[] = [];
+		  
+		  const thead = table.querySelector('thead');
+		  if (thead) {
+			const headerCells = thead.querySelectorAll('th');
+			headers.push(Array.from(headerCells).map((cell: any) => cell.innerText));
+		  }
+		  const tbody = table.querySelector('tbody');
+		  if (tbody) {
+			const bodyRows = tbody.querySelectorAll('tr');
+			bodyRows.forEach((row: any) => {
+			  const cols = row.querySelectorAll('td');
+			  const rowData = Array.from(cols).map((col: any) => col.innerText);
+			  rows.push(rowData);
 			});
-
-			const blob = new Blob([csvContent], { type: 'text/csv' });
+		  }
+		  autoTable(pdf, {
+			head: headers,
+			body: rows,
+			margin: { top: 50 },
+			styles: {
+			  overflow: 'linebreak',
+			  cellWidth: 'wrap',
+			},
+			theme: 'grid',
+		  });
+	  
+		  pdf.save('table_data.pdf');
+		} catch (error) {
+		  console.error('Error generating PDF: ', error);
+		  alert('Error generating PDF. Please try again.');
+		}
+	  };
+	
+	
+	// Function to export the table data in SVG format using library html-to-image
+	const downloadTableAsSVG = async (table: HTMLElement) => {
+		try {
+			const dataUrl = await toSvg(table, {
+				backgroundColor: 'white', 
+				cacheBust: true, 
+				style: { 
+					width: table.offsetWidth + 'px'
+				}
+			});
 			const link = document.createElement('a');
-			link.href = URL.createObjectURL(blob);
-			link.download = 'table_data.csv';
+			link.href = dataUrl;
+			link.download = 'table_data.svg'; 
 			link.click();
-		};
-		// Function to export the table data in PNG format using library html-to-image
-		const downloadTableAsPNG = (table: any) => {
-			toPng(table)
-				.then((dataUrl) => {
-					const link = document.createElement('a');
-					link.href = dataUrl;
-					link.download = 'table_data.png';
-					link.click();
-				})
-				.catch((error) => {
-					console.error('Error generating PNG: ', error);
-				});
-		};
-		// Function to export the table data in SVG format using library html-to-image
-		const downloadTableAsSVG = (table: any) => {
-			toSvg(table)
-				.then((dataUrl) => {
-					const link = document.createElement('a');
-					link.href = dataUrl;
-					link.download = 'table_data.svg';
-					link.click();
-				})
-				.catch((error) => {
-					console.error('Error generating SVG: ', error);
-				});
-		};
-
+		} catch (error) {
+			console.error('Error generating SVG: ', error); 
+		}
+	};
+	
+	// Function to export the table data in PNG format using library html-to-image
+	const downloadTableAsPNG = async (table: HTMLElement) => {
+		try {
+			const dataUrl = await toPng(table, {
+				backgroundColor: 'white', 
+				cacheBust: true, 
+				style: { 
+					width: table.offsetWidth + 'px'
+				}
+			});
+			const link = document.createElement('a');
+			link.href = dataUrl;
+			link.download = 'table_data.png'; 
+			link.click();
+		} catch (error) {
+			console.error('Error generating PNG: ', error); 
+		}
+	};
+	
 
 	// Return the JSX for rendering the page
 	return (
@@ -234,6 +305,7 @@ const Index: NextPage = () => {
 									<DropdownItem onClick={() => handleExport('svg')}>Download SVG</DropdownItem>
 									<DropdownItem onClick={() => handleExport('png')}>Download PNG</DropdownItem>
 									<DropdownItem onClick={() => handleExport('csv')}>Download CSV</DropdownItem>
+									<DropdownItem onClick={() => handleExport('pdf')}>Download PDF</DropdownItem>
 								</DropdownMenu>
 							</Dropdown>
 						</CardTitle>
