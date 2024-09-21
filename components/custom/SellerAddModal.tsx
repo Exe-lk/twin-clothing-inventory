@@ -184,7 +184,7 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 						/>
 					</FormGroup>
 
-					{formik.values.product.map((product, index) => (
+					{/* {formik.values.product.map((product, index) => (
 						<FormGroup
 							key={index}
 							id={`product-${index}`}
@@ -247,12 +247,12 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 						</FormGroup>
 					))}
 
-					{/* Button to add new product input field */}
+				
 					<div className='col-md-12'>
 						<Button color='info' onClick={addProductField}>
 							Add Product
 						</Button>
-					</div>
+					</div> */}
 				</div>
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>

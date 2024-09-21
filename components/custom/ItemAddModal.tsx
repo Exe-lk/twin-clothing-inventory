@@ -10,6 +10,12 @@ import Select from '../bootstrap/forms/Select';
 import Option from '../bootstrap/Option';
 import { useGetLotsQuery, useAddLotMutation } from '../../redux/slices/lotAPISlice'; // Import the query
 import Checks, { ChecksGroup } from '../bootstrap/forms/Checks';
+import { useGetFabricsQuery } from '../../redux/slices/fabricApiSlice';
+import { useGetGSMsQuery } from '../../redux/slices/gsmApiSlice';
+import { useGetKnitTypesQuery } from '../../redux/slices/knitTypeApiSlice';
+import { useGetCategoriesQuery } from '../../redux/slices/categoryApiSlice'; // Import the RTK Query hook
+import { useGetColorsQuery } from '../../redux/slices/colorApiSlice';
+import { useGetSuppliersQuery } from '../../redux/slices/supplierAPISlice';
 
 interface ItemAddModalProps {
 	id: string;
@@ -42,6 +48,12 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 
 	const [addLot, { isLoading }] = useAddLotMutation();
 	const { refetch } = useGetLotsQuery(undefined);
+	const { data: fabric } = useGetFabricsQuery(undefined);
+	const { data: gsm } = useGetGSMsQuery(undefined);
+	const { data: knit } = useGetKnitTypesQuery(undefined);
+	const { data: supplier } = useGetSuppliersQuery(undefined);
+	const { data: categories } = useGetCategoriesQuery(undefined);
+	const { data: color } = useGetColorsQuery(undefined);
 
 	const formik = useFormik({
 		initialValues: {
@@ -106,17 +118,18 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 		},
 	});
 
-	const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+	const handleCategoryChange = (e: any) => {
 		const selectedCategory = e.target.value;
 		formik.handleChange(e);
-
-		const selectedCategoryData = category.find((cat) => cat.categoryname === selectedCategory);
+		setSelectedOption(e.target.value);
+		const selectedCategoryData = categories.find((cat: any) => cat.name === selectedCategory);
 		if (selectedCategoryData) {
-			const options = selectedCategoryData.subcategory.map((subcat) => ({
+			const options = selectedCategoryData.subcategory.map((subcat: any) => ({
 				value: subcat,
 				label: subcat,
 			}));
 			setSubcategories(options);
+			console.log(options);
 		} else {
 			setSubcategories([]);
 		}
@@ -169,29 +182,30 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 
 					{/* Common input fields */}
 					<FormGroup
-						id='category'
-						label='Category'
-						onChange={formik.handleChange}
-						className='col-md-6'>
-						<Select
-							ariaLabel='Default select example'
-							placeholder='Open this select category'
+							id='category'
+							label='Category'
 							onChange={formik.handleChange}
-							value={formik.values.category}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.category}
-							invalidFeedback={formik.errors.category}
-							validFeedback='Looks good!'>
-							<Option value={'dd'}>abc</Option>
-							<Option value={'dd'}>efg</Option>
-							<Option value={'dd'}>xyz</Option>
-							{category.map((item, index) => (
-								<Option value={item.categoryname}>{item.categoryname}</Option>
-							))}
-						</Select>
-					</FormGroup>
-					<FormGroup id='subcategory' label='Sub Category' className='col-md-6'>
+							className='col-md-6'>
+							<Select
+								ariaLabel='Default select example'
+								placeholder='Open this select category'
+								onChange={handleCategoryChange}
+								value={formik.values.category}
+								onBlur={formik.handleBlur}
+								isValid={formik.isValid}
+								isTouched={formik.touched.category}
+								invalidFeedback={formik.errors.category}
+								validFeedback='Looks good!'>
+								{categories &&
+									categories.map((category: any) => (
+										<>
+											<Option value={category.name}>{category.name}</Option>
+										</>
+									))}
+							</Select>
+						</FormGroup>
+
+				<FormGroup id='subcategory' label='Sub Category' className='col-md-6'>
 						<Select
 							ariaLabel='Default select example'
 							placeholder='Open this select sub category'
@@ -202,14 +216,15 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							isTouched={formik.touched.subcategory}
 							invalidFeedback={formik.errors.subcategory}
 							validFeedback='Looks good!'>
-							<Option value={'dd'}>abc</Option>
-							<Option value={'dd'}>efg</Option>
-							<Option value={'dd'}>xyz</Option>
-							{category.map((item, index) => (
-								<Option value={item.categoryname}>{item.categoryname}</Option>
-							))}
+							{subcategories &&
+								subcategories.map((category: any) => (
+									<>
+										<Option value={category.value}>{category.label}</Option>
+									</>
+								))}
 						</Select>
 					</FormGroup>
+
 					<FormGroup id='code' label='Code' className='col-md-6'>
 						<Input
 							onChange={formik.handleChange}
@@ -244,43 +259,48 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
+					
 					<FormGroup id='color' label='Color' className='col-md-6'>
-						{!isAddingNewColor ? (
-							<Select
-								ariaLabel='Default select example'
-								placeholder='Open this select color'
-								onChange={(e: any) => {
-									if (e.target.value === 'Add new') {
-										setIsAddingNewColor(true); // Switch to input field
-									} else {
-										formik.handleChange(e);
-									}
-								}}
-								value={formik.values.color}
-								onBlur={formik.handleBlur}
-								isValid={formik.isValid}
-								isTouched={formik.touched.color}
-								invalidFeedback={formik.errors.color}
-								validFeedback='Looks good!'>
-								<Option value='Green'>Green</Option>
-								<Option value='Red'>Red</Option>
-								<Option value='Blue'>Blue</Option>
-								<Option value='Add new'>Add new</Option>
-							</Select>
-						) : (
-							<Input
-								type='text'
-								placeholder='Enter new color'
-								onChange={formik.handleChange}
-								value={formik.values.color}
-								onBlur={formik.handleBlur}
-								isValid={formik.isValid}
-								isTouched={formik.touched.color}
-								invalidFeedback={formik.errors.color}
-								validFeedback='Looks good!'
-							/>
-						)}
-					</FormGroup>
+								{!isAddingNewColor ? (
+									<Select
+										ariaLabel='Default select example'
+										placeholder='Open this select color'
+										onChange={(e: any) => {
+											if (e.target.value === 'Add new') {
+												setIsAddingNewColor(true); // Switch to input field
+											} else {
+												formik.handleChange(e);
+											}
+										}}
+										value={formik.values.color}
+										onBlur={formik.handleBlur}
+										isValid={formik.isValid}
+										isTouched={formik.touched.color}
+										invalidFeedback={formik.errors.color}
+										validFeedback='Looks good!'>
+										<Option value='Add new'>Add new</Option>
+
+										{color &&
+											color.map((color: any) => (
+												<>
+													<Option value={color.name}>{color.name}</Option>
+												</>
+											))}
+									</Select>
+								) : (
+									<Input
+										type='text'
+										placeholder='Enter new color'
+										onChange={formik.handleChange}
+										value={formik.values.color}
+										onBlur={formik.handleBlur}
+										isValid={formik.isValid}
+										isTouched={formik.touched.color}
+										invalidFeedback={formik.errors.color}
+										validFeedback='Looks good!'
+									/>
+								)}
+							</FormGroup>
 					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
 						<Input
 							type='number'
@@ -304,9 +324,12 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							isTouched={formik.touched.supplier}
 							invalidFeedback={formik.errors.supplier}
 							validFeedback='Looks good!'>
-							<Option value={'dd'}>abc</Option>
-							<Option value={'dd'}>efg</Option>
-							<Option value={'dd'}>ijk</Option>
+								{supplier &&
+											supplier.map((supplier: any) => (
+												<>
+													<Option value={supplier.name}>{supplier.name}</Option>
+												</>
+											))}
 						</Select>
 					</FormGroup>
 					<FormGroup id='order' label='Order Details' className='col-md-6'>
@@ -338,42 +361,55 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					{selectedOption === 'Fabric' && (
 						<>
 							<p>Fabric</p>
-							<FormGroup id='fabric_type' label='Fabric Type' className='col-md-6'>
-								{isAddingNewFabric ? (
-									<Input
-										onChange={formik.handleChange}
-										value={formik.values.fabric_type}
-										onBlur={formik.handleBlur}
-										isValid={formik.isValid}
-										isTouched={formik.touched.fabric_type}
-										invalidFeedback={formik.errors.fabric_type}
-										validFeedback='Looks good!'
-									/>
-								) : (
-									<Select
-										ariaLabel='Fabric type select'
-										onChange={(e: any) => {
-											if (e.target.value === 'Add new') {
-												setIsAddingNewFabric(true);
-											} else {
-												formik.handleChange(e);
-											}
-										}}
-										value={formik.values.fabric_type}>
-										<Option value=''>Select Fabric Type</Option>
-										<Option value='Add new'>Add New</Option>
-										{/* Existing fabric type options can be dynamically loaded here */}
-										<Option value='Cotton'>Cotton</Option>
-										<Option value='Polyester'>Polyester</Option>
-									</Select>
-								)}
-							</FormGroup>
+						
+							<FormGroup
+										id='fabric_type'
+										label='Fabric Type'
+										className='col-md-6'>
+										{isAddingNewFabric ? (
+											<Input
+												placeholder='Add new fabric type'
+												onChange={(e: any) =>
+													formik.setFieldValue(
+														'fabric_type',
+														e.target.value,
+													)
+												}
+												value={formik.values.fabric_type}
+											/>
+										) : (
+											<Select
+												ariaLabel='Fabric type select'
+												onChange={(e: any) => {
+													if (e.target.value === 'Add new') {
+														setIsAddingNewFabric(true);
+													} else {
+														formik.handleChange(e);
+													}
+												}}
+												value={formik.values.fabric_type}>
+												<Option value=''>Select Fabric Type</Option>
+												<Option value='Add new'>Add New</Option>
+												{/* Existing fabric type options can be dynamically loaded here */}
 
-							<FormGroup id='gsm' label='GSM' className='col-md-6'>
+												{fabric &&
+													fabric.map((fabric: any) => (
+														<>
+															<Option value={fabric.name}>
+																{fabric.name}
+															</Option>
+														</>
+													))}
+											</Select>
+										)}
+									</FormGroup>
+									<FormGroup id='gsm' label='GSM' className='col-md-6'>
 								{isAddingNewGSM ? (
 									<Input
 										placeholder='Add new GSM'
-										onChange={(e: any) => formik.setFieldValue('gsm', e.target.value)}
+										onChange={(e: any) =>
+											formik.setFieldValue('gsm', e.target.value)
+										}
 										value={formik.values.gsm}
 									/>
 								) : (
@@ -389,9 +425,12 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 										value={formik.values.gsm}>
 										<Option value=''>Select GSM</Option>
 										<Option value='Add new'>Add New</Option>
-										{/* Existing GSM options can be dynamically loaded here */}
-										<Option value='150'>150 GSM</Option>
-										<Option value='180'>180 GSM</Option>
+										{gsm &&
+											gsm.map((gsm: any) => (
+												<>
+													<Option value={gsm.name}>{gsm.name}</Option>
+												</>
+											))}
 									</Select>
 								)}
 							</FormGroup>
@@ -434,11 +473,15 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 										isTouched={formik.touched.knit_type}
 										invalidFeedback={formik.errors.knit_type}
 										validFeedback='Looks good!'>
-										<Option value=''>Select Knit Type</Option>
-										<Option value='60'>60</Option>
-										<Option value='70'>70</Option>
-										<Option value='80'>80</Option>
+										{/* <Option value=''>Select Knit Type</Option> */}
+
 										<Option value='Add new'>Add new</Option>
+										{knit &&
+											knit.map((knit: any) => (
+												<>
+													<Option value={knit.name}>{knit.name}</Option>
+												</>
+											))}
 									</Select>
 								)}
 							</FormGroup>
