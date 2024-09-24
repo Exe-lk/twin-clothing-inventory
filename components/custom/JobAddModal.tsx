@@ -2,17 +2,10 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
-import showNotification from '../extras/showNotification';
-import Icon from '../icon/Icon';
 import FormGroup from '../bootstrap/forms/FormGroup';
 import Input from '../bootstrap/forms/Input';
-import Button from '../bootstrap/Button';
-import { collection, addDoc, doc, setDoc, getDocs, query, where } from 'firebase/firestore';
-import { firestore, storage } from '../../firebaseConfig';
+import Button from '../bootstrap/Button'
 import Swal from 'sweetalert2';
-import Select from '../bootstrap/forms/Select';
-import Option, { Options } from '../bootstrap/Option';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { useGetJobsQuery, useAddJobMutation } from '../../redux/slices/jobApiSlice'; // Import the query
 
 // Define the props for the ItemAddModal component
@@ -21,10 +14,7 @@ interface ItemAddModalProps {
 	isOpen: boolean;
 	setIsOpen(...args: unknown[]): unknown;
 }
-interface Category {
-	categoryname: string;
-	subcategory: string[];
-}
+
 // ItemAddModal component definition
 const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 
@@ -76,13 +66,11 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 
 				setIsOpen(false);
 
-				Swal.fire('Added!', 'Lot has been added successfully.', 'success');
+				Swal.fire('Added!', 'job has been added successfully.', 'success');
 				formik.resetForm();
 				
 			} catch (error) {
-				console.error('Error during handleUpload: ', error);
 				Swal.close();
-				alert('An error occurred during file upload. Please try again later.');
 			}
 		},
 	});

@@ -97,7 +97,7 @@ const Index: React.FC<KeyboardProps> = ({
 	const keyboard = useRef<any>(null);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
 	const [popupInput, setPopupInput] = useState<any>("");
-	const [popupInput1, setPopupInput1] = useState<any>("");
+	const [popupInput1, setPopupInput1] = useState<any>();
 	const [selectedItem, setSelectedItem] = useState<any>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const popupInputRef = useRef<HTMLInputElement>(null);
@@ -142,7 +142,7 @@ const Index: React.FC<KeyboardProps> = ({
 
 	// Handle OK button click in the popup
 	const handlePopupOk = async () => {
-		if (popupInput <= 0) {
+		if (popupInput <= 0 || selectedType==="" ||( selectedType!="Return" && popupInput1==null)) {
 			return
 		}
 		if (selectedItem) {
@@ -417,16 +417,18 @@ const Index: React.FC<KeyboardProps> = ({
                             className='form-control mb-4 p-2'
                             ref={popupInputRef}
                         />
-                        <h6 className='mb-4'>Job ID</h6>
-                        <Input
-                            type='text'
-                            value={popupInput1}
-                            onChange={(e:any) => setPopupInput1(e.target.value)}
-                            min={1}
-                            className='form-control mb-4 p-2'
-                            ref={popupInputRef}
-                        />
-
+                       {selectedType !== "Return" && (
+                <>
+                    <h6 className='mb-4'>Job ID</h6>
+                    <Input
+                        type='text'
+                        value={popupInput1}
+                        onChange={(e: any) => setPopupInput1(e.target.value)}
+                        className='form-control mb-4 p-2'
+                        ref={popupInputRef}
+                    />
+                </>
+            )}
                        
 
                         <div className='d-flex justify-content-end'>

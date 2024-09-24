@@ -2,17 +2,10 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
-import showNotification from '../extras/showNotification';
-import Icon from '../icon/Icon';
 import FormGroup from '../bootstrap/forms/FormGroup';
 import Input from '../bootstrap/forms/Input';
 import Button from '../bootstrap/Button';
-import { collection, addDoc, doc, setDoc, getDocs, query, where } from 'firebase/firestore';
-import { firestore, storage } from '../../firebaseConfig';
 import Swal from 'sweetalert2';
-import Select from '../bootstrap/forms/Select';
-import Option, { Options } from '../bootstrap/Option';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { useUpdateJobMutation, useGetJobsQuery } from '../../redux/slices/jobApiSlice';
 
 // Define the props for the ItemAddModal component
@@ -27,15 +20,12 @@ interface Category {
 }
 // ItemAddModal component definition
 const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
-	const [imageurl, setImageurl] = useState<any>(null);
-	const [selectedImage, setSelectedImage] = useState<string | null>(null);
-	const [category, setCategory] = useState<Category[]>([]);
-	const [subcategory, setSubcategory] = useState<[]>([]);
+
 
 	const { data: job } = useGetJobsQuery(undefined);
 	const [updatejob, { isLoading }] = useUpdateJobMutation();
 	const jobToEdit = job?.find((job: any) => job.id === id);
-console.log(jobToEdit)
+
 	const divRef: any = useRef(null);
 	// Initialize formik for form management
 	const formik = useFormik({
@@ -81,7 +71,6 @@ console.log(jobToEdit)
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
 				Swal.close();
-				alert('An error occurred during file upload. Please try again later.');
 			}
 		},
 	});
@@ -89,7 +78,7 @@ console.log(jobToEdit)
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
 			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
-				<ModalTitle id=''>{'New Job '}</ModalTitle>
+				<ModalTitle id=''>{'Edit Job '}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>

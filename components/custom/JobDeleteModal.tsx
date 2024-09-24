@@ -41,14 +41,14 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 			if (inputText === 'DELETE') {
 				await deletejob(job.id).unwrap();
-				Swal.fire('Deleted!', 'The category has been deleted.', 'success');
+				Swal.fire('Deleted!', 'The job has been deleted.', 'success');
 
 				// Perform delete action here
 				console.log('Delete confirmed');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
-			Swal.fire('Error', 'Failed to delete category.', 'error');
+			Swal.fire('Error', 'Failed to delete job.', 'error');
 		}
 	};
 
@@ -71,11 +71,11 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 				await updatejob(values);
 
-				Swal.fire('Restory!', 'The category has been deleted.', 'success');
+				Swal.fire('Restore!', 'The job has been restore.', 'success');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
-			Swal.fire('Error', 'Failed to delete category.', 'error');
+			Swal.fire('Error', 'Failed to delete job.', 'error');
 		}
 	};
 
@@ -83,7 +83,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 		try {
 			const { value: inputText } = await Swal.fire({
 				title: 'Are you sure?',
-				text: 'Please type "DELETE ALL" to confirm deleting all categories',
+				text: 'Please type "DELETE ALL" to confirm deleting all job',
 				input: 'text',
 				icon: 'warning',
 				inputValidator: (value) => {
@@ -94,21 +94,21 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
 				cancelButtonColor: '#d33',
-				confirmButtonText: 'Yes, delete all!',
+				confirmButtonText: 'Yes, job all!',
 			});
 
 			if (inputText === 'DELETE ALL') {
 				for (const jobs of job) {
 					await deletejob(jobs.id).unwrap();
 				}
-				Swal.fire('Deleted!', 'All categories have been deleted.', 'success');
+				Swal.fire('Deleted!', 'All job have been deleted.', 'success');
 
 				// Refetch categories after deletion
 				refetch();
 			}
 		} catch (error) {
 			console.error('Error deleting all categories:', error);
-			Swal.fire('Error', 'Failed to delete all categories.', 'error');
+			Swal.fire('Error', 'Failed to delete all job.', 'error');
 		}
 	};
 
@@ -117,7 +117,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-				text: 'This will restore all categories.',
+				text: 'This will restore all job.',
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -134,14 +134,14 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					};
 					await updatejob(values).unwrap();
 				}
-				Swal.fire('Restored!', 'All categories have been restored.', 'success');
+				Swal.fire('Restored!', 'All job have been restored.', 'success');
 
 				// Refetch categories after restoring
 				refetch();
 			}
 		} catch (error) {
 			console.error('Error restoring all categories:', error);
-			Swal.fire('Error', 'Failed to restore all categories.', 'error');
+			Swal.fire('Error', 'Failed to restore all job.', 'error');
 		}
 	};
 	return (

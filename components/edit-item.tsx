@@ -131,13 +131,23 @@ const Index: React.FC<KeyboardProps> = ({
 									)}
 
 									<div className='flex-grow-1'>
-										<div className='fs-6'>{order.name}</div>
+										<div className='fs-6'>{order.category}</div>
 										<div className='text-muted'>
-											<small>{order.category}</small>
+											<small>{order.subcategory}</small>
 										</div>
 									</div>
+									<div className='flex-grow-1'>
+										<div className='fs-6'>Quentity : {order.quentity}</div>
+										<div className='fs-6'>Job ID : {order.Job_ID}</div>
+									
+									</div>
+									<div className='flex-grow-1'>
+										<div className='fs-6'>{order.order_type}</div>
+									
+									
+									</div>
 									<div className='me-2'>
-										<Input
+										{/* <Input
 											type='number'
 											value={order.quentity}
 											onChange={(e: any) =>
@@ -147,7 +157,7 @@ const Index: React.FC<KeyboardProps> = ({
 												)
 											}
 											className='form-control '
-										/>
+										/> */}
 									</div>
 									{/* <div className='me-2'>
 										<strong>{priceFormat(order.quentity * order.price)}</strong>
@@ -163,7 +173,7 @@ const Index: React.FC<KeyboardProps> = ({
 							</div>
 							<div>
 								
-									<ChecksGroup isInline>
+									{/* <ChecksGroup isInline>
 										<Checks
 											type='radio'
 											id={`return-${index}`}
@@ -197,7 +207,7 @@ const Index: React.FC<KeyboardProps> = ({
 											}}
 											checked={order.order_type}
 										/>
-									</ChecksGroup>
+									</ChecksGroup> */}
 								
 							</div>
 						</Card>

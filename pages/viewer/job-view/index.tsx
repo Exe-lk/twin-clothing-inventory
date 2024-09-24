@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
-import Head from 'next/head';
 import useDarkMode from '../../../hooks/useDarkMode';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import SubHeader, {
@@ -17,10 +16,13 @@ import StockAddModal from '../../../components/custom/JobAddModal';
 import StockEditModal from '../../../components/custom/JobEditModal';
 import { doc, deleteDoc, collection, getDocs, updateDoc, query, where } from 'firebase/firestore';
 import { firestore } from '../../../firebaseConfig';
+import Dropdown, { DropdownToggle, DropdownMenu } from '../../../components/bootstrap/Dropdown';
 import Swal from 'sweetalert2';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
-import showNotification from '../../../components/extras/showNotification';
+import JobDeleteModal from '../../../components/custom/JobDeleteModal';
+import { useUpdateJobMutation, useGetJobsQuery} from '../../../redux/slices/jobApiSlice';
+
 // Define interfaces for data objects
 interface Item {
 	cid: string;
@@ -35,11 +37,10 @@ interface Category {
 	cid: string;
 	categoryname: string;
 }
-interface stock {
-	quentity: number;
-	item_id: string;
-}
+
 const Index: NextPage = () => {
+	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
+
 	const { darkModeStatus } = useDarkMode(); // Dark mode
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
@@ -53,7 +54,40 @@ const Index: NextPage = () => {
 	const [status, setStatus] = useState(true);
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 	const [quantityDifference, setQuantityDifference] = useState([]);
+	const { data: job, error, isLoading } = useGetJobsQuery(undefined);
+	const [updatejob] = useUpdateJobMutation();
+	// Function to handle deletion of an item
+	const handleClickDelete = async (item: any) => {
+		try {
+			
+			const result = await Swal.fire({
+				title: 'Are you sure?',
 
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes, delete it!',
+			});
+			if (result.isConfirmed) {
+				try {
+					const values = await {
+						...item,status:false
+					};
+					await updatejob(values);
+
+					Swal.fire('Deleted!', 'The job has been deleted.', 'success');
+				} catch (error) {
+					console.error('Error during handleUpload: ', error);
+					Swal.close;
+				}
+			}
+		} catch (error) {
+			console.error('Error deleting document: ', error);
+			Swal.fire('Error', 'Failed to delete job.', 'error');
+		}
+	};
+	// Return the JSX for rendering the page
 	return (
 		<PageWrapper>
 			<SubHeader>
@@ -75,13 +109,19 @@ const Index: NextPage = () => {
 						value={searchTerm}
 					/>
 				</SubHeaderLeft>
+				<SubHeaderRight>
+			
+					<SubheaderSeparator />
+					{/* Button to open  New Item modal */}
+					
+				</SubHeaderRight>
 			</SubHeader>
 			<Page>
 				<div className='row h-100'>
 					<div className='col-12'>
 						{/* Table for displaying customer data */}
 						<Card stretch>
-							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
+						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
 								<div className='flex-grow-1 text-center text-info'>Manage Job</div>
 								<Button
 									icon='UploadFile'
@@ -97,29 +137,53 @@ const Index: NextPage = () => {
 											<th>Job ID</th>
 											<th>Client Name</th>
 											<th>Description</th>
+
+											
+											{/* <th><Button icon='PersonAdd' color='primary' isLight onClick={() => setAddModalStatus(true)}>
+                        New Item
+                      </Button></th> */}
 										</tr>
 									</thead>
 
 									<tbody>
-										<tr>
-											<td>15368</td>
-											<td>ABC company</td>
-											<td>500 stock</td>
-										</tr>
-										<tr>
-											<td>15368</td>
-											<td>ABC company</td>
-											<td>500 stock</td>
-										</tr>
+									{isLoading && (
+											<tr>
+												<td>Loading...</td>
+											</tr>
+										)}
+										{error && (
+											<tr>
+												<td>Error fetching categories.</td>
+											</tr>
+										)}
+										{job &&
+											job
+												.filter((job: any) =>
+													searchTerm
+														? job.code
+																.toLowerCase()
+																.includes(searchTerm.toLowerCase())
+														: true,
+												)
+												.map((job: any) => (
+													<tr key={job.id}>
+														<td>{job.code}</td>
+														<td>{job.client}</td>
+														<td>{job.description}</td>
+														
+
+													
+													</tr>
+												))}
 									</tbody>
 								</table>
+							
 							</CardBody>
 						</Card>
 					</div>
 				</div>
 			</Page>
-			<StockAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id={id1} />
-			<StockEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
+			
 		</PageWrapper>
 	);
 };

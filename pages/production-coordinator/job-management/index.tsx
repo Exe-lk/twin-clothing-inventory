@@ -80,12 +80,11 @@ const Index: NextPage = () => {
 				} catch (error) {
 					console.error('Error during handleUpload: ', error);
 					Swal.close;
-					alert('An error occurred during file upload. Please try again later.');
 				}
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
-			Swal.fire('Error', 'Failed to delete employee.', 'error');
+			Swal.fire('Error', 'Failed to delete job.', 'error');
 		}
 	};
 	// Return the JSX for rendering the page
