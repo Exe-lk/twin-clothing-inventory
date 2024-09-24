@@ -62,12 +62,11 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					// Success feedback
 					await Swal.fire({
 						icon: 'success',
-						title: 'Color added Successfully',
+						title: 'Knit added Successfully',
 					});
 					setIsOpen(false);
 			} catch (error) {
-				console.error('Error during handleUpload: ', error);
-				alert('An error occurred during file upload. Please try again later.');
+				
 			}
 
 		},

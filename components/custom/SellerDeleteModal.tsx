@@ -50,7 +50,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
-			Swal.fire('Error', 'Failed to delete category.', 'error');
+			Swal.fire('Error', 'Failed to delete supplier.', 'error');
 		}
 	};
 	const handleClickRestore = async (supplier: any) => {
@@ -72,11 +72,11 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 				await updateSupplier(values);
 
-				Swal.fire('Restory!', 'The uppliers has been deleted.', 'success');
+				Swal.fire('Restore!', 'The supplier has been deleted.', 'success');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
-			Swal.fire('Error', 'Failed to delete category.', 'error');
+			Swal.fire('Error', 'Failed to delete supplier.', 'error');
 		}
 	};
 
@@ -135,14 +135,14 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					};
 					await updateSupplier(values).unwrap();
 				}
-				Swal.fire('Restored!', 'All categories have been restored.', 'success');
+				Swal.fire('Restored!', 'All supplier have been restored.', 'success');
 
 				// Refetch categories after restoring
 				refetch();
 			}
 		} catch (error) {
 			console.error('Error restoring all categories:', error);
-			Swal.fire('Error', 'Failed to restore all categories.', 'error');
+			Swal.fire('Error', 'Failed to restore all suppliers.', 'error');
 		}
 	};
 	return (

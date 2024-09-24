@@ -1,23 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import Card, {
-	CardBody,
-	CardHeader,
-	CardLabel,
-	CardTitle,
-} from './bootstrap/Card';
+import Card, { CardBody, CardHeader, CardLabel, CardTitle } from './bootstrap/Card';
 import classNames from 'classnames';
 import useDarkMode from '../hooks/useDarkMode';
 import { getFirstLetter, priceFormat } from '../helpers/helpers';
 import Input from './bootstrap/forms/Input';
-import Dropdown, {
-	DropdownItem,
-	DropdownMenu,
-	DropdownToggle,
-} from './bootstrap/Dropdown';
+
 import Button from './bootstrap/Button';
-import { or } from 'firebase/firestore';
+
 import Checks, { ChecksGroup } from './bootstrap/forms/Checks';
-import FormGroup from './bootstrap/forms/FormGroup';
+
 interface Item {
 	cid: string;
 	category: string;
@@ -28,16 +19,22 @@ interface Item {
 	reorderlevel: number;
 }
 interface KeyboardProps {
-    orderedItems: Item[];
-    setOrderedItems: React.Dispatch<React.SetStateAction<Item[]>>;
-    isActive: boolean;
-    setActiveComponent: React.Dispatch<React.SetStateAction<'additem' | 'edit'>>;
+	orderedItems: Item[];
+	setOrderedItems: React.Dispatch<React.SetStateAction<Item[]>>;
+	isActive: boolean;
+	setActiveComponent: React.Dispatch<React.SetStateAction<'additem' | 'edit'>>;
 }
 
-const Index: React.FC<KeyboardProps>  = ({ orderedItems, setOrderedItems, isActive,setActiveComponent }: any) => {
+const Index: React.FC<KeyboardProps> = ({
+	orderedItems,
+	setOrderedItems,
+	isActive,
+	setActiveComponent,
+}: any) => {
 	const { themeStatus } = useDarkMode();
 	const { darkModeStatus } = useDarkMode();
-    const [focusedIndex, setFocusedIndex] = useState<number>(0);
+	const [focusedIndex, setFocusedIndex] = useState<number>(0);
+	console.log(orderedItems);
 	const handleDelete = (index: number) => {
 		setOrderedItems((prevItems: any) =>
 			prevItems.filter((item: any, i: number) => i !== index),
@@ -50,30 +47,40 @@ const Index: React.FC<KeyboardProps>  = ({ orderedItems, setOrderedItems, isActi
 			),
 		);
 	};
-    const handleKeyPress = (event: KeyboardEvent) => {
-        if (!isActive) return;
-      
-        if (event.key === 'ArrowDown') {
-          setFocusedIndex((prevIndex) => (prevIndex + 1) % orderedItems.length);
-        } else if (event.key === 'ArrowUp') {
-          setFocusedIndex((prevIndex) => (prevIndex - 1 + orderedItems.length) % orderedItems.length);
-        } else if (event.key === 'ArrowLeft') {
-          setActiveComponent('additem');
-          setFocusedIndex(-1);
-        } else if (event.key === 'ArrowRight') {
-          setActiveComponent('edit');
-          setFocusedIndex(0);
-        }else if (event.key.toLowerCase() === 'd') {
-            handleDelete(focusedIndex)
-          }
-      };
-    useEffect(() => {
-        window.addEventListener('keydown', handleKeyPress);
-        
-        return () => {
-            window.removeEventListener('keydown', handleKeyPress);
-        };
-    }, [orderedItems, focusedIndex,isActive]);
+
+	const handleTypeChange = async (type: any, index: any) => {
+		setOrderedItems((prevItems: any) =>
+			prevItems.map((item: any, i: number) =>
+				i === index ? { ...item, order_type: type } : item,
+			),
+		);
+	};
+	const handleKeyPress = (event: KeyboardEvent) => {
+		if (!isActive) return;
+
+		if (event.key === 'ArrowDown') {
+			setFocusedIndex((prevIndex) => (prevIndex + 1) % orderedItems.length);
+		} else if (event.key === 'ArrowUp') {
+			setFocusedIndex(
+				(prevIndex) => (prevIndex - 1 + orderedItems.length) % orderedItems.length,
+			);
+		} else if (event.key === 'ArrowLeft') {
+			setActiveComponent('additem');
+			setFocusedIndex(-1);
+		} else if (event.key === 'ArrowRight') {
+			setActiveComponent('edit');
+			setFocusedIndex(0);
+		} else if (event.key.toLowerCase() === 'd') {
+			handleDelete(focusedIndex);
+		}
+	};
+	useEffect(() => {
+		window.addEventListener('keydown', handleKeyPress);
+
+		return () => {
+			window.removeEventListener('keydown', handleKeyPress);
+		};
+	}, [orderedItems, focusedIndex, isActive]);
 	return (
 		<div>
 			<Card className='mt-4' style={{ height: '75vh' }}>
@@ -85,11 +92,12 @@ const Index: React.FC<KeyboardProps>  = ({ orderedItems, setOrderedItems, isActi
 					</CardLabel>
 				</CardHeader>
 				<CardBody isScrollable className='table-responsive'>
-					{orderedItems.map((order: Item, index: any) => (
-						<Card  key={index}
-                        className={classNames('col-12 p-3', {
-                            'bg-info': index === focusedIndex,
-                        })}>
+					{orderedItems.map((order: any, index: any) => (
+						<Card
+							key={index}
+							className={classNames('col-12 p-3', {
+								'bg-info': index === focusedIndex,
+							})}>
 							<div className={classNames('todo-item')}>
 								<div className='col d-flex align-items-center'>
 									{order.image ? (
@@ -115,7 +123,7 @@ const Index: React.FC<KeyboardProps>  = ({ orderedItems, setOrderedItems, isActi
 														},
 													)}>
 													<span className='fw-bold'>
-														{getFirstLetter(order.name)}
+														{getFirstLetter(order.category)}
 													</span>
 												</div>
 											</div>
@@ -154,50 +162,43 @@ const Index: React.FC<KeyboardProps>  = ({ orderedItems, setOrderedItems, isActi
 								</div>
 							</div>
 							<div>
-							<FormGroup id='membershipDate' className='col-md-12'>
-							
-							<ChecksGroup isInline
-							// isValid={formik.isValid}
-							// isTouched={}
-							// invalidFeedback={formik.errors.type}
-							>
-
-								<Checks
-									type='radio'
-									key={"full-time"}
-									id={"full-time"}
-									label={"Return"}
-									name='type'
-									value={"full-time"}
-								// onChange={formik.handleChange}
-								checked={"full-time"}
-
-								/>
-								<Checks
-									type='radio'
-									key={"full-time"}
-									id={"full-time"}
-									label={"Restore"}
-									name='type'
-									value={"full-time"}
-								// onChange={formik.handleChange}
-								// checked={formik.values.type}
-
-								/>
-								<Checks
 								
-									type='radio'
-									key={"part-time"}
-									id={"part-time"}
-									label={"stock out"}
-									name='type'
-									value={"part-time"}
-								// onChange={formik.handleChange}
-								// checked={formik.values.type}
-
-								/>
-							</ChecksGroup>
-						</FormGroup>
+									<ChecksGroup isInline>
+										<Checks
+											type='radio'
+											id={`return-${index}`}
+											label={'Return'}
+											// name='type'
+											value={'Return'}
+											onChange={(e: any) => {
+												handleTypeChange(e.target.value, index);
+											}}
+											checked={order.order_type}
+										/>
+										<Checks
+											type='radio'
+											id={`restore-${index}`}
+											label={'Restore'}
+											// name='type'
+											value={'Restore'}
+											onChange={(e: any) => {
+												handleTypeChange(e.target.value, index);
+											}}
+											checked={order.order_type}
+										/>
+										<Checks
+											type='radio'
+											id={`stockout-${index}`}
+											label={'Stock Out'}
+											// name='type'
+											value={'Stock Out'}
+											onChange={(e: any) => {
+												handleTypeChange(e.target.value, index);
+											}}
+											checked={order.order_type}
+										/>
+									</ChecksGroup>
+								
 							</div>
 						</Card>
 					))}

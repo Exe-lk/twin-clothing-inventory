@@ -33,7 +33,7 @@ const Index: NextPage = () => {
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-				text: 'You will not be able to recover this category!',
+				text: 'You will not be able to recover this knit!',
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -48,16 +48,16 @@ const Index: NextPage = () => {
 					};
 					await updateknit(values);
 
-					Swal.fire('Deleted!', 'The Color has been deleted.', 'success');
+					Swal.fire('Deleted!', 'The knit has been deleted.', 'success');
 				} catch (error) {
 					console.error('Error during deleting: ', error);
 					Swal.close;
-					alert('An error occurred during file upload. Please try again later.');
+					
 				}
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
-			Swal.fire('Error', 'Failed to delete category.', 'error');
+			Swal.fire('Error', 'Failed to delete knit.', 'error');
 		}
 	};
 

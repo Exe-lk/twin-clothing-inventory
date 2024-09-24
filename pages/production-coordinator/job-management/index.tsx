@@ -21,6 +21,7 @@ import Swal from 'sweetalert2';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
 import JobDeleteModal from '../../../components/custom/JobDeleteModal';
+import { useUpdateJobMutation, useGetJobsQuery} from '../../../redux/slices/jobApiSlice';
 
 // Define interfaces for data objects
 interface Item {
@@ -53,10 +54,12 @@ const Index: NextPage = () => {
 	const [status, setStatus] = useState(true);
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 	const [quantityDifference, setQuantityDifference] = useState([]);
-	
+	const { data: job, error, isLoading } = useGetJobsQuery(undefined);
+	const [updatejob] = useUpdateJobMutation();
 	// Function to handle deletion of an item
 	const handleClickDelete = async (item: any) => {
 		try {
+			
 			const result = await Swal.fire({
 				title: 'Are you sure?',
 
@@ -68,26 +71,12 @@ const Index: NextPage = () => {
 			});
 			if (result.isConfirmed) {
 				try {
-					item.status = false;
-					const docRef = doc(firestore, 'item', item.cid);
-					// Update the data
-					updateDoc(docRef, item)
-						.then(() => {
-							Swal.fire('Deleted!', 'item has been deleted.', 'success');
-							if (status) {
-								// Toggle status to trigger data refetch
-								setStatus(false);
-							} else {
-								setStatus(true);
-							}
-						})
-						.catch((error) => {
-							console.error('Error adding document: ', error);
+					const values = await {
+						...item,status:false
+					};
+					await updatejob(values);
 
-							alert(
-								'An error occurred while adding the document. Please try again later.',
-							);
-						});
+					Swal.fire('Deleted!', 'The job has been deleted.', 'success');
 				} catch (error) {
 					console.error('Error during handleUpload: ', error);
 					Swal.close;
@@ -122,49 +111,7 @@ const Index: NextPage = () => {
 					/>
 				</SubHeaderLeft>
 				<SubHeaderRight>
-					<Dropdown>
-						<DropdownToggle hasIcon={false}>
-							<Button
-								icon='FilterAlt'
-								color='dark'
-								isLight
-								className='btn-only-icon position-relative'></Button>
-						</DropdownToggle>
-						<DropdownMenu isAlignmentEnd size='lg'>
-							<div className='container py-2'>
-								<div className='row g-3'>
-									<FormGroup label='Category type' className='col-12'>
-										<ChecksGroup>
-											{category.map((category, index) => (
-												<Checks
-													key={category.categoryname}
-													id={category.categoryname}
-													label={category.categoryname}
-													name={category.categoryname}
-													value={category.categoryname}
-													checked={selectedCategories.includes(
-														category.categoryname,
-													)}
-													onChange={(event: any) => {
-														const { checked, value } = event.target;
-														setSelectedCategories(
-															(prevCategories) =>
-																checked
-																	? [...prevCategories, value] // Add category if checked
-																	: prevCategories.filter(
-																			(category) =>
-																				category !== value,
-																	  ), // Remove category if unchecked
-														);
-													}}
-												/>
-											))}
-										</ChecksGroup>
-									</FormGroup>
-								</div>
-							</div>
-						</DropdownMenu>
-					</Dropdown>
+			
 					<SubheaderSeparator />
 					{/* Button to open  New Item modal */}
 					<Button
@@ -206,55 +153,54 @@ const Index: NextPage = () => {
 									</thead>
 
 									<tbody>
-										<tr>
-											<td>15368</td>
-											<td>ABC company</td>
-											<td>500 stock</td>
-											
-											<td>
-												<Button
-													
-													icon='Edit'
-													tag='a'
-													color='info'
-													onClick={() => setEditModalStatus(true)}>
-													Edit
-												</Button>
-												<Button
-													
-													className='m-2'
-													icon='Delete'
-													color='danger'
-													onClick={() => handleClickDelete(item)}>
-													Delete
-												</Button>
-											</td>
-										</tr>
-										<tr>
-										
-										<td>15368</td>
-											<td>ABC company</td>
-											<td>500 stock</td>
-											<td>
-												<Button
-													
-													icon='Edit'
-													tag='a'
-													color='info'
-													onClick={() => setEditModalStatus(true)}>
-													Edit
-												</Button>
-												<Button
-													
-													className='m-2'
-													icon='Delete'
-													color='danger'
-													onClick={() => handleClickDelete(item)}>
-													Delete
-												</Button>
-											</td>
-										</tr>
-										
+									{isLoading && (
+											<tr>
+												<td>Loading...</td>
+											</tr>
+										)}
+										{error && (
+											<tr>
+												<td>Error fetching categories.</td>
+											</tr>
+										)}
+										{job &&
+											job
+												.filter((job: any) =>
+													searchTerm
+														? job.code
+																.toLowerCase()
+																.includes(searchTerm.toLowerCase())
+														: true,
+												)
+												.map((job: any) => (
+													<tr key={job.id}>
+														<td>{job.code}</td>
+														<td>{job.client}</td>
+														<td>{job.description}</td>
+														
+
+														<td>
+															<Button
+																icon='Edit'
+																color='info'
+																onClick={() => (
+																	setEditModalStatus(true),
+																	setId(job.id)
+																)}>
+																Edit
+															</Button>
+															<Button
+																className='m-2'
+																icon='Delete'
+																color='danger'
+																onClick={() =>
+																	handleClickDelete(job)
+																}>
+																Delete
+															</Button>
+														</td>
+													</tr>
+												))}
 									</tbody>
 								</table>
 								<Button icon='Delete' className='mb-5'

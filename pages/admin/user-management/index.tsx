@@ -14,11 +14,7 @@ import Page from '../../../layout/Page/Page';
 import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
 import UserAddModal from '../../../components/custom/UserAddModal';
 import UserEditModal from '../../../components/custom/UserEditModal';
-import { doc, deleteDoc, collection, getDocs, updateDoc, query, where } from 'firebase/firestore';
-import { firestore } from '../../../firebaseConfig';
 import Dropdown, { DropdownToggle, DropdownMenu } from '../../../components/bootstrap/Dropdown';
-import { getColorNameWithIndex } from '../../../common/data/enumColors';
-import { getFirstLetter } from '../../../helpers/helpers';
 import Swal from 'sweetalert2';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
@@ -44,15 +40,12 @@ const Index: NextPage = () => {
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
 	const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
 	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
-	const [user, setuser] = useState<User[]>([]);
 	const [id, setId] = useState<string>('');
-	const [status, setStatus] = useState(true);
 	const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 	const role = [
-		{ role: 'bill keeper' },
-		{ role: 'accessosry stock keeper' },
-		{ role: 'display stock keeper' },
-		{ role: 'cashier' },
+		{ role: 'Production Coordinator' },
+		{ role: 'Stock Keeper' },
+		
 	];
 	const { data: users, error, isLoading, refetch } = useGetUsersQuery(undefined);
 	const [updateuser] = useUpdateUserMutation();

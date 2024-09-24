@@ -101,7 +101,7 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 				
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
-				alert('An error occurred during file upload. Please try again later.');
+			
 			}
 		},
 	});

@@ -9,12 +9,10 @@ import { getFirstLetter, priceFormat } from '../helpers/helpers';
 import Keyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
 import Input from './bootstrap/forms/Input';
-import { isatty } from 'tty';
 import FormGroup from './bootstrap/forms/FormGroup';
 import Label from './bootstrap/forms/Label';
 import Checks, { ChecksGroup } from './bootstrap/forms/Checks';
-import Carousel from './bootstrap/Carousel';
-import CarouselSlide from './bootstrap/CarouselSlide';
+import { useUpdateLotMutation, useGetLotsQuery } from '../redux/slices/lotAPISlice';
 
 // Define TypeScript interfaces for Category and Item
 interface Category {
@@ -94,62 +92,21 @@ const Index: React.FC<KeyboardProps> = ({
 	// State variables
 	const [category1, setCategory1] = useState<string>('');
 	const [category, setCategory] = useState<Category[]>(cdata);
-	const [items, setItems] = useState<any[]>(idata);
+	
 	const [input, setInput] = useState<string>('');
 	const keyboard = useRef<any>(null);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
 	const [popupInput, setPopupInput] = useState<any>("");
 	const [popupInput1, setPopupInput1] = useState<any>("");
-	const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+	const [selectedItem, setSelectedItem] = useState<any>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const popupInputRef = useRef<HTMLInputElement>(null);
-
+	const [selectedType, setSelectedType] = useState<any>(''); 
 	const [layout, setLayout] = useState<string>('default');
 	const [focusedIndex, setFocusedIndex] = useState<number>(0);
-
-	// Fetch categories from Firestore on component mount
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const dataCollection = collection(firestore, 'category');
-				const q = query(dataCollection, where('status', '==', true));
-				const querySnapshot = await getDocs(q);
-				const firebaseData = querySnapshot.docs.map((doc) => {
-					const data = doc.data() as Category;
-					return {
-						...data,
-						cid: doc.id,
-					};
-				});
-				// setCategory(firebaseData);
-			} catch (error) {
-				console.error('Error fetching data: ', error);
-			}
-		};
-		fetchData();
-	}, []);
-
-	// Fetch items from Firestore on component mount
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const dataCollection = collection(firestore, 'item');
-				const querySnapshot = await getDocs(dataCollection);
-				const firebaseData = querySnapshot.docs.map((doc) => {
-					const data = doc.data() as Item;
-					return {
-						...data,
-						cid: doc.id,
-					};
-				});
-				// setItems(firebaseData);
-			} catch (error) {
-				console.error('Error fetching data: ', error);
-			}
-		};
-		fetchData();
-	}, []);
-
+	const { data: items, error, isLoading } = useGetLotsQuery(undefined);
+	const [updatelot] = useUpdateLotMutation();
+	
 	// Handle input change
 	const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const input = event.target.value;
@@ -190,10 +147,10 @@ const Index: React.FC<KeyboardProps> = ({
 		}
 		if (selectedItem) {
 			console.log(popupInput);
-			const updatedItem = { ...selectedItem, quentity: Number(popupInput) };
+			const updatedItem = { ...selectedItem, quentity: Number(popupInput),  order_type: selectedType, Job_ID:	popupInput1	};
 			console.log(updatedItem);
 			await setOrderedItems((prevItems: any) => {
-				const itemIndex = prevItems.findIndex((item: any) => item.cid === updatedItem.cid);
+				const itemIndex = prevItems.findIndex((item: any) => item.id === updatedItem.id);
 				if (itemIndex > -1) {
 					const updatedItems = [...prevItems];
 					updatedItems[itemIndex] = updatedItem;
@@ -203,6 +160,8 @@ const Index: React.FC<KeyboardProps> = ({
 				}
 			});
 			setPopupInput("");
+			setPopupInput1("");
+			setSelectedType(''); 
 			console.log('Selected item data:', orderedItems);
 		}
 		setShowPopup(false);
@@ -269,93 +228,12 @@ const Index: React.FC<KeyboardProps> = ({
 			popupInputRef.current?.focus();
 		}
 	}, [showPopup]);
-
+	const handleTypeChange = async (e:any) => {
+       await setSelectedType(e.target.value);
+    };
 	return (
 		<div>
-			{/* <div>
-				<Button
-					className='btn btn-outline-warning'
-					onClick={() => {
-						setCategory1('');
-					}}>
-					All
-				</Button>
-				{category.map((category, index) => (
-					<Button
-						key={index}
-						className='btn btn-outline-warning'
-						onClick={() => {
-							setCategory1(category.categoryname);
-						}}>
-						{category.categoryname}
-					</Button>
-				))}
-			</div> */}
-		
-			<div>
 
-				{/* <Carousel
-					isHoverPause
-					isRide
-					height={50}
-					isDark={false}
-					isSlide={false}
-					>
-					<CarouselSlide>
-						<div className='m-5'>
-							<Button
-								className='btn btn-outline-warning ms-5'
-								onClick={() => {
-									setCategory1('');
-								}}>
-								All
-							</Button>
-							{category.slice(0, 2).map((category, index) => (
-								<Button
-									key={index}
-									className='btn btn-outline-warning'
-									onClick={() => {
-										setCategory1(category.categoryname);
-									}}>
-									{category.categoryname}
-								</Button>
-							))}
-						</div>
-					</CarouselSlide>
-					<CarouselSlide>
-						<div className='m-5'>
-							<Button
-								className='btn btn-outline-warning ms-5'
-								onClick={() => {
-									setCategory1('');
-								}}>
-								All
-							</Button>
-							{category.slice(0, 3).map((category, index) => (
-								<Button
-									key={index}
-									className='btn btn-outline-warning'
-									onClick={() => {
-										setCategory1(category.categoryname);
-									}}>
-									{category.categoryname}
-								</Button>
-							))}
-						</div>
-					</CarouselSlide>
-
-				</Carousel> */}
-
-
-
-
-
-
-
-
-
-
-			</div>
 			<div>
 				<Card className='mt-4' style={{ height: '40vh' }}>
 					<CardHeader>
@@ -370,15 +248,16 @@ const Index: React.FC<KeyboardProps> = ({
 					</CardHeader>
 					<CardBody isScrollable>
 						<div className='row g-3'>
-							{items
-								.filter((val) => {
+							{items &&
+							items
+								.filter((val:any) => {
 									if (input === '') {
 										if (category1 === '') {
 											return val;
 										} else if (category1.includes(val.category)) {
 											return val;
 										}
-									} else if (val.cid.includes(input)) {
+									} else if (val.code.includes(input)) {
 										if (category1 === '') {
 											return val;
 										} else if (category1.includes(val.category)) {
@@ -387,7 +266,7 @@ const Index: React.FC<KeyboardProps> = ({
 									}
 									return null;
 								})
-								.map((item: Item, index: any) => (
+								.map((item:any, index: any) => (
 									<div
 										key={index}
 										className={classNames('col-12 ', {
@@ -412,13 +291,13 @@ const Index: React.FC<KeyboardProps> = ({
 																},
 															)}>
 															<span className='fw-bold'>
-																{getFirstLetter(item.name)}
+																{getFirstLetter(item.category)}
 															</span>
 														</div>
 													</div>
 												</div>
 												<div className='flex-grow-1'>
-													<div className='fs-6'>{item.name}</div>
+													<div className='fs-6'>{item.subcategory}</div>
 													<div className='text-muted'>
 														<small>{item.category}</small>
 													</div>
@@ -426,11 +305,11 @@ const Index: React.FC<KeyboardProps> = ({
 											</div>
 											<div className='col-auto text-end'>
 												<div>
-													<strong>{item.cid}</strong>
+													<strong>{item.code}</strong>
 												</div>
-												{/* <div className='text-muted'>
-													<small>{item.cid}</small>
-												</div> */}
+												<div className='text-muted'>
+													<small>{item.qty}</small>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -493,89 +372,74 @@ const Index: React.FC<KeyboardProps> = ({
 				</div>
 			</div>
 			{showPopup && (
-				<div
-					className='position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-black bg-opacity-50'
-					style={{ zIndex: 1050, }}>
-					<div className='p-4 rounded-4  ' style={{ zIndex: 1051, width:600,backgroundColor:"#1D1F27" }}>
-						<h4 className='mb-4'>Enter a Quantity</h4>
-						<Input
-							type='number'
-							value={popupInput}
-							onChange={(e: any) => {
-								setPopupInput(e.target.value);
-							}}
-							min={1}
-							className='form-control mb-4 p-2'
-							ref={popupInputRef}
-						/>
-						<h6 className='mb-4'>Job ID</h6>
-						<Input
-							type='number'
-							value={popupInput1}
-							onChange={(e: any) => {
-								setPopupInput1(e.target.value);
-							}}
-							min={1}
-							className='form-control mb-4 p-2'
-							ref={popupInputRef}
-						/>
+                <div
+                    className='position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-black bg-opacity-50'
+                    style={{ zIndex: 1050 }}>
+                    <div className='p-4 rounded-4' style={{ zIndex: 1051, width: 600, backgroundColor: "#1D1F27" }}>
+					<FormGroup id='membershipDate' className='col-md-6'>
+                            <Label htmlFor='ChecksGroup'>Type</Label>
+                            <ChecksGroup isInline>
+                                <Checks
+                                    type='radio'
+                                    id={"return"}
+                                    label={"Return"}
+                                    name='type'
+                                    value={"Return"}
+                                    onClick={(e:any)=>{setSelectedType(e.target.value)}}
+                                    checked={selectedType}
+                                />
+                                <Checks
+                                    type='radio'
+                                    id={"restore"}
+                                    label={"Restore"}
+                                    name='type'
+                                    value={"Restore"}
+                                    onClick={(e:any)=>{setSelectedType(e.target.value)}}
+                                    checked={selectedType}
+                                />
+                                <Checks
+                                    type='radio'
+                                    id={"stockout"}
+                                    label={"Stock Out"}
+                                    name='type'
+                                    value={"Stock Out"}
+									onClick={(e:any)=>{setSelectedType(e.target.value)}}
+									checked={selectedType}
+                                />
+                            </ChecksGroup>
+                        </FormGroup>
+                        <h6 className='mt-4'>Enter a Quantity</h6>
+                        <Input
+                            type='number'
+                            value={popupInput}
+                            onChange={(e:any) => setPopupInput(e.target.value)}
+                            min={1}
+                            className='form-control mb-4 p-2'
+                            ref={popupInputRef}
+                        />
+                        <h6 className='mb-4'>Job ID</h6>
+                        <Input
+                            type='text'
+                            value={popupInput1}
+                            onChange={(e:any) => setPopupInput1(e.target.value)}
+                            min={1}
+                            className='form-control mb-4 p-2'
+                            ref={popupInputRef}
+                        />
 
-						<FormGroup id='membershipDate' className='col-md-6'>
-							<Label htmlFor='ChecksGroup'>Type</Label>
-							<ChecksGroup isInline
-							// isValid={formik.isValid}
-							// isTouched={formik.touched.type}
-							// invalidFeedback={formik.errors.type}
-							>
+                       
 
-								<Checks
-									type='radio'
-									key={"full-time"}
-									id={"full-time"}
-									label={"Return"}
-									name='type'
-									value={"full-time"}
-								// onChange={formik.handleChange}
-								// checked={formik.values.type}
-
-								/>
-								<Checks
-									type='radio'
-									key={"full-time"}
-									id={"full-time"}
-									label={"Restore"}
-									name='type'
-									value={"full-time"}
-								// onChange={formik.handleChange}
-								// checked={formik.values.type}
-
-								/>
-								<Checks
-
-									type='radio'
-									key={"part-time"}
-									id={"part-time"}
-									label={"stock out"}
-									name='type'
-									value={"part-time"}
-								// onChange={formik.handleChange}
-								// checked={formik.values.type}
-
-								/>
-							</ChecksGroup>
-						</FormGroup>
-
-						<div className='d-flex justify-content-end' >
-							<button onClick={handlePopupCancel} className='btn btn-danger me-2'>
-								Cancel
-							</button>
-							<button className='btn btn-success' onClick={handlePopupOk}>
-								OK
-							</button>
-						</div>
-					</div>
-				</div>
-			)}
+                        <div className='d-flex justify-content-end'>
+                            <button onClick={() => setShowPopup(false)} className='btn btn-danger me-2'>
+                                Cancel
+                            </button>
+                            <button className='btn btn-success' onClick={handlePopupOk}>
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 		</div>
 	);
 };

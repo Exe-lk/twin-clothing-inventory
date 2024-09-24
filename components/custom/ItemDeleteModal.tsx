@@ -41,14 +41,14 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 			if (inputText === 'DELETE') {
 				await deletelot(lot.id).unwrap();
-				Swal.fire('Deleted!', 'The category has been deleted.', 'success');
+				Swal.fire('Deleted!', 'The lot has been deleted.', 'success');
 
 				// Perform delete action here
 				console.log('Delete confirmed');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
-			Swal.fire('Error', 'Failed to delete category.', 'error');
+			Swal.fire('Error', 'Failed to delete lot.', 'error');
 		}
 	};
 
@@ -71,11 +71,11 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 				await updatelot(values);
 
-				Swal.fire('Restory!', 'The category has been deleted.', 'success');
+				Swal.fire('Restored!', 'The lot has been restored.', 'success');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
-			Swal.fire('Error', 'Failed to delete category.', 'error');
+			Swal.fire('Error', 'Failed to delete lot.', 'error');
 		}
 	};
 
@@ -83,7 +83,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 		try {
 			const { value: inputText } = await Swal.fire({
 				title: 'Are you sure?',
-				text: 'Please type "DELETE ALL" to confirm deleting all categories',
+				text: 'Please type "DELETE ALL" to confirm deleting all lot',
 				input: 'text',
 				icon: 'warning',
 				inputValidator: (value) => {
@@ -99,25 +99,24 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 			if (inputText === 'DELETE ALL') {
 				for (const lots of lot) {
-					await deletelot(lot.id).unwrap();
+					await deletelot(lots.id).unwrap();
 				}
-				Swal.fire('Deleted!', 'All categories have been deleted.', 'success');
+				Swal.fire('Deleted!', 'All lot have been deleted.', 'success');
 
 				// Refetch categories after deletion
 				refetch();
 			}
 		} catch (error) {
-			console.error('Error deleting all categories:', error);
-			Swal.fire('Error', 'Failed to delete all categories.', 'error');
+			Swal.fire('Error', 'Failed to delete all lots.', 'error');
 		}
 	};
 
-	// Handle restore all categories
+
 	const handleRestoreAll = async () => {
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-				text: 'This will restore all categories.',
+				text: 'This will restore all lots.',
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -134,14 +133,13 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					};
 					await updatelot(values).unwrap();
 				}
-				Swal.fire('Restored!', 'All categories have been restored.', 'success');
+				Swal.fire('Restored!', 'All lot have been restored.', 'success');
 
 				// Refetch categories after restoring
 				refetch();
 			}
 		} catch (error) {
-			console.error('Error restoring all categories:', error);
-			Swal.fire('Error', 'Failed to restore all categories.', 'error');
+			Swal.fire('Error', 'Failed to restore all lot.', 'error');
 		}
 	};
 
@@ -156,7 +154,8 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 						<tr>
 							<th>Code</th>
 							
-							<th>GRN number</th>
+							<th>Category</th>
+							<th>Subcategory</th>
 
 							<th>
 								<Button
@@ -191,7 +190,8 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 							lot.map((lot: any) => (
 								<tr key={lot.id}>
 									<td>{lot.code}</td>
-									<td>{lot.GRN_number}</td>
+									<td>{lot.category}</td>
+									<td>{lot.subcategory}</td>
 
 									<td>
 										<Button
