@@ -172,49 +172,82 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								onChange={handleOptionChange}
 								checked={selectedOption}
 							/>
+							<Checks
+								type='radio'
+								id='other'
+								label='Other'
+								name='type'
+								value='Other'
+								onChange={handleOptionChange}
+								checked={selectedOption}
+							/>
 						</ChecksGroup>
 					</FormGroup>
 
 					{/* Common input fields */}
-					<FormGroup
-						id='category'
-						label='Category'
-						onChange={formik.handleChange}
-						className='col-md-6'>
-						<Select
-							ariaLabel='Default select example'
-							placeholder='Open this select category'
-							onChange={handleCategoryChange}
-							value={formik.values.category}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							validFeedback='Looks good!'>
-							{categories &&
-								categories.map((category: any) => (
-									<>
-										<Option value={category.name}>{category.name}</Option>
-									</>
-								))}
-						</Select>
-					</FormGroup>
-
-					<FormGroup id='subcategory' label='Sub Category' className='col-md-6'>
-						<Select
-							ariaLabel='Default select example'
-							placeholder='Open this select sub category'
+					{selectedOption === 'Other' && (
+						<FormGroup
+							id='category'
+							label='Category'
 							onChange={formik.handleChange}
-							value={formik.values.subcategory}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							validFeedback='Looks good!'>
-							{subcategories &&
-								subcategories.map((category: any) => (
-									<>
-										<Option value={category.value}>{category.label}</Option>
-									</>
-								))}
-						</Select>
-					</FormGroup>
+							className='col-md-6'>
+							<Select
+								ariaLabel='Default select example'
+								placeholder='Open this select category'
+								onChange={handleCategoryChange}
+								value={formik.values.category}
+								onBlur={formik.handleBlur}
+								isValid={formik.isValid}
+								validFeedback='Looks good!'>
+								{categories &&
+									categories.map((category: any) => (
+										<>
+											<Option value={category.name}>{category.name}</Option>
+										</>
+									))}
+							</Select>
+						</FormGroup>
+					)}
+
+					{/* Common input fields */}
+					{selectedOption === 'Thread' && (
+						<FormGroup id='subcategory' label='Sub Category' className='col-md-6'>
+							<Select
+								ariaLabel='Default select example'
+								placeholder='Open this select sub category'
+								onChange={formik.handleChange}
+								value={formik.values.subcategory}
+								onBlur={formik.handleBlur}
+								isValid={formik.isValid}
+								validFeedback='Looks good!'>
+								{subcategories &&
+									subcategories.map((category: any) => (
+										<>
+											<Option value={category.value}>{category.label}</Option>
+										</>
+									))}
+							</Select>
+						</FormGroup>
+					)}
+					{selectedOption === 'Other' && (
+						<FormGroup id='subcategory' label='Sub Category' className='col-md-6'>
+							<Select
+								ariaLabel='Default select example'
+								placeholder='Open this select sub category'
+								onChange={formik.handleChange}
+								value={formik.values.subcategory}
+								onBlur={formik.handleBlur}
+								isValid={formik.isValid}
+								validFeedback='Looks good!'>
+								{subcategories &&
+									subcategories.map((category: any) => (
+										<>
+											<Option value={category.value}>{category.label}</Option>
+										</>
+									))}
+							</Select>
+						</FormGroup>
+					)}
 
 					<FormGroup id='code' label='Code' className='col-md-6'>
 						<Input
@@ -321,14 +354,19 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 						/>
 					</FormGroup>
 					<FormGroup id='uom' label='UOM' className='col-md-6'>
-						<Input
-							type='number'
+						<Select
+							ariaLabel='Default select example'
+							placeholder='Open this select UOM'
 							onChange={formik.handleChange}
 							value={formik.values.uom}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
-							validFeedback='Looks good!'
-						/>
+							validFeedback='Looks good!'>
+							<Option value='Pieces'>Pieces</Option>
+							<Option value='Yards'>Yards</Option>
+							<Option value='Cones'>Cones</Option>
+							<Option value='Kg'>Kg</Option>
+						</Select>
 					</FormGroup>
 					<FormGroup id='qty' label='Qty' className='col-md-6'>
 						<Input
