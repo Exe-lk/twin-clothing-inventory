@@ -137,15 +137,15 @@ const UserAddModal: FC<UserAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					
 						<Select
 							ariaLabel='Default select example'
-						
+						placeholder='Select the user role'
 							onChange={formik.handleChange}
 							value={formik.values.role}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
 							isTouched={formik.touched.role}
 							invalidFeedback={formik.errors.role}>
-							  <Option value={'production-coordinator'}>Production Coordinator</Option>
-							  <Option value={'stock-keeper'}>Stock Keeper</Option>
+							  <Option value={'Production Coordinator'}>Production Coordinator</Option>
+							  <Option value={'Stock Keeper'}>Stock Keeper</Option>
 						</Select>
 					</FormGroup>
 					

@@ -62,7 +62,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					setIsOpen(false);
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
-				alert('An error occurred during file upload. Please try again later.');
 			}
 
 		},

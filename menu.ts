@@ -81,12 +81,12 @@ export const addminPagesMenu = {
 		path: 'single-pages',
 		icon: 'Settings',
 		subMenu: {
-			boxedSingle: {
-				id: 'boxedSingle',
-				text: 'Account',
-				path: 'admin/setting/account',
-				icon: 'Groups',
-			},
+			// boxedSingle: {
+			// 	id: 'boxedSingle',
+			// 	text: 'Account',
+			// 	path: 'admin/setting/account',
+			// 	icon: 'Groups',
+			// },
 			color: {
 				id: 'fluidSingle',
 				text: 'Color',
@@ -207,13 +207,7 @@ export const stockkeeperPagesMenu = {
 				icon: 'Category',
 				subMenu: null,
 			},
-			QR: {
-				id: 'category',
-				text: 'QR Code',
-				path: 'stock-keeper/qr-code',
-				icon: 'QrCode',
-				subMenu: null,
-			},
+			
 			
 		},
 	},

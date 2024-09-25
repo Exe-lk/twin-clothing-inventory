@@ -83,7 +83,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 				await updateCategory(values);
 
-				Swal.fire('Restory!', 'The category has been deleted.', 'success');
+				Swal.fire('restore!', 'The category has been restore.', 'success');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
@@ -161,7 +161,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
 			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
-				<ModalTitle id=''>{'New Category'}</ModalTitle>
+				<ModalTitle id=''>{'Recycle Bin'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<table className='table table-bordered border-primary table-modern table-hover text-center'>

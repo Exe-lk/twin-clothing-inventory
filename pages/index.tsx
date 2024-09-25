@@ -95,10 +95,10 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 				  case 'Viewer':
 					router.push('/viewer/dashboard');
 					break;
-				  case 'production-coordinator':
+				  case 'Production Coordinator':
 					router.push('/production-coordinator/dashboard');
 					break;
-				  case 'stock-keeper':
+				  case 'Stock Keeper':
 					router.push('/stock-keeper/dashboard');
 					break;
 				 

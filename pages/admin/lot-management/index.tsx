@@ -23,6 +23,8 @@ import { DropdownMenu } from '../../../components/bootstrap/Dropdown';
 import { DropdownItem }from '../../../components/bootstrap/Dropdown';
 import jsPDF from 'jspdf'; 
 import autoTable from 'jspdf-autotable';
+import { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
+import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 
 
 const Index: NextPage = () => {
@@ -55,11 +57,11 @@ const Index: NextPage = () => {
 					};
 					await updatelot(values);
 
-					Swal.fire('Deleted!', 'The category has been deleted.', 'success');
+					Swal.fire('Deleted!', 'The lot has been deleted.', 'success');
 				} catch (error) {
-					console.error('Error during handleUpload: ', error);
+					console.error('Error during handle delete: ', error);
 					Swal.close;
-					alert('An error occurred during file upload. Please try again later.');
+					
 				}
 			}
 		} catch (error) {
@@ -340,11 +342,12 @@ const Index: NextPage = () => {
 										{lot &&
 											lot
 												.filter((lot: any) =>
-													searchTerm
-														? lot.code
-																.toLowerCase()
-																.includes(searchTerm.toLowerCase())
-														: true,
+													searchTerm? 
+												lot.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+												lot.category.toLowerCase().includes(searchTerm.toLowerCase())||
+												lot.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
+											  : true
+												
 												)
 												.map((lot: any) => (
 													<tr key={lot.id}>

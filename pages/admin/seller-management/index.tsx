@@ -15,8 +15,6 @@ import Page from '../../../layout/Page/Page';
 import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
 import SellerAddModal from '../../../components/custom/SellerAddModal';
 import SellerEditModal from '../../../components/custom/SellerEditModal';
-import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
-import { firestore } from '../../../firebaseConfig';
 import Dropdown, { DropdownToggle, DropdownMenu } from '../../../components/bootstrap/Dropdown';
 import Swal from 'sweetalert2';
 import SellerDeleteModal from '../../../components/custom/SellerDeleteModal';
@@ -42,9 +40,7 @@ const Index: NextPage = () => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State to control the visibility of the Add Seller modal
 	const [editModalStatus, setEditModalStatus] = useState<boolean>(false); // State to control the visibility of the Edit Seller modal
-	const [seller, setStock] = useState<Seller[]>([]); // State to store the seller data fetched from Firestore
 	const [id, setId] = useState<string>(''); // State to store the ID of the seller being edited
-	const [status, setStatus] = useState(true);
 	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
 	const { data: supplier, error, isLoading } = useGetSuppliersQuery(undefined);
 	const [updatesupplier] = useUpdateSupplierMutation();
@@ -71,12 +67,11 @@ const Index: NextPage = () => {
 				} catch (error) {
 					console.error('Error during deleting: ', error);
 					Swal.close;
-					alert('An error occurred during file upload. Please try again later.');
 				}
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
-			Swal.fire('Error', 'Failed to delete seller.', 'error');
+			Swal.fire('Error', 'Failed to delete supplier.', 'error');
 		}
 	};
 
@@ -236,7 +231,7 @@ const Index: NextPage = () => {
 						id='searchInput'
 						type='search'
 						className='border-0 shadow-none bg-transparent'
-						placeholder='Search stock...'
+						placeholder='Search supplier...'
 						onChange={(event: any) => {
 							setSearchTerm(event.target.value);
 						}}
@@ -253,7 +248,7 @@ const Index: NextPage = () => {
 						color='success'
 						isLight
 						onClick={() => setAddModalStatus(true)}>
-						Add Seller
+						Add Supplier
 					</Button>
 				</SubHeaderRight>
 			</SubHeader>
@@ -263,7 +258,7 @@ const Index: NextPage = () => {
 						{/* Table for displaying customer data */}
 						<Card stretch>
 						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
-							<div className='flex-grow-1 text-center text-info '>Manage Suppler</div>
+							<div className='flex-grow-1 text-center text-info '>Manage Supplier</div>
 							{/* dropdown for export */}
 							<Dropdown>
 								<DropdownToggle hasIcon={false}>

@@ -10,6 +10,8 @@ import {colorApiSlice } from './slices/colorApiSlice';
 import {fabricApiSlice } from './slices/fabricApiSlice';
 import {gsmApiSlice } from './slices/gsmApiSlice';
 import {knitTypeApiSlice } from './slices/knitTypeApiSlice';
+import {jobApiSlice } from './slices/jobApiSlice';
+import {transactionHistoryApiSlice} from './slices/transactionHistoryApiSlice';
 
 const store = configureStore({
   reducer: {
@@ -21,7 +23,9 @@ const store = configureStore({
     [colorApiSlice.reducerPath]: colorApiSlice.reducer,
     [fabricApiSlice.reducerPath]: fabricApiSlice.reducer,
     [gsmApiSlice.reducerPath]: gsmApiSlice.reducer,
-    [knitTypeApiSlice.reducerPath]: knitTypeApiSlice.reducer, 
+    [knitTypeApiSlice.reducerPath]: knitTypeApiSlice.reducer,
+    [jobApiSlice.reducerPath]: jobApiSlice.reducer, 
+    [transactionHistoryApiSlice.reducerPath]: transactionHistoryApiSlice.reducer, 
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -34,6 +38,8 @@ const store = configureStore({
       fabricApiSlice.middleware,
       gsmApiSlice.middleware,
       knitTypeApiSlice.middleware,
+      jobApiSlice.middleware,
+      transactionHistoryApiSlice.middleware,
     ),
 });
 

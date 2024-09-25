@@ -53,8 +53,7 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 		status: true,
 	};
 
-	const [categories, setCategories] = useState<Category[]>([]);
-	const [items, setItems] = useState<Item[]>([]);
+
 	const [seller, setSeller] = useState<Seller>(initialSellerData);
 
 	const { data: supplier } = useGetSuppliersQuery(undefined);
@@ -115,7 +114,7 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 				});
 				await updateSupplier(values).unwrap();
 
-				Swal.fire('Added!', 'Seller has been update successfully.', 'success');
+				Swal.fire('update!', 'supplier has been update successfully.', 'success');
 				formik.resetForm();
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
