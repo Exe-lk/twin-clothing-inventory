@@ -9,7 +9,6 @@ import Card, {
 } from '../../../components/bootstrap/Card';
 import Chart, { IChartOptions } from '../../../components/extras/Chart';
 import CommonStoryBtn from '../../../common/partial/other/CommonStoryBtn';
-
 const PieBasic = () => {
 	const [state] = useState<IChartOptions>({
 		series: [44, 55, 13, 43, 22],

@@ -28,7 +28,6 @@ const Index: NextPage = () => {
 	const [updatedata] = useUpdateGSMMutation();
 	const [deletedata] = useDeleteGSMMutation();
 	const { refetch } = useGetDeletedGSMsQuery(undefined);
-
 	const handleClickDelete = async (data: any) => {
 		try {
 			const { value: inputText } = await Swal.fire({
@@ -46,7 +45,6 @@ const Index: NextPage = () => {
 				cancelButtonColor: '#d33',
 				confirmButtonText: 'Yes, delete it!',
 			});
-
 			if (inputText === 'DELETE') {
 				await deletedata(data.id).unwrap();
 				Swal.fire('Deleted!', 'The data has been deleted.', 'success');
@@ -62,7 +60,6 @@ const Index: NextPage = () => {
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -74,9 +71,7 @@ const Index: NextPage = () => {
 					...data,
 					status: true,
 				};
-
 				await updatedata(values);
-
 				Swal.fire('Restore!', 'The data has been restored.', 'success');
 			}
 		} catch (error) {
@@ -84,7 +79,6 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete data.', 'error');
 		}
 	};
-
 	const handleDeleteAll = async () => {
 		try {
 			const { value: inputText } = await Swal.fire({
@@ -102,13 +96,11 @@ const Index: NextPage = () => {
 				cancelButtonColor: '#d33',
 				confirmButtonText: 'Yes, delete all!',
 			});
-
 			if (inputText === 'DELETE ALL') {
 				for (const datas of data) {
 					await deletedata(datas.id).unwrap();
 				}
 				Swal.fire('Deleted!', 'All data have been deleted.', 'success');
-
 				// Refetch categories after deletion
 				refetch();
 			}
@@ -117,7 +109,6 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete all data.', 'error');
 		}
 	};
-
 	// Handle restore all categories
 	const handleRestoreAll = async () => {
 		try {
@@ -130,7 +121,6 @@ const Index: NextPage = () => {
 				cancelButtonColor: '#d33',
 				confirmButtonText: 'Yes, restore all!',
 			});
-
 			if (result.isConfirmed) {
 				for (const datas of data) {
 					const values = {
@@ -140,7 +130,6 @@ const Index: NextPage = () => {
 					await updatedata(values).unwrap();
 				}
 				Swal.fire('Restored!', 'All data have been restored.', 'success');
-
 				// Refetch categories after restoring
 				refetch();
 			}
@@ -191,7 +180,6 @@ const Index: NextPage = () => {
 						{/* Table for displaying customer data */}
 						<Card stretch>
 							<CardBody isScrollable className='table-responsive'>
-								{/* <table className='table table-modern table-hover'> */}
 								<table className='table table-bordered border-primary table-modern table-hover text-center'>
 									<thead>
 										<tr>
@@ -220,7 +208,6 @@ const Index: NextPage = () => {
 											).map((data: any) => (
 												<tr key={data.id}>
 													<td>{data.name}</td>
-
 													<td>
 														<Button
 															icon='Restore'
@@ -231,7 +218,6 @@ const Index: NextPage = () => {
 															}>
 															Restore
 														</Button>
-
 														<Button
 															className='m-2'
 															icon='Delete'

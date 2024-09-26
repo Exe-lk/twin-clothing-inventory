@@ -76,8 +76,7 @@ const TypeAnalatisk = () => {
 						Transaction History
 						</CardTitle>
 						<CardSubTitle>Analytics</CardSubTitle>
-					</CardLabel>
-					
+					</CardLabel>	
 				</CardHeader>
 				<CardBody>
 					<Chart

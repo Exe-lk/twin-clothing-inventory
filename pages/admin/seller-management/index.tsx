@@ -48,7 +48,6 @@ const Index: NextPage = () => {
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -74,7 +73,6 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete supplier.', 'error');
 		}
 	};
-
 	// Function to handle the download in different formats
 	const handleExport = async (format: string) => {
 		const table = document.querySelector('table');
@@ -89,13 +87,9 @@ const Index: NextPage = () => {
 			if (lastCell) {
 				lastCell.remove();
 			}
-		});
-	
-		
+		});		
 		const clonedTableStyles = getComputedStyle(table);
-		clonedTable.setAttribute('style', clonedTableStyles.cssText);
-	
-		
+		clonedTable.setAttribute('style', clonedTableStyles.cssText);		
 		try {
 			switch (format) {
 				case 'svg':
@@ -117,7 +111,6 @@ const Index: NextPage = () => {
 			console.error('Error exporting table: ', error);
 		}
 	};
-
 	// function to export the table data in CSV format
 	const downloadTableAsCSV = (table: any) => {
 				let csvContent = '';
@@ -129,7 +122,6 @@ const Index: NextPage = () => {
 						.join(',');
 					csvContent += rowData + '\n';
 				});
-
 				const blob = new Blob([csvContent], { type: 'text/csv' });
 				const link = document.createElement('a');
 				link.href = URL.createObjectURL(blob);
@@ -141,8 +133,7 @@ const Index: NextPage = () => {
 		try {
 		  const pdf = new jsPDF('p', 'pt', 'a4');
 		  const rows: any[] = [];
-		  const headers: any[] = [];
-		  
+		  const headers: any[] = [];		  
 		  const thead = table.querySelector('thead');
 		  if (thead) {
 			const headerCells = thead.querySelectorAll('th');
@@ -166,16 +157,13 @@ const Index: NextPage = () => {
 			  cellWidth: 'wrap',
 			},
 			theme: 'grid',
-		  });
-	  
+		  });	  
 		  pdf.save('table_data.pdf');
 		} catch (error) {
 		  console.error('Error generating PDF: ', error);
 		  alert('Error generating PDF. Please try again.');
 		}
-	  };
-	
-	
+	  };	
 	// Function to export the table data in SVG format using library html-to-image
 	const downloadTableAsSVG = async (table: HTMLElement) => {
 		try {
@@ -193,8 +181,7 @@ const Index: NextPage = () => {
 		} catch (error) {
 			console.error('Error generating SVG: ', error); 
 		}
-	};
-	
+	};	
 	// Function to export the table data in PNG format using library html-to-image
 	const downloadTableAsPNG = async (table: HTMLElement) => {
 		try {
@@ -213,7 +200,6 @@ const Index: NextPage = () => {
 			console.error('Error generating PNG: ', error); 
 		}
 	};
-
 	return (
 		<PageWrapper>
 			<Head>
@@ -284,13 +270,11 @@ const Index: NextPage = () => {
 											<th>Company name</th>
 											<th>Company email</th>
 											<th>Phone number</th>
-											<th>Seller email</th>
-											
+											<th>Seller email</th>											
 											<th></th>
 										</tr>
 									</thead>
-									<tbody>
-										
+									<tbody>										
 										{isLoading && (
 											<tr>
 												<td>Loading...</td>
@@ -317,8 +301,6 @@ const Index: NextPage = () => {
 														<td>{supplier.company_email}</td>
 														<td>{supplier.phone}</td>
 														<td>{supplier.email}</td>
-														
-
 														<td>
 															<Button
 																icon='Edit'

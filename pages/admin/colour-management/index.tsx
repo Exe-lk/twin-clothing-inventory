@@ -34,7 +34,6 @@ const Index: NextPage = () => {
 	const [id, setId] = useState<string>(''); // State for current category ID
 	const [status, setStatus] = useState(true); // State for managing data fetching status
 	// Fetch category data from Firestore on component mount or when add/edit modals are toggled
-
 	const handleClickDelete = async (category: any) => {
 		try {
 			const result = await Swal.fire({

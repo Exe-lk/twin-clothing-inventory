@@ -29,17 +29,14 @@ import CategoryEditModal from '../../../../components/custom/FabricEditModal';
 import Swal from 'sweetalert2';
 import { useUpdateFabricMutation ,useGetFabricsQuery} from '../../../../redux/slices/fabricApiSlice';
 
-
 // Define the functional component for the index page
 const Index: NextPage = () => {
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
 	const [editModalStatus, setEditModalStatus] = useState<boolean>(false); // State for edit modal status
 	const [id, setId] = useState<string>(''); // State for current category ID
-
 	const { data: fabric, error, isLoading } = useGetFabricsQuery(undefined);
 	const [updatefabric] = useUpdateFabricMutation();
-
 	const handleClickDelete = async (fabric:any) => {
 		try {
 			const result = await Swal.fire({

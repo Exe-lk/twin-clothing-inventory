@@ -69,7 +69,6 @@ const Index: NextPage = () => {
 							</div>
 						</DropdownMenu>
 					</Dropdown>
-
 					{/* Button to open  New Item modal */}
 				</SubHeaderRight>
 			</SubHeader>
@@ -99,9 +98,7 @@ const Index: NextPage = () => {
 											<th>Sub cCategory</th>
 										</tr>
 									</thead>
-
 									<tbody>
-									 
 										{isLoading && (
 											<tr>
 												<td>Loading...</td>
@@ -131,7 +128,6 @@ const Index: NextPage = () => {
 													} else if (transaction.order_type === 'Stock Out') {
 														textColorClass = 'text-success';
 													}
-									
 													return (
 														<tr key={transaction.id} className={textColorClass}>
 															<td className={textColorClass}>{transaction.code}</td>

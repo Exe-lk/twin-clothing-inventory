@@ -42,7 +42,6 @@ const PieBasic = () => {
 						<CardTitle>
 							LOT <small>analytics</small>
 						</CardTitle>
-						{/* <CardSubTitle>Chart</CardSubTitle> */}
 					</CardLabel>
 					{/* <CardActions>
 						<CommonStoryBtn to='/story/extra-chart-pie-donut--pie-basic' />

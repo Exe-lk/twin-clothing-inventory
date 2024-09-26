@@ -90,12 +90,10 @@ const Index: NextPage = () => {
 				lastCell.remove();
 			}
 		});
-	
-		
+			
 		const clonedTableStyles = getComputedStyle(table);
 		clonedTable.setAttribute('style', clonedTableStyles.cssText);
-	
-		
+			
 		try {
 			switch (format) {
 				case 'svg':
@@ -174,8 +172,7 @@ const Index: NextPage = () => {
 		  alert('Error generating PDF. Please try again.');
 		}
 	  };
-	
-	
+		
 	// Function to export the table data in SVG format using library html-to-image
 	const downloadTableAsSVG = async (table: HTMLElement) => {
 		try {
@@ -240,10 +237,8 @@ const Index: NextPage = () => {
 				</SubHeaderLeft>
 				<SubHeaderRight>
 					{/* Dropdown for filter options */}
-
 					<SubheaderSeparator />
-					{/* Button to open the Add Seller modal */}
-					
+					{/* Button to open the Add Seller modal */}					
 				</SubHeaderRight>
 			</SubHeader>
 			<Page>
@@ -278,13 +273,10 @@ const Index: NextPage = () => {
 											<th>Company name</th>
 											<th>Company email</th>
 											<th>Phone number</th>
-											<th>Seller email</th>
-											
-											
+											<th>Seller email</th>											
 										</tr>
 									</thead>
-									<tbody>
-										
+									<tbody>										
 										{isLoading && (
 											<tr>
 												<td>Loading...</td>
@@ -310,10 +302,7 @@ const Index: NextPage = () => {
 														<td>{supplier.company_name}</td>
 														<td>{supplier.company_email}</td>
 														<td>{supplier.phone}</td>
-														<td>{supplier.email}</td>
-														
-
-													
+														<td>{supplier.email}</td>													
 													</tr>
 												))}
 									</tbody>
@@ -323,9 +312,7 @@ const Index: NextPage = () => {
 						</Card>
 					</div>
 				</div>
-			</Page>
-			{/* Add Seller modal */}
-		
+			</Page>		
 		</PageWrapper>
 	);
 };

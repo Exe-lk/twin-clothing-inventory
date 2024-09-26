@@ -102,7 +102,6 @@ const Index: NextPage = () => {
 						type='search'
 						className='border-0 shadow-none bg-transparent'
 						placeholder='Search...'
-						// onChange={formik.handleChange}
 						onChange={(event: any) => {
 							setSearchTerm(event.target.value);
 						}}
@@ -151,9 +150,7 @@ const Index: NextPage = () => {
 							</div>
 						</DropdownMenu>
 					</Dropdown>
-
 					<SubheaderSeparator />
-				
 				</SubHeaderRight>
 			</SubHeader>
 			<Page>
@@ -210,19 +207,16 @@ const Index: NextPage = () => {
 														<td>{user.email}</td>
 														<td>{user.mobile}</td>
 														<td>{user.nic}</td>
-														<td>{user.role}</td>
-														
+														<td>{user.role}</td>			
 													</tr>
 												))}
 									</tbody>
-								</table>
-							
+								</table>						
 							</CardBody>
 						</Card>
 					</div>
 				</div>
-			</Page>
-			
+			</Page>			
 		</PageWrapper>
 	);
 };

@@ -56,13 +56,13 @@ const Index: NextPage = () => {
 	const [quantityDifference, setQuantityDifference] = useState([]);
 	const { data: job, error, isLoading } = useGetJobsQuery(undefined);
 	const [updatejob] = useUpdateJobMutation();
+
 	// Function to handle deletion of an item
 	const handleClickDelete = async (item: any) => {
 		try {
 			
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',

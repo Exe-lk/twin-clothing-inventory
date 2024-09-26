@@ -40,7 +40,6 @@ interface Category {
 
 const Index: NextPage = () => {
 	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
-
 	const { darkModeStatus } = useDarkMode(); // Dark mode
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
@@ -58,8 +57,7 @@ const Index: NextPage = () => {
 	const [updatejob] = useUpdateJobMutation();
 	// Function to handle deletion of an item
 	const handleClickDelete = async (item: any) => {
-		try {
-			
+		try {	
 			const result = await Swal.fire({
 				title: 'Are you sure?',
 
@@ -109,8 +107,7 @@ const Index: NextPage = () => {
 						value={searchTerm}
 					/>
 				</SubHeaderLeft>
-				<SubHeaderRight>
-			
+				<SubHeaderRight>		
 					<SubheaderSeparator />
 					{/* Button to open  New Item modal */}
 					<Button
@@ -215,7 +212,6 @@ const Index: NextPage = () => {
 			</Page>
 			<StockAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id={id1} />
 			<JobDeleteModal setIsOpen={setDeleteModalStatus} isOpen={deleteModalStatus} id='' />
-
 			<StockEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
 		</PageWrapper>
 	);

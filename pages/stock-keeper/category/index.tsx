@@ -57,9 +57,7 @@ const Index: NextPage = () => {
 					status: false,
 					subcategory: category.subcategory,
 				};
-
 				await updateCategory(values);
-
 				Swal.fire('Deleted!', 'The category has been deleted.', 'success');
 			}
 		} catch (error) {
@@ -72,9 +70,7 @@ const Index: NextPage = () => {
 	const handleExport = async (format: string) => {
 		const table = document.querySelector('table');
 		if (!table) return;
-
 		const clonedTable = table.cloneNode(true) as HTMLElement;
-
 		// Remove Edit/Delete buttons column from cloned table
 		const rows = clonedTable.querySelectorAll('tr');
 		rows.forEach((row) => {
@@ -83,12 +79,8 @@ const Index: NextPage = () => {
 				lastCell.remove();
 			}
 		});
-	
-		
 		const clonedTableStyles = getComputedStyle(table);
 		clonedTable.setAttribute('style', clonedTableStyles.cssText);
-	
-		
 		try {
 			switch (format) {
 				case 'svg':
@@ -110,7 +102,6 @@ const Index: NextPage = () => {
 			console.error('Error exporting table: ', error);
 		}
 	};
-
 	// function to export the table data in CSV format
 	const downloadTableAsCSV = (table: any) => {
 				let csvContent = '';
@@ -160,15 +151,12 @@ const Index: NextPage = () => {
 			},
 			theme: 'grid',
 		  });
-	  
 		  pdf.save('table_data.pdf');
 		} catch (error) {
 		  console.error('Error generating PDF: ', error);
 		  alert('Error generating PDF. Please try again.');
 		}
 	  };
-	
-	
 	// Function to export the table data in SVG format using library html-to-image
 	const downloadTableAsSVG = async (table: HTMLElement) => {
 		try {
@@ -187,7 +175,6 @@ const Index: NextPage = () => {
 			console.error('Error generating SVG: ', error); 
 		}
 	};
-	
 	// Function to export the table data in PNG format using library html-to-image
 	const downloadTableAsPNG = async (table: HTMLElement) => {
 		try {
@@ -206,7 +193,6 @@ const Index: NextPage = () => {
 			console.error('Error generating PNG: ', error); 
 		}
 	};
-
 	// JSX for rendering the page
 	return (
 		<PageWrapper>

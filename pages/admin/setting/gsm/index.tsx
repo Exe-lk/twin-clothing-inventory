@@ -25,10 +25,8 @@ const Index: NextPage = () => {
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
 	const [editModalStatus, setEditModalStatus] = useState<boolean>(false); // State for edit modal status
 	const [id, setId] = useState<string>(''); // State for current category ID
-
 	const { data: gsm, error, isLoading } = useGetGSMsQuery(undefined);
 	const [updateGsm] = useUpdateGSMMutation();
-
 	const handleClickDelete = async (gsm: any) => {
 		try {
 			const result = await Swal.fire({

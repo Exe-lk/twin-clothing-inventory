@@ -26,7 +26,6 @@ import autoTable from 'jspdf-autotable';
 import { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 
-
 const Index: NextPage = () => {
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
@@ -40,7 +39,6 @@ const Index: NextPage = () => {
 	// Function to handle deletion of an item
 	const handleClickDelete = async (item: any) => {
 		try {
-			
 			const result = await Swal.fire({
 				title: 'Are you sure?',
 
@@ -60,8 +58,7 @@ const Index: NextPage = () => {
 					Swal.fire('Deleted!', 'The lot has been deleted.', 'success');
 				} catch (error) {
 					console.error('Error during handle delete: ', error);
-					Swal.close;
-					
+					Swal.close;			
 				}
 			}
 		} catch (error) {
@@ -75,7 +72,6 @@ const Index: NextPage = () => {
 		if (!table) return;
 
 		const clonedTable = table.cloneNode(true) as HTMLElement;
-
 		// Remove Edit/Delete buttons column from cloned table
 		const rows = clonedTable.querySelectorAll('tr');
 		rows.forEach((row) => {
@@ -85,11 +81,9 @@ const Index: NextPage = () => {
 			}
 		});
 	
-		
 		const clonedTableStyles = getComputedStyle(table);
 		clonedTable.setAttribute('style', clonedTableStyles.cssText);
 	
-		
 		try {
 			switch (format) {
 				case 'svg':
@@ -169,7 +163,6 @@ const Index: NextPage = () => {
 		}
 	  };
 	
-	
 	// Function to export the table data in SVG format using library html-to-image
 	const downloadTableAsSVG = async (table: HTMLElement) => {
 		try {
@@ -208,7 +201,6 @@ const Index: NextPage = () => {
 		}
 	};
 	
-
 	// Return the JSX for rendering the page
 	return (
 		<PageWrapper>
@@ -276,9 +268,7 @@ const Index: NextPage = () => {
 						</DropdownMenu>
 					</Dropdown> */}
 					<SubheaderSeparator />
-
-					{/* Button to open  New Item modal */}
-					
+					{/* Button to open  New Item modal */}	
 				</SubHeaderRight>
 			</SubHeader>
 			<Page>
@@ -351,8 +341,6 @@ const Index: NextPage = () => {
 														<td>{lot.supplier}</td>
 														<td>{lot.description}</td>
 														<td>{lot.date}</td>
-
-													
 													</tr>
 												))}
 									</tbody>

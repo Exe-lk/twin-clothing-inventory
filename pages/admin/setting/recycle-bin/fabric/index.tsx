@@ -28,7 +28,6 @@ const Index: NextPage = () => {
 	const [updatedata] = useUpdateFabricMutation();
 	const [deletedata] = useDeleteFabricMutation();
 	const { refetch } = useGetDeletedFabricsQuery(undefined);
-
 	const handleClickDelete = async (data: any) => {
 		try {
 			const { value: inputText } = await Swal.fire({
@@ -46,11 +45,9 @@ const Index: NextPage = () => {
 				cancelButtonColor: '#d33',
 				confirmButtonText: 'Yes, delete it!',
 			});
-
 			if (inputText === 'DELETE') {
 				await deletedata(data.id).unwrap();
 				Swal.fire('Deleted!', 'The data has been deleted.', 'success');
-
 				// Perform delete action here
 				console.log('Delete confirmed');
 				refetch();
@@ -64,7 +61,6 @@ const Index: NextPage = () => {
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -76,9 +72,7 @@ const Index: NextPage = () => {
 					...data,
 					status: true,
 				};
-
 				await updatedata(values);
-
 				Swal.fire('Restore!', 'The data has been restored.', 'success');
 			}
 		} catch (error) {
@@ -86,7 +80,6 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete data.', 'error');
 		}
 	};
-
 	const handleDeleteAll = async () => {
 		try {
 			const { value: inputText } = await Swal.fire({
@@ -104,13 +97,11 @@ const Index: NextPage = () => {
 				cancelButtonColor: '#d33',
 				confirmButtonText: 'Yes, delete all!',
 			});
-
 			if (inputText === 'DELETE ALL') {
 				for (const datas of data) {
 					await deletedata(datas.id).unwrap();
 				}
 				Swal.fire('Deleted!', 'All data have been deleted.', 'success');
-
 				// Refetch categories after deletion
 				refetch();
 			}
@@ -119,7 +110,6 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete all data.', 'error');
 		}
 	};
-
 	// Handle restore all categories
 	const handleRestoreAll = async () => {
 		try {
@@ -132,7 +122,6 @@ const Index: NextPage = () => {
 				cancelButtonColor: '#d33',
 				confirmButtonText: 'Yes, restore all!',
 			});
-
 			if (result.isConfirmed) {
 				for (const datas of data) {
 					const values = {
@@ -142,7 +131,6 @@ const Index: NextPage = () => {
 					await updatedata(values).unwrap();
 				}
 				Swal.fire('Restored!', 'All data have been restored.', 'success');
-
 				// Refetch categories after restoring
 				refetch();
 			}

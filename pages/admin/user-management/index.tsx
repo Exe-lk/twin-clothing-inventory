@@ -151,7 +151,6 @@ const Index: NextPage = () => {
 							</div>
 						</DropdownMenu>
 					</Dropdown>
-
 					<SubheaderSeparator />
 					<Button
 						icon='PersonAdd'
@@ -259,7 +258,6 @@ const Index: NextPage = () => {
 				id={id}
 				refetch={refetch} // Pass refetch function here
 			/>
-
 			<SellerDeleteModal setIsOpen={setDeleteModalStatus} isOpen={deleteModalStatus} id='' />
 		</PageWrapper>
 	);
