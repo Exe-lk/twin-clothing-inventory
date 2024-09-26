@@ -81,6 +81,7 @@ const LineWithLabel = () => {
 			},
 		},
 	});
+	
 	return (
 		<div className='col-lg-6'>
 			<Card stretch>

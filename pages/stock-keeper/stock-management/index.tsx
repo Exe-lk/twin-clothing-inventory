@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import CommonRightPanel from '../../../components/CommonRightPanel';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Button from '../../../components/bootstrap/Button';
-
 import 'react-simple-keyboard/build/css/index.css';
 import Swal from 'sweetalert2';
 import Additem from '../../../components/add-item';
@@ -27,18 +26,15 @@ console.log(orderedItems)
 			const result = await Swal.fire({
 				title: 'Are you sure?',
 				text: 'You will not be able to recover this status!',
-				// text: id,
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
 				cancelButtonColor: '#d33',
 				confirmButtonText: 'Yes, update it!',
 			});
-
 			if (result.isConfirmed) {
 				const currentDate = new Date();
 				const formattedDate = currentDate.toLocaleDateString();
-
 				const year = currentDate.getFullYear();
 				const month = String(currentDate.getMonth() + 1).padStart(2, '0');
 				const day = String(currentDate.getDate()).padStart(2, '0');
@@ -61,30 +57,23 @@ console.log(orderedItems)
 					};
 					const response: any = await addtransaction(values).unwrap();
 				}
-				
 				refetch();
 				Swal.fire('Added!', 'transaction has been added successfully.', 'success');
-
 			}
 		} catch (error) {
 			console.error('Error during handleUpload: ', error);
 			alert('An error occurred during file upload. Please try again later.');
 		}
 	};
-
 	interface Category {
 		cid: string;
 		categoryname: string;
 	}
 	const cdata = [
 		{ status: true, categoryname: 'Main', cid: '0bc5HUELspDzvrUdt5u6' },
-
 		{ status: true, categoryname: 'Embroider', cid: 'LKcV57ThRnHtE9bxBHMb' },
-
 		{ status: true, categoryname: 'Painting', cid: 'La1K7XLguIsFPZN19vp4' },
-
 		{ categoryname: 'clothes', cid: 'NowdRVU0K7hDZiMRkksn', status: true },
-
 		{ categoryname: 'other', status: true, cid: 'irufyXKsbSNPk3z8ziC8' },
 	];
 	const [category, setCategory] = useState<Category[]>(cdata);
@@ -129,7 +118,6 @@ console.log(orderedItems)
 					</Card>
 				</div>
 			</div>
-
 			<CommonRightPanel
 				setOpen={setToggleRightPanel}
 				isOpen={toggleRightPanel}

@@ -29,11 +29,9 @@ interface Company {
 }
 export default function index() {
 	const [editStatus, setEditStatus] = useState<boolean>(false); // State for
-
 	const [imageurl, setImageurl] = useState<any>(null);
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 	const [company, setCompany] = useState<Company>();
-
 	const formik = useFormik({
 		initialValues: {
 			phone: '',
@@ -64,7 +62,6 @@ export default function index() {
 			if (!values.address) {
 				errors.addres = 'Required';
 			}
-
 			return errors;
 		},
 		onSubmit: async (values) => {
@@ -77,7 +74,6 @@ export default function index() {
 					showConfirmButton: false,
 				});
 				console.log(company?.image);
-
 				const docRef = doc(firestore, 'company', '001');
 				// Update the data
 				updateDoc(docRef, values)
@@ -126,14 +122,12 @@ export default function index() {
 		},
 		onSubmit: async (values) => {},
 	});
-
 	const addSubcategoryField = () => {
 		formik1.setValues({
 			...formik1.values,
 			subcategory: [...formik1.values.subcategory, ''],
 		});
 	};
-
 	const removeSubcategoryField = (index: number) => {
 		const newSubcategories = [...formik1.values.subcategory];
 		newSubcategories.splice(index, 1);
@@ -191,7 +185,6 @@ export default function index() {
 											validFeedback='Looks good!'
 										/>
 									</FormGroup>
-
 									<FormGroup id='address' label='Address' className='col-md-6'>
 										<Input
 											onChange={formik.handleChange}
@@ -214,7 +207,6 @@ export default function index() {
 											validFeedback='Looks good!'
 										/>
 									</FormGroup>
-
 									<FormGroup label='Profile Picture' className='col-md-6'>
 										<Input
 											type='file'
@@ -235,7 +227,6 @@ export default function index() {
 											style={{ width: '200px', height: '200px' }}
 										/>
 									)}
-
 									<div className='d-grid gap-2 d-md-flex justify-content-md-end'>
 										<Button
 											color='warning'
@@ -263,7 +254,6 @@ export default function index() {
 										<div className='row m-4'>
 											<div className='col-6 '>Company Name :</div>
 											<div className='col-6 '>
-												{/* <strong>{company?.company_name}</strong> */}
 												<strong>Twin clothing</strong>
 											</div>
 										</div>
@@ -272,7 +262,6 @@ export default function index() {
 										<div className='row m-4'>
 											<div className='col-6 '>Company Email :</div>
 											<div className='col-6 '>
-												{/* <strong>{company?.email}</strong> */}
 												<strong>twinclothing@gmail.com</strong>
 											</div>
 										</div>

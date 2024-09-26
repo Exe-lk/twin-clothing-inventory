@@ -18,17 +18,14 @@ import CategoryEditModal from '../../../../components/custom/KnitTypeEditModal';
 import Swal from 'sweetalert2';
 import { useUpdateKnitTypeMutation, useGetKnitTypesQuery } from '../../../../redux/slices/knitTypeApiSlice';
 
-
 // Define the functional component for the index page
 const Index: NextPage = () => {
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
 	const [editModalStatus, setEditModalStatus] = useState<boolean>(false); // State for edit modal status
 	const [id, setId] = useState<string>(''); // State for current category ID
-
 	const { data: knit, error, isLoading } = useGetKnitTypesQuery(undefined);
 	const [updateknit] = useUpdateKnitTypeMutation();
-
 	const handleClickDelete = async (knit: any) => {
 		try {
 			const result = await Swal.fire({

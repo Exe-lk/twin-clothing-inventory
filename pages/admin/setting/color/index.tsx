@@ -25,10 +25,8 @@ const Index: NextPage = () => {
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
 	const [editModalStatus, setEditModalStatus] = useState<boolean>(false); // State for edit modal status
 	const [id, setId] = useState<string>(''); // State for current category ID
-
 	const { data: color, error, isLoading } = useGetColorsQuery(undefined);
 	const [updateColor] = useUpdateColorMutation();
-
 	const handleClickDelete = async (color: any) => {
 		try {
 			const result = await Swal.fire({
@@ -47,10 +45,8 @@ const Index: NextPage = () => {
 						status: false,
 					};
 					await updateColor(values);
-
 					Swal.fire('Deleted!', 'The Color has been deleted.', 'success');
 				} catch (error) {
-					
 					Swal.close;
 					alert('An error occurred during file upload. Please try again later.');
 				}
@@ -60,7 +56,6 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete category.', 'error');
 		}
 	};
-
 	return (
 		<PageWrapper>
 			<SubHeader>
@@ -85,7 +80,6 @@ const Index: NextPage = () => {
 				<SubHeaderRight>
 					<SubheaderSeparator />
 					{/* Button to open New category */}
-
 					<Button icon='Restore' color='success' onClick={() => setAddModalStatus(true)}>
 						Add Color
 					</Button>
@@ -133,7 +127,6 @@ const Index: NextPage = () => {
 												.map((color: any) => (
 													<tr key={color.id}>
 														<td>{color.name}</td>
-
 														<td>
 															<Button
 																icon='Edit'

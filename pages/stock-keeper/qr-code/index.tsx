@@ -11,7 +11,6 @@ const Index: NextPage = () => {
 		email: "abc@gmail.com",
 		password: "123456"
 	}
-
 	// Create a string to encode in the QR code
 	const qrData = `Email: ${data.email}, Password: ${data.password}`;
 
@@ -32,7 +31,6 @@ const Index: NextPage = () => {
 									{/* Render QR code here */}
 									{/* <QRCode value={qrData} size={200} /> */}
 									<img src={Qr}/>
-
 								</div>
 							</CardBody>
 						</Card>

@@ -77,7 +77,6 @@ const TypeAnalatisk = () => {
 						</CardTitle>
 						<CardSubTitle>Analytics</CardSubTitle>
 					</CardLabel>
-					
 				</CardHeader>
 				<CardBody>
 					<Chart

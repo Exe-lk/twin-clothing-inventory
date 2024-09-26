@@ -1,6 +1,4 @@
-// LogoutButton.tsx
 import React from 'react';
-//import { Button } from '../components/bootstrap/Button';
 import { useRouter } from 'next/router';
 import Button from '../components/bootstrap/Button';
 
@@ -11,17 +9,9 @@ interface LogoutButtonProps {
 const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
   const router = useRouter();
 
-  const handleLogout = () => {
-    // Clear user information from session
+  const handleLogout = () => {   
     localStorage.removeItem('user');
-
-    // Optional: Perform any additional logout logic, e.g., sign out from Firebase
-    // auth.signOut();
-
-    // Update user context or perform other necessary actions
     onLogout();
-
-    // Redirect to the login page or any other desired page
     router.push('/');
   };
 

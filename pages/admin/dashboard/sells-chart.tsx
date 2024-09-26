@@ -7,7 +7,6 @@ import Card, {
 	CardTitle,
 } from '../../../components/bootstrap/Card';
 import Chart, { IChartOptions } from '../../../components/extras/Chart';
-
 const LineWithLabel = () => {
 	const [state] = useState<IChartOptions>({
 		series: [

@@ -1,4 +1,3 @@
-// pages/index.tsx
 import React, { useState } from 'react';
 import { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
@@ -26,6 +25,7 @@ import { DropdownMenu } from '../../../components/bootstrap/Dropdown';
 import { DropdownItem }from '../../../components/bootstrap/Dropdown';
 import jsPDF from 'jspdf'; 
 import autoTable from 'jspdf-autotable';
+
 // Define the functional component for the index page
 const Index: NextPage = () => {
 	const { darkModeStatus } = useDarkMode();
@@ -43,7 +43,6 @@ const Index: NextPage = () => {
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-				// text: 'You will not be able to recover this category!',
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -83,12 +82,10 @@ const Index: NextPage = () => {
 				lastCell.remove();
 			}
 		});
-	
-		
+			
 		const clonedTableStyles = getComputedStyle(table);
 		clonedTable.setAttribute('style', clonedTableStyles.cssText);
-	
-		
+			
 		try {
 			switch (format) {
 				case 'svg':
@@ -167,8 +164,7 @@ const Index: NextPage = () => {
 		  alert('Error generating PDF. Please try again.');
 		}
 	  };
-	
-	
+		
 	// Function to export the table data in SVG format using library html-to-image
 	const downloadTableAsSVG = async (table: HTMLElement) => {
 		try {
@@ -260,8 +256,7 @@ const Index: NextPage = () => {
 									<thead>
 										<tr>
 											<th>Category name</th>
-											<th>Sub Category</th>
-											
+											<th>Sub Category</th>		
 										</tr>
 									</thead>
 									<tbody>
@@ -295,8 +290,7 @@ const Index: NextPage = () => {
 																	),
 																)}
 															</ul>
-														</td>
-														
+														</td>			
 													</tr>
 												))}
 									</tbody>
@@ -306,8 +300,7 @@ const Index: NextPage = () => {
 						</Card>
 					</div>
 				</div>
-			</Page>
-			
+			</Page>			
 		</PageWrapper>
 	);
 };

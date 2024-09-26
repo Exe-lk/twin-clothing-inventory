@@ -15,7 +15,6 @@ import { useGetTransactionsQuery } from '../../../redux/slices/transactionHistor
 const Index: NextPage = () => {
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const { data: transaction, error, isLoading } = useGetTransactionsQuery(undefined);
-
 	return (
 		<PageWrapper>
 			<SubHeader>
@@ -69,7 +68,6 @@ const Index: NextPage = () => {
 							</div>
 						</DropdownMenu>
 					</Dropdown>
-
 					{/* Button to open  New Item modal */}
 				</SubHeaderRight>
 			</SubHeader>
@@ -99,9 +97,7 @@ const Index: NextPage = () => {
 											<th>Sub cCategory</th>
 										</tr>
 									</thead>
-
-									<tbody>
-									 
+									<tbody>									 
 										{isLoading && (
 											<tr>
 												<td>Loading...</td>

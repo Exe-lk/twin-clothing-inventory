@@ -8,8 +8,6 @@ import LineWithLabel1 from './sock-monthly';
 import PieBasic from './top-product-chart';
 import TypeAnalatisk from './TypeAnalatisk';
 
-
-
 const Index: NextPage = () => {
 	
 	return (
@@ -23,13 +21,9 @@ const Index: NextPage = () => {
 							 <TypeAnalatisk/>	
 				{/* <ColumnBasic /> */}
 				{/* <TypeAnalatisk/> */}
-				
 				{/* <LineWithLabel /> */}
 				{/* <LineWithLabel1 /> */} 
-
-				</div>
-				
-				
+				</div>	
 			</Page>
 		</PageWrapper>
 	);

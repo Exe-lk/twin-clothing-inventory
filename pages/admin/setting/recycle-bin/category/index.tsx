@@ -46,7 +46,6 @@ const Index: NextPage = () => {
 	const [id, setId] = useState<string>(''); // State for current category ID
 	const [status, setStatus] = useState(true); // State for managing data fetching status
 	// Fetch category data from Firestore on component mount or when add/edit modals are toggled
-
 	const handleClickRestore = async (category: any) => {
 		try {
 			const result = await Swal.fire({
@@ -62,7 +61,6 @@ const Index: NextPage = () => {
 				category.status = true;
 				let data: any = category;
 				const docRef = doc(firestore, 'category', category.cid);
-
 				updateDoc(docRef, data)
 					.then(() => {
 						if (status) {
@@ -70,7 +68,6 @@ const Index: NextPage = () => {
 						} else {
 							setStatus(true);
 						}
-
 						Swal.fire('Restore!', 'category has been restore successfully.', 'success');
 					})
 					.catch((error) => {
@@ -138,7 +135,6 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete all categories.', 'error');
 		}
 	};
-
 	// Function to handle restoration of all categories
 	const handleRestoreAll = async () => {
 		try {

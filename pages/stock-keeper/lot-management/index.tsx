@@ -26,7 +26,6 @@ import autoTable from 'jspdf-autotable';
 import { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 
-
 const Index: NextPage = () => {
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
@@ -36,14 +35,11 @@ const Index: NextPage = () => {
 	const [id1, setId1] = useState<string>('12356'); // State for new item ID
 	const { data: lot, error, isLoading } = useGetLotsQuery(undefined);
 	const [updatelot] = useUpdateLotMutation();
-
 	// Function to handle deletion of an item
 	const handleClickDelete = async (item: any) => {
 		try {
-			
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -61,7 +57,6 @@ const Index: NextPage = () => {
 				} catch (error) {
 					console.error('Error during handle delete: ', error);
 					Swal.close;
-					
 				}
 			}
 		} catch (error) {
@@ -73,9 +68,7 @@ const Index: NextPage = () => {
 	const handleExport = async (format: string) => {
 		const table = document.querySelector('table');
 		if (!table) return;
-
 		const clonedTable = table.cloneNode(true) as HTMLElement;
-
 		// Remove Edit/Delete buttons column from cloned table
 		const rows = clonedTable.querySelectorAll('tr');
 		rows.forEach((row) => {
@@ -84,12 +77,8 @@ const Index: NextPage = () => {
 				lastCell.remove();
 			}
 		});
-	
-		
 		const clonedTableStyles = getComputedStyle(table);
 		clonedTable.setAttribute('style', clonedTableStyles.cssText);
-	
-		
 		try {
 			switch (format) {
 				case 'svg':
@@ -111,7 +100,6 @@ const Index: NextPage = () => {
 			console.error('Error exporting table: ', error);
 		}
 	};
-
 	// function to export the table data in CSV format
 	const downloadTableAsCSV = (table: any) => {
 				let csvContent = '';
@@ -123,7 +111,6 @@ const Index: NextPage = () => {
 						.join(',');
 					csvContent += rowData + '\n';
 				});
-
 				const blob = new Blob([csvContent], { type: 'text/csv' });
 				const link = document.createElement('a');
 				link.href = URL.createObjectURL(blob);
@@ -136,7 +123,6 @@ const Index: NextPage = () => {
 		  const pdf = new jsPDF('p', 'pt', 'a4');
 		  const rows: any[] = [];
 		  const headers: any[] = [];
-		  
 		  const thead = table.querySelector('thead');
 		  if (thead) {
 			const headerCells = thead.querySelectorAll('th');
@@ -161,15 +147,12 @@ const Index: NextPage = () => {
 			},
 			theme: 'grid',
 		  });
-	  
 		  pdf.save('table_data.pdf');
 		} catch (error) {
 		  console.error('Error generating PDF: ', error);
 		  alert('Error generating PDF. Please try again.');
 		}
 	  };
-	
-	
 	// Function to export the table data in SVG format using library html-to-image
 	const downloadTableAsSVG = async (table: HTMLElement) => {
 		try {
@@ -188,7 +171,6 @@ const Index: NextPage = () => {
 			console.error('Error generating SVG: ', error); 
 		}
 	};
-	
 	// Function to export the table data in PNG format using library html-to-image
 	const downloadTableAsPNG = async (table: HTMLElement) => {
 		try {
@@ -207,8 +189,6 @@ const Index: NextPage = () => {
 			console.error('Error generating PNG: ', error); 
 		}
 	};
-	
-
 	// Return the JSX for rendering the page
 	return (
 		<PageWrapper>
@@ -276,7 +256,6 @@ const Index: NextPage = () => {
 						</DropdownMenu>
 					</Dropdown> */}
 					<SubheaderSeparator />
-
 					{/* Button to open  New Item modal */}
 					<Button
 						icon='AddCircleOutline'

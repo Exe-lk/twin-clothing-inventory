@@ -53,7 +53,6 @@ const Index: NextPage = () => {
 	const [stock, setStock] = useState<Stock[]>([]); // State for stock data
 	const [id, setId] = useState<string>(''); // State for current stock item ID
 	const [status, setStatus] = useState(true); // State for managing data fetching status
-
 	const handleClickDelete = async (id: string) => {
 		try {
 			const result = await Swal.fire({
@@ -81,7 +80,6 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete employee.', 'error');
 		}
 	};
-
 	const handleClickRestore = async (stock: any) => {
 		try {
 			const result = await Swal.fire({
@@ -95,7 +93,6 @@ const Index: NextPage = () => {
 			});
 			if (result.isConfirmed) {
 				stock.active = true;
-
 				let data: any = stock;
 				const docRef = doc(firestore, 'stock', stock.cid);
 				// Update the data
@@ -147,7 +144,6 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete all stock items.', 'error');
 		}
 	};
-
 	// Function to handle restoration of all stock items
 	const handleRestoreAll = async () => {
 		try {
@@ -233,7 +229,6 @@ const Index: NextPage = () => {
 											<td>70</td>
 											<td>123</td>
 											<td>785</td>
-
 											<td>
 												<Button
 													icon='Restore'
@@ -246,9 +241,6 @@ const Index: NextPage = () => {
 													className='m-2'
 													icon='Delete'
 													color='warning'
-													// onClick={() =>
-													// 	handleClickDelete(stock.cid)
-													// }
 												>
 													Delete
 												</Button>
