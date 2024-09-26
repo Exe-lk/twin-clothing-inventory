@@ -71,22 +71,22 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 		},
 		validate: (values) => {
 			const errors: Record<string, string> = {};
-			if (!values.code) errors.code = 'Required';
-			if (!values.category) errors.category = 'Required';
-			if (!values.subcategory) errors.subcategory = 'Required';
-			if (!values.date) errors.date = 'Required';
-			if (!values.description) errors.description = 'Required';
-			if (!values.color) errors.color = 'Required';
-			if (!values.GRN_number) errors.GRN_number = 'Required';
-			if (!values.order) errors.order = 'Required';
-			if (!values.qty) errors.qty = 'Required';
+			// if (!values.code) errors.code = 'Required';
+			// if (!values.category) errors.category = 'Required';
+			// if (!values.subcategory) errors.subcategory = 'Required';
+			// if (!values.date) errors.date = 'Required';
+			// if (!values.description) errors.description = 'Required';
+			// if (!values.color) errors.color = 'Required';
+			// if (!values.GRN_number) errors.GRN_number = 'Required';
+			// if (!values.order) errors.order = 'Required';
+			// if (!values.qty) errors.qty = 'Required';
 
-			if (selectedOption == 'Fabric' && !values.fabric_type) errors.fabric_type = 'Required';
-			if (selectedOption == 'Fabric' && !values.gsm) errors.gsm = 'Required';
-			if (selectedOption == 'Fabric' && !values.width) errors.width = 'Required';
-			if (selectedOption == 'Fabric' && !values.knit_type) errors.knit_type = 'Required';
+			// if (selectedOption == 'Fabric' && !values.fabric_type) errors.fabric_type = 'Required';
+			// if (selectedOption == 'Fabric' && !values.gsm) errors.gsm = 'Required';
+			// if (selectedOption == 'Fabric' && !values.width) errors.width = 'Required';
+			// if (selectedOption == 'Fabric' && !values.knit_type) errors.knit_type = 'Required';
 
-			if (selectedOption == 'Thread' && !values.Yrds) errors.Yrds = 'Required';
+			// if (selectedOption == 'Thread' && !values.Yrds) errors.Yrds = 'Required';
 
 			return errors;
 		},
