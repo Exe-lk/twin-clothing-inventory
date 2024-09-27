@@ -71,7 +71,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 				await updatejob(values);
 
-				Swal.fire('Restore!', 'The job has been restore.', 'success');
+				Swal.fire('Restored!', 'The job has been restored.', 'success');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
@@ -101,7 +101,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 				for (const jobs of job) {
 					await deletejob(jobs.id).unwrap();
 				}
-				Swal.fire('Deleted!', 'All job have been deleted.', 'success');
+				Swal.fire('Deleted!', 'All jobs have been deleted.', 'success');
 
 				// Refetch categories after deletion
 				refetch();
@@ -134,14 +134,14 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					};
 					await updatejob(values).unwrap();
 				}
-				Swal.fire('Restored!', 'All job have been restored.', 'success');
+				Swal.fire('Restored!', 'All jobs have been restored.', 'success');
 
 				// Refetch categories after restoring
 				refetch();
 			}
 		} catch (error) {
 			console.error('Error restoring all categories:', error);
-			Swal.fire('Error', 'Failed to restore all job.', 'error');
+			Swal.fire('Error', 'Failed to restore all jobs.', 'error');
 		}
 	};
 	return (

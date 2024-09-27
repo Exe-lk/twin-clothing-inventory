@@ -35,13 +35,11 @@ const Index: NextPage = () => {
 	const [id1, setId1] = useState<string>('12356'); // State for new item ID
 	const { data: lot, error, isLoading } = useGetLotsQuery(undefined);
 	const [updatelot] = useUpdateLotMutation();
-
 	// Function to handle deletion of an item
 	const handleClickDelete = async (item: any) => {
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -54,11 +52,10 @@ const Index: NextPage = () => {
 						...item,status:false
 					};
 					await updatelot(values);
-
 					Swal.fire('Deleted!', 'The lot has been deleted.', 'success');
 				} catch (error) {
 					console.error('Error during handle delete: ', error);
-					Swal.close;			
+					Swal.close;	
 				}
 			}
 		} catch (error) {
@@ -70,7 +67,6 @@ const Index: NextPage = () => {
 	const handleExport = async (format: string) => {
 		const table = document.querySelector('table');
 		if (!table) return;
-
 		const clonedTable = table.cloneNode(true) as HTMLElement;
 		// Remove Edit/Delete buttons column from cloned table
 		const rows = clonedTable.querySelectorAll('tr');
@@ -80,10 +76,8 @@ const Index: NextPage = () => {
 				lastCell.remove();
 			}
 		});
-	
 		const clonedTableStyles = getComputedStyle(table);
 		clonedTable.setAttribute('style', clonedTableStyles.cssText);
-	
 		try {
 			switch (format) {
 				case 'svg':
@@ -105,7 +99,6 @@ const Index: NextPage = () => {
 			console.error('Error exporting table: ', error);
 		}
 	};
-
 	// function to export the table data in CSV format
 	const downloadTableAsCSV = (table: any) => {
 				let csvContent = '';
@@ -117,7 +110,6 @@ const Index: NextPage = () => {
 						.join(',');
 					csvContent += rowData + '\n';
 				});
-
 				const blob = new Blob([csvContent], { type: 'text/csv' });
 				const link = document.createElement('a');
 				link.href = URL.createObjectURL(blob);
@@ -130,7 +122,6 @@ const Index: NextPage = () => {
 		  const pdf = new jsPDF('p', 'pt', 'a4');
 		  const rows: any[] = [];
 		  const headers: any[] = [];
-		  
 		  const thead = table.querySelector('thead');
 		  if (thead) {
 			const headerCells = thead.querySelectorAll('th');
@@ -155,14 +146,12 @@ const Index: NextPage = () => {
 			},
 			theme: 'grid',
 		  });
-	  
 		  pdf.save('table_data.pdf');
 		} catch (error) {
 		  console.error('Error generating PDF: ', error);
 		  alert('Error generating PDF. Please try again.');
 		}
 	  };
-	
 	// Function to export the table data in SVG format using library html-to-image
 	const downloadTableAsSVG = async (table: HTMLElement) => {
 		try {
@@ -181,7 +170,6 @@ const Index: NextPage = () => {
 			console.error('Error generating SVG: ', error); 
 		}
 	};
-	
 	// Function to export the table data in PNG format using library html-to-image
 	const downloadTableAsPNG = async (table: HTMLElement) => {
 		try {
@@ -200,7 +188,6 @@ const Index: NextPage = () => {
 			console.error('Error generating PNG: ', error); 
 		}
 	};
-	
 	// Return the JSX for rendering the page
 	return (
 		<PageWrapper>
@@ -268,7 +255,9 @@ const Index: NextPage = () => {
 						</DropdownMenu>
 					</Dropdown> */}
 					<SubheaderSeparator />
-					{/* Button to open  New Item modal */}	
+
+					{/* Button to open  New Item modal */}
+					
 				</SubHeaderRight>
 			</SubHeader>
 			<Page>
@@ -277,7 +266,7 @@ const Index: NextPage = () => {
 						{/* Table for displaying customer data */}
 						<Card stretch>
 						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
-							<div className='flex-grow-1 text-center text-info '>Manage Lot</div>
+							<div className='flex-grow-1 text-center text-info '> Lots</div>
 							{/* dropdown for export */}
 							<Dropdown>
 								<DropdownToggle hasIcon={false}>
@@ -299,19 +288,22 @@ const Index: NextPage = () => {
 								<table className='table table-bordered border-primary table-modern table-hover'>
 									<thead>
 										<tr>
+										<th>Date</th>
 											<th>Code</th>
+											<th>GRN number</th>
+											<th>Quantity</th>
+											<th>Current Quantity</th>
 											<th>Category</th>
 											<th>Sub Category</th>
 											<th>Supplier</th>
-											<th>Type</th>
-											<th>Date</th>
+											<th>Description</th>
 											
+										
 											{/* <th><Button icon='PersonAdd' color='primary' isLight onClick={() => setAddModalStatus(true)}>
                         New Item
                       </Button></th> */}
 										</tr>
 									</thead>
-
 									<tbody>
 										{isLoading && (
 											<tr>
@@ -330,28 +322,31 @@ const Index: NextPage = () => {
 												lot.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
 												lot.category.toLowerCase().includes(searchTerm.toLowerCase())||
 												lot.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
-											  : true
-												
+											  : true	
 												)
 												.map((lot: any) => (
 													<tr key={lot.id}>
+														<td>{lot.date}</td>
 														<td>{lot.code}</td>
-														<td>{lot.category}</td>
+														<td>{lot.GRN_number}</td>
+														<td>{lot.qty} {lot.uom}</td>
+														<td>{lot.current_quantity} {lot.uom}</td>
+														<td>{lot.category||lot.type}</td>
 														<td>{lot.subcategory}</td>
 														<td>{lot.supplier}</td>
 														<td>{lot.description}</td>
-														<td>{lot.date}</td>
+												
 													</tr>
 												))}
 									</tbody>
 								</table>
-								
+							
 							</CardBody>
 						</Card>
 					</div>
 				</div>
 			</Page>
-			
+		
 		</PageWrapper>
 	);
 };

@@ -247,7 +247,7 @@ const Index: NextPage = () => {
 						{/* Table for displaying customer data */}
 						<Card stretch>
 						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
-							<div className='flex-grow-1 text-center text-info '>Manage Supplier</div>
+							<div className='flex-grow-1 text-center text-info '> Suppliers</div>
 							{/* dropdown for export */}
 							<Dropdown>
 								<DropdownToggle hasIcon={false}>
@@ -269,11 +269,11 @@ const Index: NextPage = () => {
 								<table className='table table-bordered border-primary table-modern table-hover'>
 									<thead>
 										<tr>
-											<th>Seller name</th>
-											<th>Company name</th>
-											<th>Company email</th>
-											<th>Phone number</th>
-											<th>Seller email</th>											
+											<th>Supplier Name</th>
+											<th>Company Name</th>
+											<th>Company Email</th>
+											<th>Phone Number</th>
+											<th>Supplier Email</th>											
 										</tr>
 									</thead>
 									<tbody>										

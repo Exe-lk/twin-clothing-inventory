@@ -54,9 +54,13 @@ console.log(orderedItems)
 						quentity: orderedItem.quentity,
 						Job_ID: orderedItem.Job_ID,
 						lot_type:orderedItem.type,
+						uom:orderedItem.uom,
+						GRN_number:orderedItem.GRN_number
+
 					};
 					const response: any = await addtransaction(values).unwrap();
 				}
+				setOrderedItems([])
 				refetch();
 				Swal.fire('Added!', 'transaction has been added successfully.', 'success');
 			}

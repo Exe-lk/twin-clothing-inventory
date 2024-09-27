@@ -123,7 +123,7 @@ const Index: React.FC<KeyboardProps> = ({
 														},
 													)}>
 													<span className='fw-bold'>
-														{getFirstLetter(order.category)}
+														{getFirstLetter(order.category||order.type)}
 													</span>
 												</div>
 											</div>

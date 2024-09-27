@@ -142,7 +142,7 @@ const Index: React.FC<KeyboardProps> = ({
 
 	// Handle OK button click in the popup
 	const handlePopupOk = async () => {
-		if (popupInput <= 0 || selectedType==="" ||( selectedType!="Return" && popupInput1==null)) {
+		if (popupInput <= 0 || selectedType==="" ||( selectedType!="Return" && popupInput1==null)||selectedItem.current_quantity<Number(popupInput)) {
 			return
 		}
 		if (selectedItem) {
@@ -291,24 +291,24 @@ const Index: React.FC<KeyboardProps> = ({
 																},
 															)}>
 															<span className='fw-bold'>
-																{getFirstLetter(item.category)}
+																{getFirstLetter(item.category||item.type)}
 															</span>
 														</div>
 													</div>
 												</div>
 												<div className='flex-grow-1'>
-													<div className='fs-6'>{item.subcategory}</div>
+													<div className='fs-6'>{item.category||item.type}</div>
 													<div className='text-muted'>
-														<small>{item.category}</small>
+														<small>{item.GRN_number}</small>
 													</div>
 												</div>
 											</div>
 											<div className='col-auto text-end'>
 												<div>
-													<strong>{item.code}</strong>
+													<strong>{item.current_quantity} {item.uom}</strong>
 												</div>
 												<div className='text-muted'>
-													<small>{item.qty}</small>
+													<small>{item.code}</small>
 												</div>
 											</div>
 										</div>
