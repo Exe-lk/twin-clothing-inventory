@@ -98,7 +98,7 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 				  case 'Production Coordinator':
 					router.push('/production-coordinator/dashboard');
 					break;
-				  case 'Stock Keeper':
+				  case 'stock-keeper':
 					router.push('/stock-keeper/dashboard');
 					break;
 				 

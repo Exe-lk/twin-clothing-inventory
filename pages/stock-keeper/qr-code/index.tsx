@@ -3,16 +3,15 @@ import type { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../layout/Page/Page';
 import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
-// import QRCode  from 'qrcode.react';
-import Qr from '../../../assets/img/QR.png'
+import QRCode from "react-qr-code";
+import Qr from '../../../assets/img/QR.png';
 const Index: NextPage = () => {
-
 	const data = {
-		email: "abc@gmail.com",
-		password: "123456"
-	}
+		email: 'achinthawijethunga@gmail.com',
+		password: '200133701291',
+	};
 	// Create a string to encode in the QR code
-	const qrData = `Email: ${data.email}, Password: ${data.password}`;
+	const qrData = `email: ${data.email}, password: ${data.password}`;
 
 	// JSX for rendering the page
 	return (
@@ -29,8 +28,15 @@ const Index: NextPage = () => {
 							<CardBody isScrollable className='table-responsive'>
 								<div className='d-flex justify-content-center'>
 									{/* Render QR code here */}
-									{/* <QRCode value={qrData} size={200} /> */}
-									<img src={Qr}/>
+									<QRCode
+										value={qrData}
+										size={256} // Size of the QR code
+										bgColor='#ffffff' // Background color
+										fgColor='#000000' // Foreground color
+										level='Q' // Error correction level (L, M, Q, H)
+										// Include margin around the QR code
+									/>
+									{/* <img src={Qr}/> */}
 								</div>
 							</CardBody>
 						</Card>

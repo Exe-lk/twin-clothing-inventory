@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext, useState } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
@@ -49,30 +49,37 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 	const { setUser } = useContext(AuthContext);
 	const [addUser] = useAddUserMutation();
 	const [data, setData] = useState('No result');
-	//login
-	const formik = useFormik({
-		enableReinitialize: true,
-		initialValues: {
-			email: '',
-			password: '',
-		},
-		validate: (values) => {
-			const errors: { email?: string; password?: string } = {};
 
-			if (!values.email) {
-				errors.email = 'Required';
+	const convertTextToJson = (text: any) => {
+		// Ensure the input is a string
+		if (typeof text !== 'string') {
+			console.error('Expected a string but got:', typeof text);
+			return {};
+		}
+
+		const result: { [key: string]: string } = {};
+
+		// Split by comma to get each key-value pair
+		const pairs = text.split(',');
+
+		pairs.forEach((pair) => {
+			// Split each pair by the colon to separate the key and the value
+			const [key, value] = pair.split(':').map((str) => str.trim());
+
+			if (key && value) {
+				result[key] = value;
 			}
+		});
 
-			if (!values.password) {
-				errors.password = 'Required';
-			}
-
-			return errors;
-		},
-
-		onSubmit: async (values) => {
+		return result;
+	};
+	const login = async (result: any) => {
+		if (result?.text) {
+			// Safely call the conversion function
+			const jsonResult = convertTextToJson(result.text);
+			console.log(jsonResult)
 			try {
-				const response = await addUser(values).unwrap();
+				const response = await addUser(jsonResult).unwrap();
 				const email = response.user.email;
 				localStorage.setItem('email', email);
 				console.log(response);
@@ -83,17 +90,8 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 						text: 'You have successfully logged in!',
 					});
 					switch (response.user.position) {
-						case 'admin':
-							router.push('/admin/dashboard');
-							break;
-						case 'Viewer':
-							router.push('/viewer/dashboard');
-							break;
-						case 'Production Coordinator':
-							router.push('/production-coordinator/dashboard');
-							break;
-						case 'Stock Keeper':
-							router.push('/stock-keeper/dashboard');
+						case 'stock-keeper':
+							router.push('/stock/stock-transaction');
 							break;
 
 						default:
@@ -110,9 +108,11 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 				console.error('Error occurred:', error);
 				Swal.fire('Error', 'An unexpected error occurred', 'error');
 			}
-		},
-	});
-
+		  } else {
+			console.error('No text found in the QR result');
+		  }
+	};
+	
 	return (
 		<PageWrapper
 			isProtected={false}
@@ -145,6 +145,7 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 									onResult={(result: any, error: Error | null | undefined) => {
 										if (!!result) {
 											setData(result?.text);
+											login(result);
 										}
 
 										if (!!error) {
