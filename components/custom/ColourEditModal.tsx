@@ -53,7 +53,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 				});
 				await updateColor(values).unwrap();
 
-				Swal.fire('Update!', 'Color has been update successfully.', 'success');
+				Swal.fire('Updated!', 'Color has been update successfully.', 'success');
 				formik.resetForm();
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
@@ -69,7 +69,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>
-					<FormGroup id='name' label='Color name' className='col-md-6'>
+					<FormGroup id='name' label='Color Name' className='col-md-6'>
 						<Input
 							onChange={formik.handleChange}
 							value={formik.values.name}

@@ -62,7 +62,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					// Success feedback
 					await Swal.fire({
 						icon: 'success',
-						title: 'Knit added Successfully',
+						title: 'Knit added successfully',
 					});
 					setIsOpen(false);
 			} catch (error) {
@@ -78,7 +78,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>
-					<FormGroup id='name' label='Knit type' className='col-md-6'>
+					<FormGroup id='name' label='Knit Type' className='col-md-6'>
 						<Input
 							onChange={formik.handleChange}
 							value={formik.values.name}

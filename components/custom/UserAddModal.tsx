@@ -8,7 +8,7 @@ import FormGroup from '../bootstrap/forms/FormGroup';
 import Input from '../bootstrap/forms/Input';
 import Button from '../bootstrap/Button';
 import { collection, addDoc } from 'firebase/firestore';
-import { firestore, storage,auth } from '../../firebaseConfig';
+import { firestore, storage, auth } from '../../firebaseConfig';
 import Swal from 'sweetalert2';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import Select from '../bootstrap/forms/Select';
@@ -27,32 +27,30 @@ interface UserAddModalProps {
 const UserAddModal: FC<UserAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const [imageurl, setImageurl] = useState<any>(null);
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
-	const [addUser , {isLoading}] = useAddUserMutation();
-	const {refetch} = useGetUsersQuery(undefined);
+	const [addUser, { isLoading }] = useAddUserMutation();
+	const { refetch } = useGetUsersQuery(undefined);
 
 	// Initialize formik for form management
 	const formik = useFormik({
 		initialValues: {
-			
 			name: '',
 			role: '',
 			nic: '',
 			email: '',
 			mobile: '',
-			
-			status:true
+
+			status: true,
 		},
 		validate: (values) => {
 			const errors: {
 				role?: string;
-				
+
 				name?: string;
 				nic?: string;
 				email?: string;
-			
+
 				password?: string;
 				mobile?: string;
-				
 			} = {};
 			if (!values.role) {
 				errors.role = 'Required';
@@ -60,7 +58,7 @@ const UserAddModal: FC<UserAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			if (!values.name) {
 				errors.name = 'Required';
 			}
-		
+
 			if (!values.mobile) {
 				errors.mobile = 'Required';
 			}
@@ -71,7 +69,6 @@ const UserAddModal: FC<UserAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 				errors.email = 'Required';
 			}
 
-			
 			return errors;
 		},
 		onSubmit: async (values) => {
@@ -84,7 +81,7 @@ const UserAddModal: FC<UserAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					showCancelButton: false,
 					showConfirmButton: false,
 				});
-				
+
 				try {
 					// Add the new category
 					const response: any = await addUser(values).unwrap();
@@ -107,7 +104,6 @@ const UserAddModal: FC<UserAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 						text: 'Failed to add the user. Please try again.',
 					});
 				}
-				
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
 				Swal.close;
@@ -134,21 +130,20 @@ const UserAddModal: FC<UserAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 						/>
 					</FormGroup>
 					<FormGroup id='role' label='Role' className='col-md-6'>
-					
 						<Select
 							ariaLabel='Default select example'
-						placeholder='Select the user role'
+							placeholder='Select the user role'
 							onChange={formik.handleChange}
 							value={formik.values.role}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
 							isTouched={formik.touched.role}
 							invalidFeedback={formik.errors.role}>
-							  <Option value={'Production Coordinator'}>Production Coordinator</Option>
-							  <Option value={'Stock Keeper'}>Stock Keeper</Option>
+							<Option value={'Production Coordinator'}>Production Coordinator</Option>
+							<Option value={'Stock Keeper'}>Stock Keeper</Option>
 						</Select>
 					</FormGroup>
-					
+
 					<FormGroup id='mobile' label='Mobile number' className='col-md-6'>
 						<Input
 							onChange={formik.handleChange}
@@ -182,8 +177,6 @@ const UserAddModal: FC<UserAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					
-					
 				</div>
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>

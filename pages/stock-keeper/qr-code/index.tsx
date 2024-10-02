@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../layout/Page/Page';
@@ -6,6 +6,8 @@ import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
 import QRCode from "react-qr-code";
 import Qr from '../../../assets/img/QR.png';
 const Index: NextPage = () => {
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
 	const data = {
 		email: 'achinthawijethunga@gmail.com',
 		password: '200133701291',

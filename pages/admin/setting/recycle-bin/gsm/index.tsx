@@ -72,7 +72,7 @@ const Index: NextPage = () => {
 					status: true,
 				};
 				await updatedata(values);
-				Swal.fire('Restore!', 'The data has been restored.', 'success');
+				Swal.fire('Restored!', 'The data has been restored.', 'success');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
@@ -83,7 +83,7 @@ const Index: NextPage = () => {
 		try {
 			const { value: inputText } = await Swal.fire({
 				title: 'Are you sure?',
-				text: 'Please type "DELETE ALL" to confirm deleting all dat',
+				text: 'Please type "DELETE ALL" to confirm deleting all data',
 				input: 'text',
 				icon: 'warning',
 				inputValidator: (value) => {

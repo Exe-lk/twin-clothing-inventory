@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const transactionHistoryApiSlice = createApi({
   reducerPath: 'transactionHistoryApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://twinclothinginventory.netlify.app/api/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/' }),
   tagTypes: ['TransactionHistory'],
   endpoints: (builder) => ({
     // Fetch all active transactions

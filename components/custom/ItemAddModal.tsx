@@ -283,7 +283,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-					<FormGroup id='date' label='date' className='col-md-6'>
+					<FormGroup id='date' label='Date' className='col-md-6'>
 						<Input
 							type='date'
 							onChange={formik.handleChange}
@@ -338,7 +338,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 						)}
 					</FormGroup>
 					
-					<FormGroup id='supplier' label='supplier Name' className='col-md-6'>
+					<FormGroup id='supplier' label='Supplier Name' className='col-md-6'>
 						<Select
 							ariaLabel='Default select example'
 							placeholder='Open this select supplier'

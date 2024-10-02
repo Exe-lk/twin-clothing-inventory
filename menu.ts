@@ -55,7 +55,7 @@ export const addminPagesMenu = {
 	},
 	seller: {
 		id: 'lot',
-		text: 'Suppler Management',
+		text: 'Supplier Management',
 		path: 'admin/seller-management',
 		icon: 'SelectAll',
 		subMenu: null,
@@ -95,7 +95,7 @@ export const addminPagesMenu = {
 			},
 			fabric: {
 				id: 'fluidSingle',
-				text: 'fabric',
+				text: 'Fabric',
 				path: 'admin/setting/fabric-type',
 				icon: 'AppSettingsAlt',
 			},
@@ -107,7 +107,7 @@ export const addminPagesMenu = {
 			},
 			knet: {
 				id: 'fluidSingle',
-				text: 'Knit type',
+				text: 'Knit Type',
 				path: 'admin/setting/knit-type',
 				icon: 'AirlineSeatLegroomExtra',
 			},
@@ -127,7 +127,7 @@ export const addminPagesMenu = {
 					},
 					fabric: {
 						id: 'fluidSingle',
-						text: 'fabric',
+						text: 'Fabric',
 						path: 'admin/setting/recycle-bin/fabric',
 						icon: 'AppSettingsAlt',
 					},
@@ -139,7 +139,7 @@ export const addminPagesMenu = {
 					},
 					knet: {
 						id: 'fluidSingle',
-						text: 'Knit type',
+						text: 'Knit Type',
 						path: 'admin/setting/recycle-bin/knit-type',
 						icon: 'AirlineSeatLegroomExtra',
 					},

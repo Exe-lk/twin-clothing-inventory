@@ -80,7 +80,7 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 			try {
 			  const response = await addUser(values).unwrap();
 			  const email = response.user.email;
-			  localStorage.setItem('email', email);
+			  
 			  console.log(response)
 			  if (response.user) {
 				await Swal.fire({
@@ -98,7 +98,9 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 				  case 'Production Coordinator':
 					router.push('/production-coordinator/dashboard');
 					break;
-				  case 'stock-keeper':
+				  case 'Stock Keeper':
+					await localStorage.setItem('email', email);
+					await localStorage.setItem('password', values.password);
 					router.push('/stock-keeper/dashboard');
 					break;
 				 
