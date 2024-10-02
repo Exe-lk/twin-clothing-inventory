@@ -1,7 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Button from './bootstrap/Button';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { firestore } from '../firebaseConfig';
 import Card, { CardActions, CardBody, CardHeader, CardLabel, CardTitle } from './bootstrap/Card';
 import classNames from 'classnames';
 import useDarkMode from '../hooks/useDarkMode';

@@ -20,23 +20,9 @@ import Swal from 'sweetalert2';
 import Logo from '../../../components/Logo';
 import { useAddUserMutation } from '../../../redux/slices/userApiSlice';
 import { QrReader } from 'react-qr-reader';
-
+import Additem from '../../../components/add-item';
 interface ILoginHeaderProps {
 	isNewUser?: boolean;
-}
-const LoginHeader: FC<ILoginHeaderProps> = () => {
-	return (
-		<>
-			<div className='text-center h1 fw-bold mt-5'>Welcome,</div>
-			<div className='text-center h4 text-muted mb-5'>Scan QR to continue!</div>
-		</>
-	);
-};
-
-interface User {
-	password: string;
-	email: string;
-	position: string;
 }
 
 interface ILoginProps {
@@ -44,75 +30,9 @@ interface ILoginProps {
 }
 const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 	const router = useRouter();
-	const { darkModeStatus } = useDarkMode();
-	const [users, setUsers] = useState<User[]>([]);
-	const { setUser } = useContext(AuthContext);
-	const [addUser] = useAddUserMutation();
-	const [data, setData] = useState('No result');
+	const [orderedItems, setOrderedItems] = useState<any>([]);
+	const [activeComponent, setActiveComponent] = useState<'additem' | 'edit'>('additem');
 
-	const convertTextToJson = (text: any) => {
-		// Ensure the input is a string
-		if (typeof text !== 'string') {
-			console.error('Expected a string but got:', typeof text);
-			return {};
-		}
-
-		const result: { [key: string]: string } = {};
-
-		// Split by comma to get each key-value pair
-		const pairs = text.split(',');
-
-		pairs.forEach((pair) => {
-			// Split each pair by the colon to separate the key and the value
-			const [key, value] = pair.split(':').map((str) => str.trim());
-
-			if (key && value) {
-				result[key] = value;
-			}
-		});
-
-		return result;
-	};
-	const login = async (result: any) => {
-		if (result?.text) {
-			// Safely call the conversion function
-			const jsonResult = convertTextToJson(result.text);
-			console.log(jsonResult)
-			try {
-				const response = await addUser(jsonResult).unwrap();
-				const email = response.user.email;
-				localStorage.setItem('email', email);
-				console.log(response);
-				if (response.user) {
-					await Swal.fire({
-						icon: 'success',
-						title: 'Login Successful',
-						text: 'You have successfully logged in!',
-					});
-					switch (response.user.position) {
-						case 'stock-keeper':
-							router.push('/stock/stock-transaction');
-							break;
-
-						default:
-							break;
-					}
-				} else {
-					await Swal.fire({
-						icon: 'error',
-						title: 'Invalid Credentials',
-						text: 'Username and password do not match. Please try again.',
-					});
-				}
-			} catch (error) {
-				console.error('Error occurred:', error);
-				Swal.fire('Error', 'An unexpected error occurred', 'error');
-			}
-		  } else {
-			console.error('No text found in the QR result');
-		  }
-	};
-	
 	return (
 		<PageWrapper
 			isProtected={false}
@@ -124,23 +44,14 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 			<Page className='p-0'>
 				<div className='row h-100 align-items-center justify-content-center'>
 					<div className='col-xl-4 col-lg-6 col-md-8 shadow-3d-container'>
-						<Card className='' data-tour='login-page'>
+						<Card className='shadow-3d-dark' data-tour='login-page'>
 							<CardBody>
-								<div className='text-center my-5'>
-									<Link
-										href='/'
-										className={classNames(
-											'text-decoration-none  fw-bold display-2',
-											{
-												'text-dark': !darkModeStatus,
-												'text-light': darkModeStatus,
-											},
-										)}>
-										<Logo width={200} />
-									</Link>
-								</div>
-
-								
+								<Additem
+									orderedItems={orderedItems}
+									setOrderedItems={setOrderedItems}
+									isActive={activeComponent === 'additem'}
+									setActiveComponent={setActiveComponent}
+								/>
 							</CardBody>
 						</Card>
 					</div>
