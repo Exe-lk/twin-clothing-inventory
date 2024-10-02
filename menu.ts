@@ -207,6 +207,13 @@ export const stockkeeperPagesMenu = {
 				icon: 'Category',
 				subMenu: null,
 			},
+			QR: {
+				id: 'qr',
+				text: 'QR',
+				path: 'stock-keeper/qr-code',
+				icon: 'QR',
+				subMenu: null,
+			},
 			
 			
 		},
