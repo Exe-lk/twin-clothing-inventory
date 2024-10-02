@@ -20,7 +20,8 @@ import Swal from 'sweetalert2';
 import Logo from '../../../components/Logo';
 import { useAddUserMutation } from '../../../redux/slices/userApiSlice';
 import { QrReader } from 'react-qr-reader';
-import Additem from '../../../components/add-item';
+import Additem from '../../../components/add-item-mobile';
+import Edit from '../../../components/edit-item';
 interface ILoginHeaderProps {
 	isNewUser?: boolean;
 }
@@ -31,8 +32,9 @@ interface ILoginProps {
 const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 	const router = useRouter();
 	const [orderedItems, setOrderedItems] = useState<any>([]);
+	const [status, setStatus] = useState<any>(true);
 	const [activeComponent, setActiveComponent] = useState<'additem' | 'edit'>('additem');
-
+	const { darkModeStatus } = useDarkMode();
 	return (
 		<PageWrapper
 			isProtected={false}
@@ -46,12 +48,50 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 					<div className='col-xl-4 col-lg-6 col-md-8 shadow-3d-container'>
 						<Card className='shadow-3d-dark' data-tour='login-page'>
 							<CardBody>
-								<Additem
-									orderedItems={orderedItems}
-									setOrderedItems={setOrderedItems}
-									isActive={activeComponent === 'additem'}
-									setActiveComponent={setActiveComponent}
-								/>
+								<div className='text-center my-5'>
+									<Link
+										href='/'
+										className={classNames(
+											'text-decoration-none  fw-bold display-2',
+											{
+												'text-dark': !darkModeStatus,
+												'text-light': darkModeStatus,
+											},
+										)}>
+										<Logo width={200} />
+									</Link>
+								</div>
+								{status ? (
+									<Additem
+										orderedItems={orderedItems}
+										setOrderedItems={setOrderedItems}
+										isActive={activeComponent === 'additem'}
+										setActiveComponent={setActiveComponent}
+									/>
+								) : (
+									<Edit
+										orderedItems={orderedItems}
+										setOrderedItems={setOrderedItems}
+										isActive={activeComponent === 'edit'}
+										setActiveComponent={setActiveComponent}
+									/>
+								)}
+
+								{status ? (
+									<Button
+										onClick={() => {
+											setStatus(false);
+										}}>
+										Stock Movement
+									</Button>
+								) : (
+									<Button
+										onClick={() => {
+											setStatus(true);
+										}}>
+										Stock Add
+									</Button>
+								)}
 							</CardBody>
 						</Card>
 					</div>
