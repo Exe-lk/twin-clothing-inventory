@@ -288,7 +288,7 @@ export const viewmenu = {
 	},
 	stockout: {
 		id: 'restore',
-		text: 'suppliers',
+		text: 'Suppliers',
 		path: 'viewer/supplier-history',
 		icon: 'SupervisedUserCircle',
 		subMenu: null,

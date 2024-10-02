@@ -52,11 +52,10 @@ const Index: NextPage = () => {
 						...item,status:false
 					};
 					await updatelot(values);
-
 					Swal.fire('Deleted!', 'The lot has been deleted.', 'success');
 				} catch (error) {
 					console.error('Error during handle delete: ', error);
-					Swal.close;
+					Swal.close;	
 				}
 			}
 		} catch (error) {
@@ -256,6 +255,7 @@ const Index: NextPage = () => {
 						</DropdownMenu>
 					</Dropdown> */}
 					<SubheaderSeparator />
+
 					{/* Button to open  New Item modal */}
 					<Button
 						icon='AddCircleOutline'
@@ -294,19 +294,22 @@ const Index: NextPage = () => {
 								<table className='table table-bordered border-primary table-modern table-hover'>
 									<thead>
 										<tr>
+										<th>Date</th>
 											<th>Code</th>
+											<th>GRN number</th>
+											<th>Quantity</th>
+											<th>Current Quantity</th>
 											<th>Category</th>
 											<th>Sub Category</th>
 											<th>Supplier</th>
-											<th>Type</th>
-											<th>Date</th>
+											<th>Description</th>
+											
 											<th></th>
 											{/* <th><Button icon='PersonAdd' color='primary' isLight onClick={() => setAddModalStatus(true)}>
                         New Item
                       </Button></th> */}
 										</tr>
 									</thead>
-
 									<tbody>
 										{isLoading && (
 											<tr>
@@ -325,18 +328,19 @@ const Index: NextPage = () => {
 												lot.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
 												lot.category.toLowerCase().includes(searchTerm.toLowerCase())||
 												lot.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
-											  : true
-												
+											  : true	
 												)
 												.map((lot: any) => (
 													<tr key={lot.id}>
+														<td>{lot.date}</td>
 														<td>{lot.code}</td>
-														<td>{lot.category}</td>
+														<td>{lot.GRN_number}</td>
+														<td>{lot.qty} {lot.uom}</td>
+														<td>{lot.current_quantity} {lot.uom}</td>
+														<td>{lot.category||lot.type}</td>
 														<td>{lot.subcategory}</td>
 														<td>{lot.supplier}</td>
 														<td>{lot.description}</td>
-														<td>{lot.date}</td>
-
 														<td>
 															<Button
 																icon='Edit'
@@ -374,7 +378,6 @@ const Index: NextPage = () => {
 			</Page>
 			<StockAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id={id1} />
 			<StockDeleteModal setIsOpen={setDeleteModalStatus} isOpen={deleteModalStatus} id='' />
-
 			<StockEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
 		</PageWrapper>
 	);

@@ -294,12 +294,16 @@ const Index: NextPage = () => {
 								<table className='table table-bordered border-primary table-modern table-hover'>
 									<thead>
 										<tr>
+										<th>Date</th>
 											<th>Code</th>
+											<th>GRN number</th>
+											<th>Quantity</th>
+											<th>Current Quantity</th>
 											<th>Category</th>
 											<th>Sub Category</th>
 											<th>Supplier</th>
-											<th>Type</th>
-											<th>Date</th>
+											<th>Description</th>
+											
 											<th></th>
 											{/* <th><Button icon='PersonAdd' color='primary' isLight onClick={() => setAddModalStatus(true)}>
                         New Item
@@ -328,12 +332,15 @@ const Index: NextPage = () => {
 												)
 												.map((lot: any) => (
 													<tr key={lot.id}>
+														<td>{lot.date}</td>
 														<td>{lot.code}</td>
-														<td>{lot.category}</td>
+														<td>{lot.GRN_number}</td>
+														<td>{lot.qty} {lot.uom}</td>
+														<td>{lot.current_quantity} {lot.uom}</td>
+														<td>{lot.category||lot.type}</td>
 														<td>{lot.subcategory}</td>
 														<td>{lot.supplier}</td>
 														<td>{lot.description}</td>
-														<td>{lot.date}</td>
 														<td>
 															<Button
 																icon='Edit'

@@ -15,6 +15,14 @@ import { useGetTransactionsQuery } from '../../../redux/slices/transactionHistor
 const Index: NextPage = () => {
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const { data: transaction, error, isLoading } = useGetTransactionsQuery(undefined);
+	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+	const position = [
+		{ position: 'Return' },
+		{ position: 'Restore' },
+		{ position: 'Stock Out' },
+		
+	];
 	return (
 		<PageWrapper>
 			<SubHeader>
@@ -48,20 +56,26 @@ const Index: NextPage = () => {
 						<DropdownMenu isAlignmentEnd size='lg'>
 							<div className='container py-2'>
 								<div className='row g-3'>
-									<FormGroup label='Category type' className='col-12'>
+								<FormGroup label='Category' className='col-12'>
 										<ChecksGroup>
-											<Checks
-												key='check'
-												id='check'
-												label='Outgoing'
-												name='check'
-												value='check'></Checks>
-											<Checks
-												key='check'
-												id='check'
-												label='Return'
-												name='check'
-												value='check'></Checks>
+											{position.map((category: any, index) => (
+												<Checks
+													key={category.position}
+													id={category.position}
+													label={category.position}
+													name={category.position}
+													value={category.position}
+													checked={selectedCategories.includes(category.position)}
+													onChange={(event: any) => {
+														const { checked, value } = event.target;
+														setSelectedCategories((prevCategories) =>
+															checked
+																? [...prevCategories, value]
+																: prevCategories.filter((category) => category !== value)
+														);
+													}}
+												/>
+											))}
 										</ChecksGroup>
 									</FormGroup>
 								</div>
@@ -91,13 +105,13 @@ const Index: NextPage = () => {
 											<th>Code</th>
 											<th>Date</th>
 											<th>Type</th>
-											<th>Quentity</th>
+											<th>Quantity</th>
 											<th>Lot Type</th>
 											<th>Category</th>
-											<th>Sub cCategory</th>
+											<th>Sub Category</th>
 										</tr>
 									</thead>
-									<tbody>									 
+									<tbody>
 										{isLoading && (
 											<tr>
 												<td>Loading...</td>
@@ -117,6 +131,11 @@ const Index: NextPage = () => {
 																.includes(searchTerm.toLowerCase())
 														: true,
 												)
+												.filter((transaction: any) =>
+													selectedCategories.length > 0
+														? selectedCategories.includes(transaction.order_type)
+														: true,
+												)
 												.map((transaction: any) => {
 													// Determine the appropriate Bootstrap text color class based on order_type
 													let textColorClass = '';
@@ -127,15 +146,14 @@ const Index: NextPage = () => {
 													} else if (transaction.order_type === 'Stock Out') {
 														textColorClass = 'text-success';
 													}
-									
 													return (
 														<tr key={transaction.id} className={textColorClass}>
 															<td className={textColorClass}>{transaction.code}</td>
 															<td className={textColorClass}>{transaction.date}</td>
 															<td className={textColorClass}>{transaction.order_type}</td>
-															<td className={textColorClass}>{transaction.quentity}</td>
+															<td className={textColorClass}>{transaction.quentity} {transaction.uom}</td>
 															<td className={textColorClass}>{transaction.lot_type}</td>
-															<td className={textColorClass}>{transaction.category}</td>
+															<td className={textColorClass}>{transaction.category||transaction.type}</td>
 															<td className={textColorClass}>{transaction.subcategory}</td>
 															
 														</tr>

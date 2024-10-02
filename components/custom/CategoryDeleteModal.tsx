@@ -1,16 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useFormik } from 'formik';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
-import showNotification from '../extras/showNotification';
-import Icon from '../icon/Icon';
-import FormGroup from '../bootstrap/forms/FormGroup';
-import Input from '../bootstrap/forms/Input';
 import Button from '../bootstrap/Button';
-import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
-import { firestore } from '../../firebaseConfig';
 import Swal from 'sweetalert2';
-import useDarkMode from '../../hooks/useDarkMode';
 import {
 	useDeleteCategoryMutation,
 	useGetCategoriesQuery,
@@ -83,7 +75,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 				await updateCategory(values);
 
-				Swal.fire('restore!', 'The category has been restore.', 'success');
+				Swal.fire('restore!', 'The category has been restored.', 'success');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);

@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useFormik } from 'formik';
+import { Formik, useFormik } from 'formik';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
 import FormGroup from '../bootstrap/forms/FormGroup';
 import Input from '../bootstrap/forms/Input';
@@ -68,25 +68,27 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			Yrds: '',
 			bales: '',
 			qty: '',
+			current_quantity:''
 		},
 		validate: (values) => {
 			const errors: Record<string, string> = {};
-			// if (!values.code) errors.code = 'Required';
-			// if (!values.category) errors.category = 'Required';
-			// if (!values.subcategory) errors.subcategory = 'Required';
-			// if (!values.date) errors.date = 'Required';
-			// if (!values.description) errors.description = 'Required';
-			// if (!values.color) errors.color = 'Required';
-			// if (!values.GRN_number) errors.GRN_number = 'Required';
-			// if (!values.order) errors.order = 'Required';
-			// if (!values.qty) errors.qty = 'Required';
-
-			// if (selectedOption == 'Fabric' && !values.fabric_type) errors.fabric_type = 'Required';
-			// if (selectedOption == 'Fabric' && !values.gsm) errors.gsm = 'Required';
-			// if (selectedOption == 'Fabric' && !values.width) errors.width = 'Required';
-			// if (selectedOption == 'Fabric' && !values.knit_type) errors.knit_type = 'Required';
-
-			// if (selectedOption == 'Thread' && !values.Yrds) errors.Yrds = 'Required';
+			if (!values.code) errors.code = 'Required';
+			if (!values.date) errors.date = 'Required';
+			if (!values.GRN_number) errors.GRN_number = 'Required';
+			if (!values.order) errors.order = 'Required';
+			if (!values.qty) errors.qty = 'Required';
+			if (!values.supplier) errors.supplier = 'Required';
+			if (!values.uom) errors.uom = 'Required';
+			if (!values.description) errors.description = 'Required';
+			if (selectedOption == 'Fabric' && !values.bales) errors.bales = 'Required';
+			if (selectedOption == 'Other' && !values.category) errors.category = 'Required';
+			if (selectedOption != 'Fabric' && !values.subcategory) errors.subcategory = 'Required';
+			if ( !values.color) errors.color = 'Required';
+			if (selectedOption == 'Fabric' && !values.fabric_type) errors.fabric_type = 'Required';
+			if (selectedOption == 'Fabric' && !values.gsm) errors.gsm = 'Required';
+			if (selectedOption == 'Fabric' && !values.width) errors.width = 'Required';
+			if (selectedOption == 'Fabric' && !values.knit_type) errors.knit_type = 'Required';
+			if (selectedOption == 'Thread' && !values.Yrds) errors.Yrds = 'Required';
 
 			return errors;
 		},
@@ -99,6 +101,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					showCancelButton: false,
 					showConfirmButton: false,
 				});
+				values.current_quantity = values.qty
 				const response: any = await addLot(values).unwrap();
 				console.log(response);
 
@@ -120,7 +123,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const handleCategoryChange = (e: any) => {
 		const selectedCategory = e.target.value;
 		formik.handleChange(e);
-		setSelectedOption(e.target.value);
+		// setSelectedOption(e.target.value);
 		const selectedCategoryData = categories.find((cat: any) => cat.name === selectedCategory);
 		if (selectedCategoryData) {
 			const options = selectedCategoryData.subcategory.map((subcat: any) => ({
@@ -268,6 +271,18 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
+					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
+						<Input
+							type='number'
+							onChange={formik.handleChange}
+							value={formik.values.GRN_number}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.GRN_number}
+							invalidFeedback={formik.errors.GRN_number}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
 					<FormGroup id='date' label='date' className='col-md-6'>
 						<Input
 							type='date'
@@ -322,18 +337,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							/>
 						)}
 					</FormGroup>
-					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
-						<Input
-							type='number'
-							onChange={formik.handleChange}
-							value={formik.values.GRN_number}
-							onBlur={formik.handleBlur}
-							isValid={formik.isValid}
-							isTouched={formik.touched.GRN_number}
-							invalidFeedback={formik.errors.GRN_number}
-							validFeedback='Looks good!'
-						/>
-					</FormGroup>
+					
 					<FormGroup id='supplier' label='supplier Name' className='col-md-6'>
 						<Select
 							ariaLabel='Default select example'
@@ -353,6 +357,18 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								))}
 						</Select>
 					</FormGroup>
+					<FormGroup id='description' label='Description' className='col-md-6'>
+						<Input
+							type='text'
+							onChange={formik.handleChange}
+							value={formik.values.description}
+							onBlur={formik.handleBlur}
+							isValid={formik.isValid}
+							isTouched={formik.touched.description}
+							invalidFeedback={formik.errors.description}
+							validFeedback='Looks good!'
+						/>
+					</FormGroup>
 					<FormGroup id='order' label='Order Details' className='col-md-6'>
 						<Input
 							type='text'
@@ -366,8 +382,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 						/>
 					</FormGroup>
 					<FormGroup id='uom' label='UOM' className='col-md-6'>
-						
-
 						<Select
 							ariaLabel='Default select example'
 							placeholder='Open this select UOM'
@@ -378,13 +392,13 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							isTouched={formik.touched.uom}
 							invalidFeedback={formik.errors.uom}
 							validFeedback='Looks good!'>
-							<Option value="Pieces">Pieces</Option>
-							<Option value="Yards">Yards</Option>
-							<Option value="Cones">Cones</Option>
-							<Option value="Kg">Kg</Option>
+							<Option value='Pieces'>Pieces</Option>
+							<Option value='Yards'>Yards</Option>
+							<Option value='Cones'>Cones</Option>
+							<Option value='Kg'>Kg</Option>
 						</Select>
 					</FormGroup>
-					<FormGroup id='qty' label='Qty' className='col-md-6'>
+					<FormGroup id='qty' label='Quantity' className='col-md-6'>
 						<Input
 							type='number'
 							onChange={formik.handleChange}
