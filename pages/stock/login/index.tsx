@@ -90,7 +90,7 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 						text: 'You have successfully logged in!',
 					});
 					switch (response.user.position) {
-						case 'stock-keeper':
+						case 'Stock Keeper':
 							router.push('/stock/stock-transaction');
 							break;
 

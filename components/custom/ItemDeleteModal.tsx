@@ -155,7 +155,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 							<th>Code</th>
 							
 							<th>Category</th>
-							<th>Subcategory</th>
+							<th>Sub Category</th>
 
 							<th>
 								<Button

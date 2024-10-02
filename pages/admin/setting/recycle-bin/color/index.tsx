@@ -71,7 +71,7 @@ const Index: NextPage = () => {
 					status: true,
 				};
 				await updatedata(values);
-				Swal.fire('Restore!', 'The data has been restored.', 'success');
+				Swal.fire('Restored!', 'The data has been restored.', 'success');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
@@ -190,7 +190,7 @@ const Index: NextPage = () => {
 								<table className='table table-bordered border-primary table-modern table-hover text-center'>
 									<thead>
 										<tr>
-											<th>Colour name</th>
+											<th>Color Name</th>
 											<th></th>
 										</tr>
 									</thead>

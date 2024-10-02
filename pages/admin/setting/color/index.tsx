@@ -92,7 +92,7 @@ const Index: NextPage = () => {
 						<Card stretch>
 							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
 								<div className='flex-grow-1 text-center text-info'>
-									Color management
+									Color Management
 								</div>
 							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
@@ -100,7 +100,7 @@ const Index: NextPage = () => {
 								<table className='table table-bordered border-primary table-modern table-hover text-center'>
 									<thead>
 										<tr>
-											<th>Colour name</th>
+											<th>Color Name</th>
 											<th></th>
 										</tr>
 									</thead>

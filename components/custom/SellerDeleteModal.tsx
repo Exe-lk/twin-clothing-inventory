@@ -72,7 +72,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 				await updateSupplier(values);
 
-				Swal.fire('Restore!', 'The supplier has been deleted.', 'success');
+				Swal.fire('Restored!', 'The supplier has been deleted.', 'success');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
@@ -141,7 +141,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 				refetch();
 			}
 		} catch (error) {
-			console.error('Error restoring all categories:', error);
+			
 			Swal.fire('Error', 'Failed to restore all suppliers.', 'error');
 		}
 	};
@@ -154,10 +154,10 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 				<table className='table table-bordered border-primary table-modern table-hover'>
 					<thead>
 						<tr>
-							<th>Seller name</th>
-							<th>Company name</th>
-							<th>Company email</th>
-							<th>Phone number</th>
+							<th>Supplier Name</th>
+							<th>Company Name</th>
+							<th>Company Email</th>
+							<th>Phone Number</th>
 
 						
 							<th>

@@ -73,7 +73,7 @@ const Index: NextPage = () => {
 					status: true,
 				};
 				await updatedata(values);
-				Swal.fire('Restore!', 'The data has been restored.', 'success');
+				Swal.fire('Restored!', 'The data has been restored.', 'success');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
