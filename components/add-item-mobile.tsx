@@ -10,12 +10,11 @@ import FormGroup from './bootstrap/forms/FormGroup';
 import Label from './bootstrap/forms/Label';
 import Checks, { ChecksGroup } from './bootstrap/forms/Checks';
 import { useUpdateLotMutation, useGetLotsQuery } from '../redux/slices/lotAPISlice';
-
-// Define TypeScript interfaces for Category and Item
-interface Category {
-	cid: string;
-	categoryname: string;
-}
+import {
+	useAddLotMovementMutation,
+	useGetLotMovementsQuery,
+} from '../redux/slices/LotMovementApiSlice';
+import { QrReader } from 'react-qr-reader';
 
 interface Item {
 	cid: string;
@@ -29,58 +28,23 @@ interface Item {
 
 // Define props for the Keyboard component
 interface KeyboardProps {
-	orderedItems: Item[];
-	setOrderedItems: React.Dispatch<React.SetStateAction<Item[]>>;
+	// orderedItems: Item[];
+	// setOrderedItems: React.Dispatch<React.SetStateAction<Item[]>>;
 	isActive: boolean;
 	setActiveComponent: React.Dispatch<React.SetStateAction<'additem' | 'edit'>>;
 }
 
 const Index: React.FC<KeyboardProps> = ({
-	orderedItems,
-	setOrderedItems,
+	// orderedItems,
+	// setOrderedItems,
 	isActive,
 	setActiveComponent,
 }) => {
-	const cdata = [
-		{ status: true, categoryname: 'Main', cid: '0bc5HUELspDzvrUdt5u6' },
-
-		{ status: true, categoryname: 'Embroider', cid: 'LKcV57ThRnHtE9bxBHMb' },
-
-		{ status: true, categoryname: 'Painting', cid: 'La1K7XLguIsFPZN19vp4' },
-
-		{ categoryname: 'clothes', cid: 'NowdRVU0K7hDZiMRkksn', status: true },
-
-		{ categoryname: 'other', status: true, cid: 'irufyXKsbSNPk3z8ziC8' },
-	];
-	const idata = [
-		{
-			price: 1000,
-			cid: '12356',
-			status: true,
-			image: '',
-			quentity: 0,
-			name: 'button',
-			category: 'clothes',
-			reorderlevel: '1500',
-		},
-		{
-			category: 'clothes',
-			status: false,
-			quentity: 0,
-			image: '',
-			cid: '12358',
-			reorderlevel: 3,
-			name: 'fabric',
-			price: 10,
-		},
-	];
 	// Custom hook to manage dark mode
 	const { darkModeStatus } = useDarkMode();
 
 	// State variables
 	const [category1, setCategory1] = useState<string>('');
-	const [category, setCategory] = useState<Category[]>(cdata);
-
 	const [input, setInput] = useState<string>('');
 	const keyboard = useRef<any>(null);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
@@ -93,8 +57,9 @@ const Index: React.FC<KeyboardProps> = ({
 	const [layout, setLayout] = useState<string>('default');
 	const [focusedIndex, setFocusedIndex] = useState<number>(0);
 	const { data: items, error, isLoading } = useGetLotsQuery(undefined);
-	const [updatelot] = useUpdateLotMutation();
-
+	const [updateLot] = useUpdateLotMutation();
+	const [addlotmovement] = useAddLotMovementMutation();
+	const { refetch } = useGetLotMovementsQuery(undefined);
 	// Handle input change
 	const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const input = event.target.value;
@@ -103,23 +68,6 @@ const Index: React.FC<KeyboardProps> = ({
 		if (keyboard.current) {
 			keyboard.current.setInput(numericInput);
 		}
-	};
-
-	// Handle virtual keyboard input change
-	const onChange = (input: string) => {
-		const numericInput = input.replace(/\D/g, '');
-		if (showPopup) {
-			//   setPopupInput(numericInput);
-		} else {
-			setInput(numericInput);
-		}
-		console.log('Input changed', numericInput);
-	};
-
-	// Handle key press events on virtual keyboard
-	const onKeyPress = (button: string) => {
-		console.log('Button pressed', button);
-		if (button === '{shift}' || button === '{lock}') handleShift();
 	};
 
 	// Toggle between default and shift layouts on virtual keyboard
@@ -139,37 +87,45 @@ const Index: React.FC<KeyboardProps> = ({
 			return;
 		}
 		if (selectedItem) {
-			console.log(popupInput);
+			const { id, ...rest } = selectedItem; // Destructure to remove id
 			const updatedItem = {
-				...selectedItem,
+				...rest, // Spread the remaining properties without id
+				stock_id: id, // Add stock_id with the value of id
 				quentity: Number(popupInput),
 				order_type: selectedType,
 				Job_ID: popupInput1,
 			};
-			console.log(updatedItem);
-			await setOrderedItems((prevItems: any) => {
-				const itemIndex = prevItems.findIndex((item: any) => item.id === updatedItem.id);
-				if (itemIndex > -1) {
-					const updatedItems = [...prevItems];
-					updatedItems[itemIndex] = updatedItem;
-					return updatedItems;
-				} else {
-					return [...prevItems, updatedItem];
-				}
-			});
+			await addlotmovement(updatedItem).unwrap();
+
+			// Refetch categories to update the list
+			refetch();
+
+			const quentity = selectedItem.current_quantity - Number(popupInput);
+
+			const updatedItem1 = {
+				...selectedItem,
+				current_quantity: quentity, // Update current_quantity with the new quentity
+			};
+			await updateLot(updatedItem1).unwrap();
+			refetch();
+			// await setOrderedItems((prevItems: any) => {
+			// 	const itemIndex = prevItems.findIndex((item: any) => item.id === updatedItem.id);
+			// 	if (itemIndex > -1) {
+			// 		const updatedItems = [...prevItems];
+			// 		updatedItems[itemIndex] = updatedItem;
+			// 		return updatedItems;
+			// 	} else {
+			// 		return [...prevItems, updatedItem];
+			// 	}
+			// });
 			setPopupInput('');
 			setPopupInput1('');
 			setSelectedType('');
-			console.log('Selected item data:', orderedItems);
 		}
 		setShowPopup(false);
 		setFocusedIndex(-1);
 	};
 
-	// Handle Cancel button click in the popup
-	const handlePopupCancel = () => {
-		setShowPopup(false);
-	};
 
 	// Open the popup to enter quantity
 	const handlePopupOpen = async (selectedIndex1: any) => {
@@ -177,13 +133,6 @@ const Index: React.FC<KeyboardProps> = ({
 		setShowPopup(true);
 	};
 
-	// Handle input change in the popup
-	const onChangePopupInput = async (event: React.ChangeEvent<HTMLInputElement>) => {
-		const input: any = event.target.value;
-
-		await setPopupInput(input);
-		await console.log(popupInput);
-	};
 
 	// Handle keyboard events for navigation and actions
 	const handleKeyPress = async (event: KeyboardEvent) => {
@@ -226,12 +175,26 @@ const Index: React.FC<KeyboardProps> = ({
 			popupInputRef.current?.focus();
 		}
 	}, [showPopup]);
-	const handleTypeChange = async (e: any) => {
-		await setSelectedType(e.target.value);
-	};
+
 	return (
 		<div>
 			<div>
+				<QrReader
+					onResult={(result: any, error: Error | null | undefined) => {
+						if (!!result) {
+							// setData(result?.text);
+							// login(result);
+						}
+
+						if (!!error) {
+							console.info(error);
+						}
+					}}
+					constraints={{
+						facingMode: 'environment', // 'user' for front camera
+					}}
+					// style={{ width: '100%' }}
+				/>
 				<Input
 					id='keyboardinput'
 					className='form-control mb-4 p-2'
