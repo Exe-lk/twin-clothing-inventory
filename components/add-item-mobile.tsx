@@ -28,22 +28,13 @@ interface Item {
 
 // Define props for the Keyboard component
 interface KeyboardProps {
-	// orderedItems: Item[];
-	// setOrderedItems: React.Dispatch<React.SetStateAction<Item[]>>;
 	isActive: boolean;
 	setActiveComponent: React.Dispatch<React.SetStateAction<'additem' | 'edit'>>;
 }
 
-const Index: React.FC<KeyboardProps> = ({
-	// orderedItems,
-	// setOrderedItems,
-	isActive,
-	setActiveComponent,
-}) => {
+const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 	// Custom hook to manage dark mode
 	const { darkModeStatus } = useDarkMode();
-
-	// State variables
 	const [category1, setCategory1] = useState<string>('');
 	const [input, setInput] = useState<string>('');
 	const keyboard = useRef<any>(null);
@@ -126,13 +117,27 @@ const Index: React.FC<KeyboardProps> = ({
 		setFocusedIndex(-1);
 	};
 
-
 	// Open the popup to enter quantity
 	const handlePopupOpen = async (selectedIndex1: any) => {
 		setSelectedItem(items[selectedIndex1] || null);
 		setShowPopup(true);
 	};
+	const finditem = async (result: any) => {
+		if (result?.text) {
+			// Find the item with a matching code value
+			const foundItem = items?.find((item: any) => item.code === result.text);
 
+			if (foundItem) {
+				// Set the found item as the selected item
+				await setSelectedItem(foundItem);
+				setShowPopup(true);
+			} else {
+				// If not found, you can handle it (optional)
+				console.log('Item not found');
+				setSelectedItem(null); // Optionally reset the selected item
+			}
+		}
+	};
 
 	// Handle keyboard events for navigation and actions
 	const handleKeyPress = async (event: KeyboardEvent) => {
@@ -182,8 +187,7 @@ const Index: React.FC<KeyboardProps> = ({
 				<QrReader
 					onResult={(result: any, error: Error | null | undefined) => {
 						if (!!result) {
-							// setData(result?.text);
-							// login(result);
+							finditem(result);
 						}
 
 						if (!!error) {
@@ -193,7 +197,6 @@ const Index: React.FC<KeyboardProps> = ({
 					constraints={{
 						facingMode: 'environment', // 'user' for front camera
 					}}
-					// style={{ width: '100%' }}
 				/>
 				<Input
 					id='keyboardinput'
@@ -209,11 +212,6 @@ const Index: React.FC<KeyboardProps> = ({
 						<CardLabel>
 							<CardTitle>Lot</CardTitle>
 						</CardLabel>
-						{/* <CardActions>
-						 <Button color='info' isLink icon='Summarize' tag='a'>
-								View
-							</Button> 
-						</CardActions> */}
 					</CardHeader>
 					<CardBody isScrollable>
 						<div className='row g-3'>
