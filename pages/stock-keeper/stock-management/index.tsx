@@ -7,20 +7,30 @@ import Swal from 'sweetalert2';
 import Additem from '../../../components/add-item';
 import Edit from '../../../components/edit-item';
 import Card, { CardBody } from '../../../components/bootstrap/Card';
-import { useGetTransactionsQuery, useAddTransactionMutation} from '../../../redux/slices/transactionHistoryApiSlice'; // Import the query
+import {
+	useGetTransactionsQuery,
+	useAddTransactionMutation,
+} from '../../../redux/slices/transactionHistoryApiSlice'; // Import the query
+import {
+	useGetLotMovementsQuery,
+	useDeleteLotMovementMutation,
+	useGetDeletedLotMovementsQuery,
+} from '../../../redux/slices/LotMovementApiSlice';
 
 function index() {
 	const [toggleRightPanel, setToggleRightPanel] = useState(false);
-	const [orderedItems, setOrderedItems] = useState<any>([]);
+	// const [orderedItems, setOrderedItems] = useState<any>([]);
 	const [addtransaction, { isLoading }] = useAddTransactionMutation();
 	const { refetch } = useGetTransactionsQuery(undefined);
 	const [id, setId] = useState<number>(1530);
+	const { data: orderedItems, error } = useGetLotMovementsQuery(undefined);
+	const [deletelot] = useDeleteLotMovementMutation();
+
 	const [activeComponent, setActiveComponent] = useState<'additem' | 'edit'>('additem');
 	const currentTime = new Date().toLocaleTimeString('en-GB', {
 		hour: '2-digit',
 		minute: '2-digit',
 	});
-console.log(orderedItems)
 	const addbill = async () => {
 		try {
 			const result = await Swal.fire({
@@ -42,7 +52,7 @@ console.log(orderedItems)
 
 				for (const orderedItem of orderedItems) {
 					const values = {
-						stock_id: orderedItem.id,
+						stock_id: orderedItem.stock_id,
 						fabric_type: orderedItem.fabric_type,
 						order_type: orderedItem.order_type,
 						type: orderedItem.type,
@@ -53,14 +63,15 @@ console.log(orderedItems)
 						date: formattedDate1,
 						quentity: orderedItem.quentity,
 						Job_ID: orderedItem.Job_ID,
-						lot_type:orderedItem.type,
-						uom:orderedItem.uom,
-						GRN_number:orderedItem.GRN_number
-
+						lot_type: orderedItem.type,
+						uom: orderedItem.uom,
+						GRN_number: orderedItem.GRN_number,
 					};
 					const response: any = await addtransaction(values).unwrap();
 				}
-				setOrderedItems([])
+				for (const orderedItem of orderedItems) {
+					await deletelot(orderedItem.id).unwrap();
+				}
 				refetch();
 				Swal.fire('Added!', 'transaction has been added successfully.', 'success');
 			}
@@ -69,18 +80,7 @@ console.log(orderedItems)
 			alert('An error occurred during file upload. Please try again later.');
 		}
 	};
-	interface Category {
-		cid: string;
-		categoryname: string;
-	}
-	const cdata = [
-		{ status: true, categoryname: 'Main', cid: '0bc5HUELspDzvrUdt5u6' },
-		{ status: true, categoryname: 'Embroider', cid: 'LKcV57ThRnHtE9bxBHMb' },
-		{ status: true, categoryname: 'Painting', cid: 'La1K7XLguIsFPZN19vp4' },
-		{ categoryname: 'clothes', cid: 'NowdRVU0K7hDZiMRkksn', status: true },
-		{ categoryname: 'other', status: true, cid: 'irufyXKsbSNPk3z8ziC8' },
-	];
-	const [category, setCategory] = useState<Category[]>(cdata);
+
 	return (
 		<PageWrapper className=''>
 			{/* <div>
@@ -96,16 +96,12 @@ console.log(orderedItems)
 			<div className='row'>
 				<div className='col-4  mb-sm-0'>
 					<Additem
-						orderedItems={orderedItems}
-						setOrderedItems={setOrderedItems}
 						isActive={activeComponent === 'additem'}
 						setActiveComponent={setActiveComponent}
 					/>
 				</div>
 				<div className='col-4 '>
 					<Edit
-						orderedItems={orderedItems}
-						setOrderedItems={setOrderedItems}
 						isActive={activeComponent === 'edit'}
 						setActiveComponent={setActiveComponent}
 					/>

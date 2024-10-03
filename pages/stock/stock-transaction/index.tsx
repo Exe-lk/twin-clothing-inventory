@@ -62,16 +62,20 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 									</Link>
 								</div>
 								{status ? (
+
+
+
+
 									<Additem
-										orderedItems={orderedItems}
-										setOrderedItems={setOrderedItems}
+									
+										
 										isActive={activeComponent === 'additem'}
 										setActiveComponent={setActiveComponent}
 									/>
 								) : (
 									<Edit
-										orderedItems={orderedItems}
-										setOrderedItems={setOrderedItems}
+									
+									
 										isActive={activeComponent === 'edit'}
 										setActiveComponent={setActiveComponent}
 									/>

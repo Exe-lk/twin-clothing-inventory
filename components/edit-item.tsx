@@ -3,11 +3,13 @@ import Card, { CardBody, CardHeader, CardLabel, CardTitle } from './bootstrap/Ca
 import classNames from 'classnames';
 import useDarkMode from '../hooks/useDarkMode';
 import { getFirstLetter, priceFormat } from '../helpers/helpers';
-import Input from './bootstrap/forms/Input';
-
 import Button from './bootstrap/Button';
-
-import Checks, { ChecksGroup } from './bootstrap/forms/Checks';
+import {
+	useGetLotMovementsQuery,
+	useDeleteLotMovementMutation,
+	useGetDeletedLotMovementsQuery,
+} from '../redux/slices/LotMovementApiSlice';
+import { useUpdateLotMutation, useGetLotsQuery } from '../redux/slices/lotAPISlice';
 
 interface Item {
 	cid: string;
@@ -19,42 +21,38 @@ interface Item {
 	reorderlevel: number;
 }
 interface KeyboardProps {
-	orderedItems: Item[];
-	setOrderedItems: React.Dispatch<React.SetStateAction<Item[]>>;
+	// orderedItems: Item[];
+	// setOrderedItems: React.Dispatch<React.SetStateAction<Item[]>>;
 	isActive: boolean;
 	setActiveComponent: React.Dispatch<React.SetStateAction<'additem' | 'edit'>>;
 }
 
 const Index: React.FC<KeyboardProps> = ({
-	orderedItems,
-	setOrderedItems,
+	// orderedItems,
+	// setOrderedItems,
 	isActive,
 	setActiveComponent,
 }: any) => {
 	const { themeStatus } = useDarkMode();
 	const { darkModeStatus } = useDarkMode();
 	const [focusedIndex, setFocusedIndex] = useState<number>(0);
-	console.log(orderedItems);
-	const handleDelete = (index: number) => {
-		setOrderedItems((prevItems: any) =>
-			prevItems.filter((item: any, i: number) => i !== index),
-		);
-	};
-	const handleQuantityChange = (index: number, newQuantity: number) => {
-		setOrderedItems((prevItems: any) =>
-			prevItems.map((item: any, i: number) =>
-				i === index ? { ...item, quentity: newQuantity } : item,
-			),
-		);
+	const { data: orderedItems, error, isLoading } = useGetLotMovementsQuery(undefined);
+	const [deletelot] = useDeleteLotMovementMutation();
+	const { refetch } = useGetDeletedLotMovementsQuery(undefined);
+	const [updateLot] = useUpdateLotMutation();
+
+	const handleDelete = async (order: any) => {
+		await deletelot(order.id).unwrap();
+		const current_quantity = order.current_quantity;
+		const values = {
+			id: order.stock_id,
+			current_quantity,
+		};
+
+		await updateLot(values).unwrap();
+		refetch();
 	};
 
-	const handleTypeChange = async (type: any, index: any) => {
-		setOrderedItems((prevItems: any) =>
-			prevItems.map((item: any, i: number) =>
-				i === index ? { ...item, order_type: type } : item,
-			),
-		);
-	};
 	const handleKeyPress = (event: KeyboardEvent) => {
 		if (!isActive) return;
 
@@ -92,7 +90,7 @@ const Index: React.FC<KeyboardProps> = ({
 					</CardLabel>
 				</CardHeader>
 				<CardBody isScrollable className='table-responsive'>
-					{orderedItems.map((order: any, index: any) => (
+					{orderedItems?.map((order: any, index: any) => (
 						<Card
 							key={index}
 							className={classNames('col-12 p-3', {
@@ -123,7 +121,9 @@ const Index: React.FC<KeyboardProps> = ({
 														},
 													)}>
 													<span className='fw-bold'>
-														{getFirstLetter(order.category||order.type)}
+														{getFirstLetter(
+															order.category || order.type,
+														)}
 													</span>
 												</div>
 											</div>
@@ -139,12 +139,9 @@ const Index: React.FC<KeyboardProps> = ({
 									<div className='flex-grow-1'>
 										<div className='fs-6'>Quentity : {order.quentity}</div>
 										<div className='fs-6'>Job ID : {order.Job_ID}</div>
-									
 									</div>
 									<div className='flex-grow-1'>
 										<div className='fs-6'>{order.order_type}</div>
-									
-									
 									</div>
 									<div className='me-2'>
 										{/* <Input
@@ -167,13 +164,12 @@ const Index: React.FC<KeyboardProps> = ({
 									<span>
 										<Button
 											icon='Delete'
-											onClick={() => handleDelete(index)}></Button>
+											onClick={() => handleDelete(order)}></Button>
 									</span>
 								</div>
 							</div>
 							<div>
-								
-									{/* <ChecksGroup isInline>
+								{/* <ChecksGroup isInline>
 										<Checks
 											type='radio'
 											id={`return-${index}`}
@@ -208,7 +204,6 @@ const Index: React.FC<KeyboardProps> = ({
 											checked={order.order_type}
 										/>
 									</ChecksGroup> */}
-								
 							</div>
 						</Card>
 					))}
