@@ -16,6 +16,9 @@ import { useGetKnitTypesQuery } from '../../redux/slices/knitTypeApiSlice';
 import { useGetCategoriesQuery } from '../../redux/slices/categoryApiSlice'; // Import the RTK Query hook
 import { useGetColorsQuery } from '../../redux/slices/colorApiSlice';
 import { useGetSuppliersQuery } from '../../redux/slices/supplierAPISlice';
+import QRCode from 'react-qr-code';
+import ReactDOMServer from 'react-dom/server';
+
 
 interface ItemAddModalProps {
 	id: string;
@@ -44,20 +47,18 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const { data: supplier } = useGetSuppliersQuery(undefined);
 	const { data: categories } = useGetCategoriesQuery(undefined);
 	const { data: color } = useGetColorsQuery(undefined);
-
 	const [maxCode, setMaxCode] = useState(0);
 	const [maxGRN, setMaxGRN] = useState(0);
-  
-	useEffect(() => {
-	  if (lot) {
-		// Find max values for code and GRN_number in the lot data
-		const maxCodeValue = Math.max(...lot.map((item: any) => item.code || 0), 0);
-		const maxGRNValue = Math.max(...lot.map((item: any) => item.GRN_number || 0), 0);
-		setMaxCode(maxCodeValue + 1); // Auto increment by 1
-		setMaxGRN(maxGRNValue + 1);   // Auto increment by 1
-	  }
-	}, [lot]);
 
+	useEffect(() => {
+		if (lot) {
+			// Find max values for code and GRN_number in the lot data
+			const maxCodeValue = Math.max(...lot.map((item: any) => item.code || 0), 0);
+			const maxGRNValue = Math.max(...lot.map((item: any) => item.GRN_number || 0), 0);
+			setMaxCode(maxCodeValue + 1); // Auto increment by 1
+			setMaxGRN(maxGRNValue + 1); // Auto increment by 1
+		}
+	}, [lot]);
 
 	const formik = useFormik({
 		initialValues: {
@@ -69,7 +70,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			gsm: '',
 			width: '',
 			knit_type: '',
-			GRN_number: maxGRN, 
+			GRN_number: maxGRN,
 			status: true,
 			category: '',
 			subcategory: '',
@@ -107,30 +108,79 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 		},
 		onSubmit: async (values) => {
 			try {
-				Swal.fire({
-					title: 'Processing...',
-					html: 'Please wait while the data is being processed.<br><div class="spinner-border" role="status"></div>',
-					allowOutsideClick: false,
-					showCancelButton: false,
-					showConfirmButton: false,
-				});
-				values.current_quantity = values.qty;
-				const response: any = await addLot(values).unwrap();
-				console.log(response);
-
-				// Refetch categories to update the list
-				refetch();
-
-				setIsOpen(false);
-
-				Swal.fire('Added!', 'Lot has been added successfully.', 'success');
-				formik.resetForm();
+			  Swal.fire({
+				title: 'Processing...',
+				html: 'Please wait while the data is being processed.<br><div class="spinner-border" role="status"></div>',
+				allowOutsideClick: false,
+				showCancelButton: false,
+				showConfirmButton: false,
+			  });
+		
+			  values.current_quantity = values.qty;
+			  const response = await addLot(values).unwrap();
+			  console.log(response);
+		
+			  // Refetch categories to update the list
+			  refetch();
+		
+			  // Create a QR code using the react-qr-code component as an HTML string
+			  const qrCodeHtml = ReactDOMServer.renderToString(
+				<QRCode value={values.code} size={128} />
+			  );
+		
+			  Swal.fire({
+				title: 'QR Code Generated!',
+				html: `
+				  <div>
+					${qrCodeHtml}
+					<br/>
+					<label>Enter Quantity:</label>
+					<input type="number" id="quantityInput" class="swal2-input" placeholder="Quantity">
+				  </div>
+				`,
+				showCancelButton: true,
+				confirmButtonText: 'Print',
+				preConfirm: () => {
+				  const quantity = (document.getElementById('quantityInput') as HTMLInputElement).value;
+				  if (!quantity) {
+					Swal.showValidationMessage('Please enter the quantity');
+				  } else {
+					return quantity;
+				  }
+				},
+			  }).then((result) => {
+				if (result.isConfirmed) {
+				  const quantity = result.value;
+		
+				  // Add printing logic here
+				  const printWindow = window.open('', '_blank');
+				  printWindow?.document.write(`
+					<html>
+					  <head>
+						<title>Print QR Code</title>
+					  </head>
+					  <body>
+						<div style="text-align: center;">
+						  <h3>QR Code for ${values.code}</h3>
+						  <p>Quantity: ${quantity}</p>
+						  ${qrCodeHtml}
+						</div>
+					  </body>
+					</html>
+				  `);
+				  printWindow?.document.close();
+				  printWindow?.focus();
+				  printWindow?.print();
+				}
+			  });
+		
+			  formik.resetForm();
 			} catch (error) {
-				console.error('Error during handleUpload: ', error);
-				Swal.close();
-				alert('An error occurred during file upload. Please try again later.');
+			  console.error('Error during handleUpload: ', error);
+			  Swal.close();
+			  alert('An error occurred during file upload. Please try again later.');
 			}
-		},
+		  },
 	});
 
 	const handleCategoryChange = (e: any) => {
