@@ -125,7 +125,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 		
 			  // Create a QR code using the react-qr-code component as an HTML string
 			  const qrCodeHtml = ReactDOMServer.renderToString(
-				<QRCode value={values.code} size={128} />
+				<QRCode size={128} value={values.code.toString()}  />
 			  );
 		
 			  Swal.fire({
