@@ -34,11 +34,9 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const [isAddingNewFabric, setIsAddingNewFabric] = useState(false);
 	const [isAddingNewGSM, setIsAddingNewGSM] = useState(false);
 	const [isAddingNewKnitType, setIsAddingNewKnitType] = useState(false);
-
-	// state to manage selected option between Fabric and Thread
 	const [selectedOption, setSelectedOption] = useState('Fabric');
-
 	const [addLot, { isLoading }] = useAddLotMutation();
+	const { data: lot, error } = useGetLotsQuery(undefined);
 	const { refetch } = useGetLotsQuery(undefined);
 	const { data: fabric } = useGetFabricsQuery(undefined);
 	const { data: gsm } = useGetGSMsQuery(undefined);
@@ -47,9 +45,23 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const { data: categories } = useGetCategoriesQuery(undefined);
 	const { data: color } = useGetColorsQuery(undefined);
 
+	const [maxCode, setMaxCode] = useState(0);
+	const [maxGRN, setMaxGRN] = useState(0);
+  
+	useEffect(() => {
+	  if (lot) {
+		// Find max values for code and GRN_number in the lot data
+		const maxCodeValue = Math.max(...lot.map((item: any) => item.code || 0), 0);
+		const maxGRNValue = Math.max(...lot.map((item: any) => item.GRN_number || 0), 0);
+		setMaxCode(maxCodeValue + 1); // Auto increment by 1
+		setMaxGRN(maxGRNValue + 1);   // Auto increment by 1
+	  }
+	}, [lot]);
+
+
 	const formik = useFormik({
 		initialValues: {
-			code: '',
+			code: maxCode,
 			date: '',
 			description: '',
 			color: '',
@@ -57,7 +69,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			gsm: '',
 			width: '',
 			knit_type: '',
-			GRN_number: '',
+			GRN_number: maxGRN, 
 			status: true,
 			category: '',
 			subcategory: '',
@@ -68,8 +80,9 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			Yrds: '',
 			bales: '',
 			qty: '',
-			current_quantity:''
+			current_quantity: '',
 		},
+		enableReinitialize: true,
 		validate: (values) => {
 			const errors: Record<string, string> = {};
 			if (!values.code) errors.code = 'Required';
@@ -83,7 +96,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			if (selectedOption == 'Fabric' && !values.bales) errors.bales = 'Required';
 			if (selectedOption == 'Other' && !values.category) errors.category = 'Required';
 			if (selectedOption != 'Fabric' && !values.subcategory) errors.subcategory = 'Required';
-			if ( !values.color) errors.color = 'Required';
+			if (!values.color) errors.color = 'Required';
 			if (selectedOption == 'Fabric' && !values.fabric_type) errors.fabric_type = 'Required';
 			if (selectedOption == 'Fabric' && !values.gsm) errors.gsm = 'Required';
 			if (selectedOption == 'Fabric' && !values.width) errors.width = 'Required';
@@ -101,7 +114,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					showCancelButton: false,
 					showConfirmButton: false,
 				});
-				values.current_quantity = values.qty
+				values.current_quantity = values.qty;
 				const response: any = await addLot(values).unwrap();
 				console.log(response);
 
@@ -148,6 +161,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	//  function to handle option change between Fabric and Thread
 	const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSelectedOption(event.target.value);
+		handleCategoryChange(event);
 	};
 
 	return (
@@ -337,7 +351,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							/>
 						)}
 					</FormGroup>
-					
+
 					<FormGroup id='supplier' label='Supplier Name' className='col-md-6'>
 						<Select
 							ariaLabel='Default select example'
