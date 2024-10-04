@@ -108,7 +108,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 				});
 				await updateLot(values).unwrap();
 
-				Swal.fire('update!', 'Lot has been update successfully.', 'success');
+				Swal.fire('Updated!', 'Lot has been update successfully.', 'success');
 				formik.resetForm();
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
@@ -120,6 +120,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 
 	const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSelectedOption(event.target.value);
+		handleCategoryChange(event)
 	};
 	const handleCategoryChange = (e: any) => {
 		const selectedCategory = e.target.value;

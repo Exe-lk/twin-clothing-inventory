@@ -114,7 +114,7 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 				});
 				await updateSupplier(values).unwrap();
 
-				Swal.fire('update!', 'Supplier has been update successfully.', 'success');
+				Swal.fire('Updated!', 'Supplier has been update successfully.', 'success');
 				formik.resetForm();
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);

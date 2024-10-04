@@ -110,6 +110,10 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 						className='col-md-6'>
 						<Input
 							name='categoryname'
+						    disabled={
+								formik.values.categoryname == 'Fabric'||
+								formik.values.categoryname== 'Thread'
+							}
 							onChange={formik.handleChange}
 							value={formik.values.categoryname}
 							onBlur={formik.handleBlur}

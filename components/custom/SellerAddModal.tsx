@@ -96,7 +96,7 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 
 				setIsOpen(false);
 
-				Swal.fire('Added!', 'supplier has been added successfully.', 'success');
+				Swal.fire('Added!', 'Supplier has been added successfully.', 'success');
 				formik.resetForm();
 				
 			} catch (error) {

@@ -72,7 +72,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 				await updateSupplier(values);
 
-				Swal.fire('Restored!', 'The supplier has been deleted.', 'success');
+				Swal.fire('Restored!', 'The supplier has been restored.', 'success');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
