@@ -211,7 +211,7 @@ export const stockkeeperPagesMenu = {
 				id: 'qr',
 				text: 'QR',
 				path: 'stock-keeper/qr-code',
-				icon: 'QR',
+				icon: 'QrCode',
 				subMenu: null,
 			},
 			
