@@ -47,11 +47,11 @@ const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 	const [selectedType, setSelectedType] = useState<any>('');
 	const [layout, setLayout] = useState<string>('default');
 	const [focusedIndex, setFocusedIndex] = useState<number>(0);
-	const { data: items, error, isLoading } = useGetLotsQuery(undefined);
+	const { data: items, error, isLoading, refetch } = useGetLotsQuery(undefined);
 	const [updateLot] = useUpdateLotMutation();
 	const [addlotmovement] = useAddLotMovementMutation();
-	const { refetch } = useGetLotMovementsQuery(undefined);
-	const [data, setData] = useState('No result');
+	// const { refetch } = useGetLotMovementsQuery(undefined);
+	const [data, setData] = useState<any[]>([]);
 	// Handle input change
 	const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const input = event.target.value;
@@ -123,19 +123,29 @@ const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 		setSelectedItem(items[selectedIndex1] || null);
 		setShowPopup(true);
 	};
+
 	const finditem = async (result: any) => {
+		if (isLoading) {
+			refetch();
+			console.log('Loading items...');
+			return;
+		}
+		if (error) {
+			refetch();
+			console.log('Error fetching items:', error);
+			return;
+		}
+
+		// Debugging: ensure items is populated here.
 		if (result?.text) {
-			// Find the item with a matching code value
-			const foundItem = items?.find((item: any) => item.code === result.text);
+			const foundItem = items?.find((item: any) => item.code.toString() === result.text);
 
 			if (foundItem) {
-				// Set the found item as the selected item
 				await setSelectedItem(foundItem);
 				setShowPopup(true);
 			} else {
-				// If not found, you can handle it (optional)
 				console.log('Item not found');
-				setSelectedItem(null); // Optionally reset the selected item
+				setSelectedItem(null);
 			}
 		}
 	};
@@ -173,7 +183,7 @@ const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 		return () => {
 			window.removeEventListener('keydown', handleKeyPress);
 		};
-	}, [items, focusedIndex, showPopup, isActive]);
+	}, [focusedIndex, showPopup, isActive]);
 
 	// Focus input in the popup when it is shown
 	useEffect(() => {
@@ -187,21 +197,19 @@ const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 			<div>
 				<QrReader
 					onResult={(result: any, error: Error | null | undefined) => {
-						if (!!result) {
+						if (result) {
 							finditem(result);
 							setData(result?.text);
 						}
 
-						if (!!error) {
+						if (error) {
 							console.info(error);
 						}
 					}}
-					constraints={{
-						facingMode: 'environment', // 'user' for front camera
-					}}
+					constraints={{ facingMode: 'environment' }}
 				/>
 
-{data && <p>Scanned QR Data: {data}</p>}
+				{data && <p>Scanned QR Data: {data}</p>}
 				<Input
 					id='keyboardinput'
 					className='form-control mb-4 p-2'
