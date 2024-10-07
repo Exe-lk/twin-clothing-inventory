@@ -237,7 +237,7 @@ const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 											} else if (category1.includes(val.category)) {
 												return val;
 											}
-										} else if (val.code.includes(input)) {
+										} else if (val.code.toString().includes(input)) {
 											if (category1 === '') {
 												return val;
 											} else if (category1.includes(val.category)) {

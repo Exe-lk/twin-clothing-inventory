@@ -222,17 +222,13 @@ const Index: React.FC<KeyboardProps> = ({
 								items
 									.filter((val: any) => {
 										if (input === '') {
-											if (category1 === '') {
+											
 												return val;
-											} else if (category1.includes(val.category)) {
+											
+										} else if (val.code.toString().includes(input)) {
+										
 												return val;
-											}
-										} else if (val.code.includes(input)) {
-											if (category1 === '') {
-												return val;
-											} else if (category1.includes(val.category)) {
-												return val;
-											}
+										
 										}
 										return null;
 									})
