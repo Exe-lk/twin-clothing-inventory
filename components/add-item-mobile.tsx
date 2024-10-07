@@ -51,6 +51,7 @@ const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 	const [updateLot] = useUpdateLotMutation();
 	const [addlotmovement] = useAddLotMovementMutation();
 	const { refetch } = useGetLotMovementsQuery(undefined);
+	const [data, setData] = useState('No result');
 	// Handle input change
 	const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const input = event.target.value;
@@ -188,6 +189,7 @@ const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 					onResult={(result: any, error: Error | null | undefined) => {
 						if (!!result) {
 							finditem(result);
+							setData(result?.text);
 						}
 
 						if (!!error) {
@@ -198,6 +200,8 @@ const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 						facingMode: 'environment', // 'user' for front camera
 					}}
 				/>
+
+{data && <p>Scanned QR Data: {data}</p>}
 				<Input
 					id='keyboardinput'
 					className='form-control mb-4 p-2'
