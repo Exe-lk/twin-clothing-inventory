@@ -20,7 +20,7 @@ import Swal from 'sweetalert2';
 import Logo from '../../../components/Logo';
 import { useAddUserMutation } from '../../../redux/slices/userApiSlice';
 import { QrReader } from 'react-qr-reader';
-
+import { Scanner } from '@yudiel/react-qr-scanner';
 interface ILoginHeaderProps {
 	isNewUser?: boolean;
 }
@@ -77,7 +77,7 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 		if (result?.text) {
 			// Safely call the conversion function
 			const jsonResult = convertTextToJson(result.text);
-			console.log(jsonResult)
+			console.log(jsonResult);
 			try {
 				const response = await addUser(jsonResult).unwrap();
 				const email = response.user.email;
@@ -108,11 +108,11 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 				console.error('Error occurred:', error);
 				Swal.fire('Error', 'An unexpected error occurred', 'error');
 			}
-		  } else {
+		} else {
 			console.error('No text found in the QR result');
-		  }
+		}
 	};
-	
+
 	return (
 		<PageWrapper
 			isProtected={false}
@@ -141,7 +141,7 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 								</div>
 
 								<LoginHeader />
-								<QrReader
+								{/* <QrReader
 									onResult={(result: any, error: Error | null | undefined) => {
 										if (!!result) {
 											setData(result?.text);
@@ -156,8 +156,14 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 										facingMode: 'environment', // 'user' for front camera
 									}}
 									// style={{ width: '100%' }}
+								/> */}
+								<Scanner
+									onScan={(result) => login(result[0].rawValue)}
+									onError={(error) => console.error(error)}
+									constraints={{ facingMode: 'environment' }} // Use the back camera
+									allowMultiple
+									// styles={{ "width": '300px', height: '300px' }} // Set scanner size
 								/>
-								{data && <p>Scanned QR Data: {data}</p>}
 							</CardBody>
 						</Card>
 					</div>

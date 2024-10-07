@@ -14,7 +14,7 @@ import {
 	useAddLotMovementMutation,
 	useGetLotMovementsQuery,
 } from '../redux/slices/LotMovementApiSlice';
-import { QrReader } from 'react-qr-reader';
+import { Scanner } from '@yudiel/react-qr-scanner';
 
 interface Item {
 	cid: string;
@@ -52,6 +52,7 @@ const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 	const [addlotmovement] = useAddLotMovementMutation();
 	// const { refetch } = useGetLotMovementsQuery(undefined);
 	const [data, setData] = useState<any[]>([]);
+	const [status, setStatus] = useState<boolean>(false);
 	// Handle input change
 	const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const input = event.target.value;
@@ -124,32 +125,6 @@ const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 		setShowPopup(true);
 	};
 
-	const finditem = async (result: any) => {
-		if (isLoading) {
-			refetch();
-			console.log('Loading items...');
-			return;
-		}
-		if (error) {
-			refetch();
-			console.log('Error fetching items:', error);
-			return;
-		}
-
-		// Debugging: ensure items is populated here.
-		if (result?.text) {
-			const foundItem = items?.find((item: any) => item.code.toString() === result.text);
-
-			if (foundItem) {
-				await setSelectedItem(foundItem);
-				setShowPopup(true);
-			} else {
-				console.log('Item not found');
-				setSelectedItem(null);
-			}
-		}
-	};
-
 	// Handle keyboard events for navigation and actions
 	const handleKeyPress = async (event: KeyboardEvent) => {
 		if (!isActive) return;
@@ -192,27 +167,53 @@ const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 		}
 	}, [showPopup]);
 
+	const finditem = async (result: any) => {
+		// Ensure items are defined before proceeding
+
+	
+		await console.log(data);
+		await console.log(result[0]);
+		// Proceed to find the ite
+		const foundItem = data.find((item: any) => item.code.toString() == result[0].rawValue);
+
+		if (foundItem) {
+			setSelectedItem(foundItem);
+			setShowPopup(true);
+		} else {
+			console.log('Item not found');
+			setSelectedItem(null);
+		}
+	};
+
+	useEffect(() => {
+		const getdata = async () => {
+			console.log(items);
+			console.log(data);
+			if (!status) {
+				await setData(items);
+
+				console.log(data);
+			}
+		};
+
+		getdata();
+	}, [items, finditem, selectedItem]);
+
 	return (
 		<div>
 			<div>
-				<QrReader
-					onResult={(result: any, error: Error | null | undefined) => {
-						if (result) {
-							finditem(result);
-							setData(result?.text);
-						}
-
-						if (error) {
-							console.info(error);
-						}
-					}}
-					constraints={{ facingMode: 'environment' }}
+				<Scanner
+					onScan={(result) => finditem(result)} 
+					onError={(error) => console.error(error)}
+					constraints={{ facingMode: 'environment' }} // Use the back camera
+					allowMultiple
+					// styles={{ "width": '300px', height: '300px' }} // Set scanner size
 				/>
-
-				{data && <p>Scanned QR Data: {data}</p>}
+				
+				{/* {data && <p>Scanned QR Data: {data}</p>} */}
 				<Input
 					id='keyboardinput'
-					className='form-control mb-4 p-2'
+					className='form-control mb-4 p-2 mt-4'
 					value={input}
 					placeholder='Tap on the virtual keyboard to start'
 					onChange={onChangeInput}
@@ -225,7 +226,7 @@ const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 							<CardTitle>Lot</CardTitle>
 						</CardLabel>
 					</CardHeader>
-					<CardBody isScrollable>
+					<CardBody style={{ overflowY: 'auto', maxHeight: '30vh' }}>
 						<div className='row g-3'>
 							{items &&
 								items
