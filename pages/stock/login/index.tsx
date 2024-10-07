@@ -74,9 +74,9 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 		return result;
 	};
 	const login = async (result: any) => {
-		if (result?.text) {
+		if (result[0].rawValue) {
 			// Safely call the conversion function
-			const jsonResult = convertTextToJson(result.text);
+			const jsonResult = convertTextToJson(result[0].rawValue);
 			console.log(jsonResult);
 			try {
 				const response = await addUser(jsonResult).unwrap();
@@ -158,7 +158,7 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 									// style={{ width: '100%' }}
 								/> */}
 								<Scanner
-									onScan={(result) => login(result[0].rawValue)}
+									onScan={(result) => login(result)}
 									onError={(error) => console.error(error)}
 									constraints={{ facingMode: 'environment' }} // Use the back camera
 									allowMultiple
