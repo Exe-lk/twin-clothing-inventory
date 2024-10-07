@@ -96,10 +96,10 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 					router.push('/viewer/dashboard');
 					break;
 				  case 'Production Coordinator':
-					router.push('/production-coordinator/dashboard');
+					router.push('/production-coordinator/job-management');
 					break;
 				  case 'Stock Keeper':
-					await localStorage.setItem('email', email);
+					await localStorage.setItem('email',values.email);
 					await localStorage.setItem('password', values.password);
 					router.push('/stock-keeper/dashboard');
 					break;

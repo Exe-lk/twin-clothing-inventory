@@ -81,6 +81,9 @@ const Index: NextPage = () => {
 		}
 	};
 	const handleDeleteAll = async () => {
+		if(data?.length==0){
+			return
+		}
 		try {
 			const { value: inputText } = await Swal.fire({
 				title: 'Are you sure?',
@@ -112,6 +115,9 @@ const Index: NextPage = () => {
 	};
 	// Handle restore all categories
 	const handleRestoreAll = async () => {
+		if(data?.length==0){
+			return
+		}
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',

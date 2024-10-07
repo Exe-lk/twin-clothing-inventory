@@ -19,6 +19,10 @@ const headers = [
 		element: <StockHeader />,
 	},
 	{
+		path: `/stock/stock-transaction`,
+		element: <StockHeader />,
+	},
+	{
 		path: `/viewer/*`,
 		element: <ViewHeader />,
 	},

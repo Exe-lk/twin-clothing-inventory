@@ -14,55 +14,29 @@ import Page from '../../../layout/Page/Page';
 import Card, { CardBody, CardTitle } from '../../../components/bootstrap/Card';
 import StockAddModal from '../../../components/custom/JobAddModal';
 import StockEditModal from '../../../components/custom/JobEditModal';
-import { doc, deleteDoc, collection, getDocs, updateDoc, query, where } from 'firebase/firestore';
-import { firestore } from '../../../firebaseConfig';
-import Dropdown, { DropdownToggle, DropdownMenu } from '../../../components/bootstrap/Dropdown';
 import Swal from 'sweetalert2';
-import FormGroup from '../../../components/bootstrap/forms/FormGroup';
-import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
 import JobDeleteModal from '../../../components/custom/JobDeleteModal';
 import { useUpdateJobMutation, useGetJobsQuery} from '../../../redux/slices/jobApiSlice';
-
-// Define interfaces for data objects
-interface Item {
-	cid: string;
-	category: number;
-	image: string;
-	name: string;
-	price: number;
-	quentity: number;
-	reorderlevel: number;
-}
-interface Category {
-	cid: string;
-	categoryname: string;
-}
+import { toPng, toSvg } from 'html-to-image';
+import jsPDF from 'jspdf'; 
+import autoTable from 'jspdf-autotable';
+import Dropdown, { DropdownItem, DropdownMenu, DropdownToggle } from '../../../components/bootstrap/Dropdown';
 
 const Index: NextPage = () => {
 	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
-
-	const { darkModeStatus } = useDarkMode(); // Dark mode
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
 	const [editModalStatus, setEditModalStatus] = useState<boolean>(false); // State for edit modal status
-	const [item, setItem] = useState<Item[]>([]); // State for stock data
-	const [category, setcategory] = useState<Category[]>([]);
-	const [orderData, setOrdersData] = useState([]);
-	const [stockData, setStockData] = useState([]);
 	const [id, setId] = useState<string>(''); // State for current stock item ID
 	const [id1, setId1] = useState<string>('12356'); // State for new item ID
-	const [status, setStatus] = useState(true);
-	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-	const [quantityDifference, setQuantityDifference] = useState([]);
 	const { data: job, error, isLoading } = useGetJobsQuery(undefined);
 	const [updatejob] = useUpdateJobMutation();
-
 	// Function to handle deletion of an item
 	const handleClickDelete = async (item: any) => {
-		try {
-			
+		try {	
 			const result = await Swal.fire({
 				title: 'Are you sure?',
+
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -87,7 +61,130 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete job.', 'error');
 		}
 	};
-	// Return the JSX for rendering the page
+	const handleExport = async (format: string) => {
+		const table = document.querySelector('table');
+		if (!table) return;
+		const clonedTable = table.cloneNode(true) as HTMLElement;
+		// Remove Edit/Delete buttons column from cloned table
+		const rows = clonedTable.querySelectorAll('tr');
+		// rows.forEach((row) => {
+		// 	const lastCell = row.querySelector('td:last-child, th:last-child');
+		// 	if (lastCell) {
+		// 		lastCell.remove();
+		// 	}
+		// });
+		const clonedTableStyles = getComputedStyle(table);
+		clonedTable.setAttribute('style', clonedTableStyles.cssText);
+		try {
+			switch (format) {
+				case 'svg':
+					await downloadTableAsSVG(clonedTable);
+					break;
+				case 'png':
+					await downloadTableAsPNG(clonedTable);
+					break;
+				case 'csv':
+					downloadTableAsCSV(clonedTable);
+					break;
+				case 'pdf': 
+					await downloadTableAsPDF(clonedTable);
+					break;
+				default:
+					console.warn('Unsupported export format: ', format);
+			}
+		} catch (error) {
+			console.error('Error exporting table: ', error);
+		}
+	};
+	// function to export the table data in CSV format
+	const downloadTableAsCSV = (table: any) => {
+				let csvContent = '';
+				const rows = table.querySelectorAll('tr');
+				rows.forEach((row: any) => {
+					const cols = row.querySelectorAll('td, th');
+					const rowData = Array.from(cols)
+						.map((col: any) => `"${col.innerText}"`)
+						.join(',');
+					csvContent += rowData + '\n';
+				});
+				const blob = new Blob([csvContent], { type: 'text/csv' });
+				const link = document.createElement('a');
+				link.href = URL.createObjectURL(blob);
+				link.download = 'job_data.csv';
+				link.click();
+	};
+	//  function for PDF export
+	const downloadTableAsPDF = (table: HTMLElement) => {
+		try {
+		  const pdf = new jsPDF('p', 'pt', 'a4');
+		  const rows: any[] = [];
+		  const headers: any[] = [];
+		  const thead = table.querySelector('thead');
+		  if (thead) {
+			const headerCells = thead.querySelectorAll('th');
+			headers.push(Array.from(headerCells).map((cell: any) => cell.innerText));
+		  }
+		  const tbody = table.querySelector('tbody');
+		  if (tbody) {
+			const bodyRows = tbody.querySelectorAll('tr');
+			bodyRows.forEach((row: any) => {
+			  const cols = row.querySelectorAll('td');
+			  const rowData = Array.from(cols).map((col: any) => col.innerText);
+			  rows.push(rowData);
+			});
+		  }
+		  autoTable(pdf, {
+			head: headers,
+			body: rows,
+			margin: { top: 50,left:10,right:10 },
+			styles: {
+			  overflow: 'linebreak',
+			  cellWidth: 'wrap',
+			},
+			theme: 'grid',
+		  });
+		  pdf.save('job.pdf');
+		} catch (error) {
+		  console.error('Error generating PDF: ', error);
+		  alert('Error generating PDF. Please try again.');
+		}
+	  };
+	// Function to export the table data in SVG format using library html-to-image
+	const downloadTableAsSVG = async (table: HTMLElement) => {
+		try {
+			const dataUrl = await toSvg(table, {
+				backgroundColor: 'white', 
+				cacheBust: true, 
+				style: { 
+					width: table.offsetWidth + 'px'
+				}
+			});
+			const link = document.createElement('a');
+			link.href = dataUrl;
+			link.download = 'job.svg'; 
+			link.click();
+		} catch (error) {
+			console.error('Error generating SVG: ', error); 
+		}
+	};
+	// Function to export the table data in PNG format using library html-to-image
+	const downloadTableAsPNG = async (table: HTMLElement) => {
+		try {
+			const dataUrl = await toPng(table, {
+				backgroundColor: 'white', 
+				cacheBust: true, 
+				style: { 
+					width: table.offsetWidth + 'px'
+				}
+			});
+			const link = document.createElement('a');
+			link.href = dataUrl;
+			link.download = 'job.png'; 
+			link.click();
+		} catch (error) {
+			console.error('Error generating PNG: ', error); 
+		}
+	};
 	return (
 		<PageWrapper>
 			<SubHeader>
@@ -109,12 +206,7 @@ const Index: NextPage = () => {
 						value={searchTerm}
 					/>
 				</SubHeaderLeft>
-				<SubHeaderRight>
-			
-					<SubheaderSeparator />
-					{/* Button to open  New Item modal */}
-					
-				</SubHeaderRight>
+				
 			</SubHeader>
 			<Page>
 				<div className='row h-100'>
@@ -123,12 +215,21 @@ const Index: NextPage = () => {
 						<Card stretch>
 						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
 								<div className='flex-grow-1 text-center text-info'>Jobs</div>
-								<Button
-									icon='UploadFile'
-									color='warning'
-									onClick={() => setAddModalStatus(true)}>
-									Export
-								</Button>
+								<Dropdown>
+								<DropdownToggle hasIcon={false}>
+									<Button
+										icon='UploadFile'
+										color='warning'>
+										Export
+									</Button>
+								</DropdownToggle>
+								<DropdownMenu isAlignmentEnd>
+									<DropdownItem onClick={() => handleExport('svg')}>Download SVG</DropdownItem>
+									
+									<DropdownItem onClick={() => handleExport('csv')}>Download CSV</DropdownItem>
+									<DropdownItem onClick={() => handleExport('pdf')}>Download PDF</DropdownItem>
+								</DropdownMenu>
+							</Dropdown>
 							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-bordered border-primary table-modern table-hover'>
@@ -138,7 +239,7 @@ const Index: NextPage = () => {
 											<th>Client Name</th>
 											<th>Description</th>
 
-											
+										
 											{/* <th><Button icon='PersonAdd' color='primary' isLight onClick={() => setAddModalStatus(true)}>
                         New Item
                       </Button></th> */}
@@ -172,18 +273,20 @@ const Index: NextPage = () => {
 														<td>{job.description}</td>
 														
 
-													
+														
 													</tr>
 												))}
 									</tbody>
 								</table>
-							
+							 
 							</CardBody>
 						</Card>
 					</div>
 				</div>
 			</Page>
-			
+			<StockAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id={id1} />
+			<JobDeleteModal setIsOpen={setDeleteModalStatus} isOpen={deleteModalStatus} id='' />
+			<StockEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
 		</PageWrapper>
 	);
 };
