@@ -117,7 +117,7 @@ const Index: NextPage = () => {
 				const blob = new Blob([csvContent], { type: 'text/csv' });
 				const link = document.createElement('a');
 				link.href = URL.createObjectURL(blob);
-				link.download = 'table_data.csv';
+				link.download = 'category.csv';
 				link.click();
 	};
 	//  function for PDF export
@@ -137,10 +137,22 @@ const Index: NextPage = () => {
 			const bodyRows = tbody.querySelectorAll('tr');
 			bodyRows.forEach((row: any) => {
 			  const cols = row.querySelectorAll('td');
-			  const rowData = Array.from(cols).map((col: any) => col.innerText);
+			  const rowData = Array.from(cols).map((col: any) => {
+				const ul = col.querySelector('ul');
+				if (ul) {
+				  // Handle <ul> and extract <li> or <p> elements as line-separated text
+				  const listItems = Array.from(ul.querySelectorAll('p')).map(
+					(li: any) => li.innerText
+				  );
+				  return listItems.join('\n'); // Separate each item by a new line
+				} else {
+				  return col.innerText; // Return regular text for other <td> elements
+				}
+			  });
 			  rows.push(rowData);
 			});
 		  }
+	  
 		  autoTable(pdf, {
 			head: headers,
 			body: rows,
@@ -151,7 +163,7 @@ const Index: NextPage = () => {
 			},
 			theme: 'grid',
 		  });
-		  pdf.save('table_data.pdf');
+		  pdf.save('category.pdf');
 		} catch (error) {
 		  console.error('Error generating PDF: ', error);
 		  alert('Error generating PDF. Please try again.');
@@ -169,7 +181,7 @@ const Index: NextPage = () => {
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'table_data.svg'; 
+			link.download = 'category.svg'; 
 			link.click();
 		} catch (error) {
 			console.error('Error generating SVG: ', error); 
@@ -187,7 +199,7 @@ const Index: NextPage = () => {
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'table_data.png'; 
+			link.download = 'category.png'; 
 			link.click();
 		} catch (error) {
 			console.error('Error generating PNG: ', error); 
@@ -240,7 +252,7 @@ const Index: NextPage = () => {
 								</DropdownToggle>
 								<DropdownMenu isAlignmentEnd>
 									<DropdownItem onClick={() => handleExport('svg')}>Download SVG</DropdownItem>
-									<DropdownItem onClick={() => handleExport('png')}>Download PNG</DropdownItem>
+									{/* <DropdownItem onClick={() => handleExport('png')}>Download PNG</DropdownItem> */}
 									<DropdownItem onClick={() => handleExport('csv')}>Download CSV</DropdownItem>
 									<DropdownItem onClick={() => handleExport('pdf')}>Download PDF</DropdownItem>
 								</DropdownMenu>

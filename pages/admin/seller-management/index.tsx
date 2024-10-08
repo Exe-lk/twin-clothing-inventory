@@ -128,9 +128,9 @@ const Index: NextPage = () => {
 		const blob = new Blob([csvContent], { type: 'text/csv' });
 		const link = document.createElement('a');
 		link.href = URL.createObjectURL(blob);
-		link.download = 'table_data.csv';
+		link.download = 'Supplier_data.csv';
 		link.click();
-	};
+};
 	//  function for PDF export
 	const downloadTableAsPDF = (table: HTMLElement) => {
 		try {
@@ -161,7 +161,7 @@ const Index: NextPage = () => {
 				},
 				theme: 'grid',
 			});
-			pdf.save('table_data.pdf');
+			pdf.save('Supplier.pdf');
 		} catch (error) {
 			console.error('Error generating PDF: ', error);
 			alert('Error generating PDF. Please try again.');
@@ -179,7 +179,7 @@ const Index: NextPage = () => {
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'table_data.svg';
+			link.download = 'Supplier_data.svg';
 			link.click();
 		} catch (error) {
 			console.error('Error generating SVG: ', error);
@@ -197,7 +197,7 @@ const Index: NextPage = () => {
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'table_data.png';
+			link.download = 'Supplier_data.png';
 			link.click();
 		} catch (error) {
 			console.error('Error generating PNG: ', error);
@@ -279,7 +279,7 @@ const Index: NextPage = () => {
 											<th>Company Name</th>
 											<th>Company Email</th>
 											<th>Phone Number</th>
-											<th>Seller Email</th>
+											<th>Supplier Email</th>
 											<th></th>
 										</tr>
 									</thead>

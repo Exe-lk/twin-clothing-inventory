@@ -1,3 +1,4 @@
+// pages/index.tsx
 import React, { useState } from 'react';
 import { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
@@ -22,10 +23,9 @@ import { toPng, toSvg } from 'html-to-image';
 import Dropdown from '../../../components/bootstrap/Dropdown';
 import { DropdownToggle } from '../../../components/bootstrap/Dropdown';
 import { DropdownMenu } from '../../../components/bootstrap/Dropdown';
-import { DropdownItem }from '../../../components/bootstrap/Dropdown';
-import jsPDF from 'jspdf'; 
+import { DropdownItem } from '../../../components/bootstrap/Dropdown';
+import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
 // Define the functional component for the index page
 const Index: NextPage = () => {
 	const { darkModeStatus } = useDarkMode();
@@ -43,6 +43,7 @@ const Index: NextPage = () => {
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
+				// text: 'You will not be able to recover this category!',
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -56,9 +57,7 @@ const Index: NextPage = () => {
 					status: false,
 					subcategory: category.subcategory,
 				};
-
 				await updateCategory(values);
-
 				Swal.fire('Deleted!', 'The category has been deleted.', 'success');
 			}
 		} catch (error) {
@@ -71,9 +70,7 @@ const Index: NextPage = () => {
 	const handleExport = async (format: string) => {
 		const table = document.querySelector('table');
 		if (!table) return;
-
 		const clonedTable = table.cloneNode(true) as HTMLElement;
-
 		// Remove Edit/Delete buttons column from cloned table
 		const rows = clonedTable.querySelectorAll('tr');
 		rows.forEach((row) => {
@@ -82,10 +79,8 @@ const Index: NextPage = () => {
 				lastCell.remove();
 			}
 		});
-			
 		const clonedTableStyles = getComputedStyle(table);
 		clonedTable.setAttribute('style', clonedTableStyles.cssText);
-			
 		try {
 			switch (format) {
 				case 'svg':
@@ -97,7 +92,7 @@ const Index: NextPage = () => {
 				case 'csv':
 					downloadTableAsCSV(clonedTable);
 					break;
-				case 'pdf': 
+				case 'pdf':
 					await downloadTableAsPDF(clonedTable);
 					break;
 				default:
@@ -107,102 +102,109 @@ const Index: NextPage = () => {
 			console.error('Error exporting table: ', error);
 		}
 	};
-
 	// function to export the table data in CSV format
 	const downloadTableAsCSV = (table: any) => {
-				let csvContent = '';
-				const rows = table.querySelectorAll('tr');
-				rows.forEach((row: any) => {
-					const cols = row.querySelectorAll('td, th');
-					const rowData = Array.from(cols)
-						.map((col: any) => `"${col.innerText}"`)
-						.join(',');
-					csvContent += rowData + '\n';
-				});
+		let csvContent = '';
+		const rows = table.querySelectorAll('tr');
+		rows.forEach((row: any) => {
+			const cols = row.querySelectorAll('td, th');
+			const rowData = Array.from(cols)
+				.map((col: any) => `"${col.innerText}"`)
+				.join(',');
+			csvContent += rowData + '\n';
+		});
 
-				const blob = new Blob([csvContent], { type: 'text/csv' });
-				const link = document.createElement('a');
-				link.href = URL.createObjectURL(blob);
-				link.download = 'table_data.csv';
-				link.click();
+		const blob = new Blob([csvContent], { type: 'text/csv' });
+		const link = document.createElement('a');
+		link.href = URL.createObjectURL(blob);
+		link.download = 'category.csv';
+		link.click();
 	};
 	//  function for PDF export
 	const downloadTableAsPDF = (table: HTMLElement) => {
 		try {
-		  const pdf = new jsPDF('p', 'pt', 'a4');
-		  const rows: any[] = [];
-		  const headers: any[] = [];
-		  
-		  const thead = table.querySelector('thead');
-		  if (thead) {
-			const headerCells = thead.querySelectorAll('th');
-			headers.push(Array.from(headerCells).map((cell: any) => cell.innerText));
-		  }
-		  const tbody = table.querySelector('tbody');
-		  if (tbody) {
-			const bodyRows = tbody.querySelectorAll('tr');
-			bodyRows.forEach((row: any) => {
-			  const cols = row.querySelectorAll('td');
-			  const rowData = Array.from(cols).map((col: any) => col.innerText);
-			  rows.push(rowData);
+			const pdf = new jsPDF('p', 'pt', 'a4');
+			const rows: any[] = [];
+			const headers: any[] = [];
+
+			const thead = table.querySelector('thead');
+			if (thead) {
+				const headerCells = thead.querySelectorAll('th');
+				headers.push(Array.from(headerCells).map((cell: any) => cell.innerText));
+			}
+			const tbody = table.querySelector('tbody');
+			if (tbody) {
+				const bodyRows = tbody.querySelectorAll('tr');
+				bodyRows.forEach((row: any) => {
+					const cols = row.querySelectorAll('td');
+					const rowData = Array.from(cols).map((col: any) => {
+						const ul = col.querySelector('ul');
+						if (ul) {
+							// Handle <ul> and extract <li> or <p> elements as line-separated text
+							const listItems = Array.from(ul.querySelectorAll('p')).map(
+								(li: any) => li.innerText,
+							);
+							return listItems.join('\n'); // Separate each item by a new line
+						} else {
+							return col.innerText; // Return regular text for other <td> elements
+						}
+					});
+					rows.push(rowData);
+				});
+			}
+
+			autoTable(pdf, {
+				head: headers,
+				body: rows,
+				margin: { top: 50 },
+				styles: {
+					overflow: 'linebreak',
+					cellWidth: 'wrap',
+				},
+				theme: 'grid',
 			});
-		  }
-		  autoTable(pdf, {
-			head: headers,
-			body: rows,
-			margin: { top: 50 },
-			styles: {
-			  overflow: 'linebreak',
-			  cellWidth: 'wrap',
-			},
-			theme: 'grid',
-		  });
-	  
-		  pdf.save('table_data.pdf');
+			pdf.save('category.pdf');
 		} catch (error) {
-		  console.error('Error generating PDF: ', error);
-		  alert('Error generating PDF. Please try again.');
+			console.error('Error generating PDF: ', error);
+			alert('Error generating PDF. Please try again.');
 		}
-	  };
-		
+	};
 	// Function to export the table data in SVG format using library html-to-image
 	const downloadTableAsSVG = async (table: HTMLElement) => {
 		try {
 			const dataUrl = await toSvg(table, {
-				backgroundColor: 'white', 
-				cacheBust: true, 
-				style: { 
-					width: table.offsetWidth + 'px'
-				}
+				backgroundColor: 'white',
+				cacheBust: true,
+				style: {
+					width: table.offsetWidth + 'px',
+				},
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'table_data.svg'; 
+			link.download = 'category.svg';
 			link.click();
 		} catch (error) {
-			console.error('Error generating SVG: ', error); 
+			console.error('Error generating SVG: ', error);
 		}
 	};
-	
 	// Function to export the table data in PNG format using library html-to-image
 	const downloadTableAsPNG = async (table: HTMLElement) => {
 		try {
 			const dataUrl = await toPng(table, {
-				backgroundColor: 'white', 
-				cacheBust: true, 
-				style: { 
-					width: table.offsetWidth + 'px'
-				}
+				backgroundColor: 'white',
+				cacheBust: true,
+				style: {
+					width: table.offsetWidth + 'px',
+				},
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'table_data.png'; 
+			link.download = 'category.png';
 			link.click();
 		} catch (error) {
-			console.error('Error generating PNG: ', error); 
+			console.error('Error generating PNG: ', error);
 		}
 	};
-
 	// JSX for rendering the page
 	return (
 		<PageWrapper>
@@ -222,41 +224,45 @@ const Index: NextPage = () => {
 						value={searchTerm}
 					/>
 				</SubHeaderLeft>
-				<SubHeaderRight>
-					<SubheaderSeparator />
 				
-				</SubHeaderRight>
 			</SubHeader>
 			<Page>
 				<div className='row h-100'>
 					<div className='col-12'>
 						<Card stretch>
-						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
-							<div className='flex-grow-1 text-center text-info '>Categories</div>
-							{/* dropdown for export */}
-							<Dropdown>
-								<DropdownToggle hasIcon={false}>
-									<Button
-										icon='UploadFile'
-										color='warning'>
-										Export
-									</Button>
-								</DropdownToggle>
-								<DropdownMenu isAlignmentEnd>
-									<DropdownItem onClick={() => handleExport('svg')}>Download SVG</DropdownItem>
-									<DropdownItem onClick={() => handleExport('png')}>Download PNG</DropdownItem>
-									<DropdownItem onClick={() => handleExport('csv')}>Download CSV</DropdownItem>
-									<DropdownItem onClick={() => handleExport('pdf')}>Download PDF</DropdownItem>
-								</DropdownMenu>
-							</Dropdown>
-						</CardTitle>
+							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
+								<div className='flex-grow-1 text-center text-info '>
+							 Category
+								</div>
+								{/* dropdown for export */}
+								<Dropdown>
+									<DropdownToggle hasIcon={false}>
+										<Button icon='UploadFile' color='warning'>
+											Export
+										</Button>
+									</DropdownToggle>
+									<DropdownMenu isAlignmentEnd>
+										<DropdownItem onClick={() => handleExport('svg')}>
+											Download SVG
+										</DropdownItem>
+										{/* <DropdownItem onClick={() => handleExport('png')}>Download PNG</DropdownItem> */}
+										<DropdownItem onClick={() => handleExport('csv')}>
+											Download CSV
+										</DropdownItem>
+										<DropdownItem onClick={() => handleExport('pdf')}>
+											Download PDF
+										</DropdownItem>
+									</DropdownMenu>
+								</Dropdown>
+							</CardTitle>
 
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-modern table-bordered border-primary table-hover text-center'>
 									<thead>
 										<tr>
 											<th>Category name</th>
-											<th>Sub Category</th>		
+											<th>Sub Category</th>
+											<th hidden></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -290,7 +296,27 @@ const Index: NextPage = () => {
 																	),
 																)}
 															</ul>
-														</td>			
+														</td>
+														<td hidden>
+															<Button
+																icon='Edit'
+																color='info'
+																onClick={() => (
+																	setEditModalStatus(true),
+																	setId(category.id)
+																)}>
+																Edit
+															</Button>
+															<Button
+																className='m-2'
+																icon='Delete'
+																color='danger'
+																onClick={() =>
+																	handleClickDelete(category)
+																}>
+																Delete
+															</Button>
+														</td>
 													</tr>
 												))}
 									</tbody>
@@ -300,7 +326,14 @@ const Index: NextPage = () => {
 						</Card>
 					</div>
 				</div>
-			</Page>			
+			</Page>
+			<CategoryAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id='' />
+			<CategoryDeleteModal
+				setIsOpen={setDeleteModalStatus}
+				isOpen={deleteModalStatus}
+				id=''
+			/>
+			<CategoryEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
 		</PageWrapper>
 	);
 };

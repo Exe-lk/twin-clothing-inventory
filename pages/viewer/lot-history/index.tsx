@@ -68,14 +68,9 @@ const Index: NextPage = () => {
 		const table = document.querySelector('table');
 		if (!table) return;
 		const clonedTable = table.cloneNode(true) as HTMLElement;
-		// Remove Edit/Delete buttons column from cloned table
-		const rows = clonedTable.querySelectorAll('tr');
-		rows.forEach((row) => {
-			const lastCell = row.querySelector('td:last-child, th:last-child');
-			if (lastCell) {
-				lastCell.remove();
-			}
-		});
+
+		
+		
 		const clonedTableStyles = getComputedStyle(table);
 		clonedTable.setAttribute('style', clonedTableStyles.cssText);
 		try {
@@ -113,13 +108,13 @@ const Index: NextPage = () => {
 				const blob = new Blob([csvContent], { type: 'text/csv' });
 				const link = document.createElement('a');
 				link.href = URL.createObjectURL(blob);
-				link.download = 'table_data.csv';
+				link.download = 'lot_data.csv';
 				link.click();
 	};
 	//  function for PDF export
 	const downloadTableAsPDF = (table: HTMLElement) => {
 		try {
-		  const pdf = new jsPDF('p', 'pt', 'a4');
+		  const pdf = new jsPDF('l', 'pt', 'a4');
 		  const rows: any[] = [];
 		  const headers: any[] = [];
 		  const thead = table.querySelector('thead');
@@ -139,14 +134,14 @@ const Index: NextPage = () => {
 		  autoTable(pdf, {
 			head: headers,
 			body: rows,
-			margin: { top: 50 },
+			margin: { top: 50,left:10,right:10 },
 			styles: {
 			  overflow: 'linebreak',
 			  cellWidth: 'wrap',
 			},
 			theme: 'grid',
 		  });
-		  pdf.save('table_data.pdf');
+		  pdf.save('Lot_data.pdf');
 		} catch (error) {
 		  console.error('Error generating PDF: ', error);
 		  alert('Error generating PDF. Please try again.');
@@ -164,7 +159,7 @@ const Index: NextPage = () => {
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'table_data.svg'; 
+			link.download = 'lot_data.svg'; 
 			link.click();
 		} catch (error) {
 			console.error('Error generating SVG: ', error); 
@@ -182,7 +177,7 @@ const Index: NextPage = () => {
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'table_data.png'; 
+			link.download = 'lot_data.png'; 
 			link.click();
 		} catch (error) {
 			console.error('Error generating PNG: ', error); 
@@ -210,7 +205,7 @@ const Index: NextPage = () => {
 						value={searchTerm}
 					/>
 				</SubHeaderLeft>
-				<SubHeaderRight>
+
 					{/* <Dropdown>
 						<DropdownToggle hasIcon={false}>
 							<Button
@@ -254,11 +249,7 @@ const Index: NextPage = () => {
 							</div>
 						</DropdownMenu>
 					</Dropdown> */}
-					<SubheaderSeparator />
-
-					{/* Button to open  New Item modal */}
-					
-				</SubHeaderRight>
+				
 			</SubHeader>
 			<Page>
 				<div className='row h-100'>
@@ -278,7 +269,7 @@ const Index: NextPage = () => {
 								</DropdownToggle>
 								<DropdownMenu isAlignmentEnd>
 									<DropdownItem onClick={() => handleExport('svg')}>Download SVG</DropdownItem>
-									<DropdownItem onClick={() => handleExport('png')}>Download PNG</DropdownItem>
+									
 									<DropdownItem onClick={() => handleExport('csv')}>Download CSV</DropdownItem>
 									<DropdownItem onClick={() => handleExport('pdf')}>Download PDF</DropdownItem>
 								</DropdownMenu>
@@ -319,7 +310,8 @@ const Index: NextPage = () => {
 											lot
 												.filter((lot: any) =>
 													searchTerm? 
-												lot.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+												lot.code.toString().includes(searchTerm.toLowerCase()) ||
+												lot.GRN_number.toString().includes(searchTerm.toLowerCase()) ||
 												lot.category.toLowerCase().includes(searchTerm.toLowerCase())||
 												lot.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
 											  : true	
@@ -335,18 +327,20 @@ const Index: NextPage = () => {
 														<td>{lot.subcategory}</td>
 														<td>{lot.supplier}</td>
 														<td>{lot.description}</td>
-												
+													
 													</tr>
 												))}
 									</tbody>
 								</table>
-							
+								
 							</CardBody>
 						</Card>
 					</div>
 				</div>
 			</Page>
-		
+			<StockAddModal setIsOpen={setAddModalStatus} isOpen={addModalStatus} id={id1} />
+			<StockDeleteModal setIsOpen={setDeleteModalStatus} isOpen={deleteModalStatus} id='' />
+			<StockEditModal setIsOpen={setEditModalStatus} isOpen={editModalStatus} id={id} />
 		</PageWrapper>
 	);
 };

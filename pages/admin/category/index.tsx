@@ -34,9 +34,11 @@ const Index: NextPage = () => {
 	const [deleteModalStatus, setDeleteModalStatus] = useState(false);
 	const [editModalStatus, setEditModalStatus] = useState(false);
 	const [id, setId] = useState<string>('');
+
 	// Fetch categories using RTK Query from the custom API
 	const { data: categories, error, isLoading } = useGetCategoriesQuery(undefined);
 	const [updateCategory] = useUpdateCategoryMutation();
+
 	const handleClickDelete = async (category: any) => {
 		try {
 			const result = await Swal.fire({
@@ -63,6 +65,7 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete category.', 'error');
 		}
 	};
+
 	// Function to handle the download in different formats
 	const handleExport = async (format: string) => {
 		const table = document.querySelector('table');
@@ -110,10 +113,11 @@ const Index: NextPage = () => {
 				.join(',');
 			csvContent += rowData + '\n';
 		});
+
 		const blob = new Blob([csvContent], { type: 'text/csv' });
 		const link = document.createElement('a');
 		link.href = URL.createObjectURL(blob);
-		link.download = 'table_data.csv';
+		link.download = 'category.csv';
 		link.click();
 	};
 	//  function for PDF export
@@ -122,6 +126,7 @@ const Index: NextPage = () => {
 			const pdf = new jsPDF('p', 'pt', 'a4');
 			const rows: any[] = [];
 			const headers: any[] = [];
+
 			const thead = table.querySelector('thead');
 			if (thead) {
 				const headerCells = thead.querySelectorAll('th');
@@ -132,10 +137,22 @@ const Index: NextPage = () => {
 				const bodyRows = tbody.querySelectorAll('tr');
 				bodyRows.forEach((row: any) => {
 					const cols = row.querySelectorAll('td');
-					const rowData = Array.from(cols).map((col: any) => col.innerText);
+					const rowData = Array.from(cols).map((col: any) => {
+						const ul = col.querySelector('ul');
+						if (ul) {
+							// Handle <ul> and extract <li> or <p> elements as line-separated text
+							const listItems = Array.from(ul.querySelectorAll('p')).map(
+								(li: any) => li.innerText,
+							);
+							return listItems.join('\n'); // Separate each item by a new line
+						} else {
+							return col.innerText; // Return regular text for other <td> elements
+						}
+					});
 					rows.push(rowData);
 				});
 			}
+
 			autoTable(pdf, {
 				head: headers,
 				body: rows,
@@ -146,8 +163,7 @@ const Index: NextPage = () => {
 				},
 				theme: 'grid',
 			});
-
-			pdf.save('table_data.pdf');
+			pdf.save('category.pdf');
 		} catch (error) {
 			console.error('Error generating PDF: ', error);
 			alert('Error generating PDF. Please try again.');
@@ -165,7 +181,7 @@ const Index: NextPage = () => {
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'table_data.svg';
+			link.download = 'category.svg';
 			link.click();
 		} catch (error) {
 			console.error('Error generating SVG: ', error);
@@ -183,7 +199,7 @@ const Index: NextPage = () => {
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'table_data.png';
+			link.download = 'category.png';
 			link.click();
 		} catch (error) {
 			console.error('Error generating PNG: ', error);
@@ -238,9 +254,7 @@ const Index: NextPage = () => {
 										<DropdownItem onClick={() => handleExport('svg')}>
 											Download SVG
 										</DropdownItem>
-										<DropdownItem onClick={() => handleExport('png')}>
-											Download PNG
-										</DropdownItem>
+										{/* <DropdownItem onClick={() => handleExport('png')}>Download PNG</DropdownItem> */}
 										<DropdownItem onClick={() => handleExport('csv')}>
 											Download CSV
 										</DropdownItem>
@@ -250,6 +264,7 @@ const Index: NextPage = () => {
 									</DropdownMenu>
 								</Dropdown>
 							</CardTitle>
+
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-modern table-bordered border-primary table-hover text-center'>
 									<thead>
@@ -302,10 +317,6 @@ const Index: NextPage = () => {
 																Edit
 															</Button>
 															<Button
-																isDisable={
-																	category.name == 'Fabric'||
-																	category.name == 'Thread'
-																}
 																className='m-2'
 																icon='Delete'
 																color='danger'

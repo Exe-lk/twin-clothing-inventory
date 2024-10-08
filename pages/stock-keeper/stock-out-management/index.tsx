@@ -94,9 +94,9 @@ const Index: NextPage = () => {
 								<div className='flex-grow-1 text-center text-info'>
 									Transaction History
 								</div>
-								<Button icon='UploadFile' color='warning'>
+								{/* <Button icon='UploadFile' color='warning'>
 									Export
-								</Button>
+								</Button> */}
 							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-modern table-bordered border-primary table-hover '>
