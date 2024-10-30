@@ -29,21 +29,22 @@ const useAsideTouch = () => {
 		[asideWidthWithSpace, asideWidthWithSpace, 0, 0],
 	);
 
-	// X value get
 	useEffect(() => {
 		function updateX() {
 			const X = x.get();
 			setTouchStatus(!X);
 		}
-
-		// @ts-ignore
-		const unsubscribeX = x.onChange(updateX);
-
+	
+		// Use the new event listener method for changes
+		const unsubscribeX = x.on("change", updateX);
+	
+		// Cleanup the listener on unmount
 		return () => {
-			unsubscribeX();
+			unsubscribeX(); // Assuming unsubscribeX is the correct function for cleanup
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+	
 
 	// Set Aside & Touch Button value
 	useEffect(() => {

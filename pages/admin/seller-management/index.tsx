@@ -26,6 +26,10 @@ import { toPng, toSvg } from 'html-to-image';
 import { DropdownItem } from '../../../components/bootstrap/Dropdown';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import PaginationButtons, {
+	dataPagination,
+	PER_COUNT,
+} from '../../../components/PaginationButtons';
 
 // Define interfaces for Seller
 interface Seller {
@@ -39,6 +43,8 @@ interface Seller {
 	status: boolean;
 }
 const Index: NextPage = () => {
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
 	const { darkModeStatus } = useDarkMode(); // Dark mode
 	const [searchTerm, setSearchTerm] = useState('');
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State to control the visibility of the Add Seller modal
@@ -130,7 +136,7 @@ const Index: NextPage = () => {
 		link.href = URL.createObjectURL(blob);
 		link.download = 'Supplier_data.csv';
 		link.click();
-};
+	};
 	//  function for PDF export
 	const downloadTableAsPDF = (table: HTMLElement) => {
 		try {
@@ -272,8 +278,8 @@ const Index: NextPage = () => {
 								</Dropdown>
 							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
-								<table className='table table-bordered border-primary table-modern table-hover'>
-									<thead>
+							<table className='table table-hover table-bordered border-primary'>
+							<thead className={'table-dark border-primary'}>
 										<tr>
 											<th>Supplier Name</th>
 											<th>Company Name</th>
@@ -295,7 +301,7 @@ const Index: NextPage = () => {
 											</tr>
 										)}
 										{supplier &&
-											supplier
+											dataPagination(supplier, currentPage, perPage)
 												.filter((supplier: any) =>
 													searchTerm
 														? supplier.name
@@ -341,6 +347,14 @@ const Index: NextPage = () => {
 									Recycle Bin
 								</Button>
 							</CardBody>
+							<PaginationButtons
+								data={supplier||[]}
+								label='parts'
+								setCurrentPage={setCurrentPage}
+								currentPage={currentPage}
+								perPage={perPage}
+								setPerPage={setPerPage}
+							/>
 						</Card>
 					</div>
 				</div>

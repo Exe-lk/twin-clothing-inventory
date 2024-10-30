@@ -80,19 +80,18 @@ const DefaultAside = () => {
 
 			</AsideBody>
 			<AsideFoot>
-				{/* <div onClick={() => { localStorage.removeItem('token') }}>
-					<Navigation menu={logoutmenu} id='aside-dashboard' />
-
-				</div> */}
-				<Button
-					icon='Logout'
-					className='w-100'
-					color='dark'
-					size='lg'
-					tag='button'
-					onClick={handleLogout}>
-						
-					</Button>
+			<div aria-label='aside-bottom-user-menu-2' onClick={handleLogout}>
+					<div className='navigation'>
+						<div className='navigation-item cursor-pointer'>
+							<span className='navigation-link navigation-link-pill'>
+								<span className='navigation-link-info'>
+									<Icon icon='Logout' className='navigation-icon' />
+									<span className='navigation-text'>{t('Logout')}</span>
+								</span>
+							</span>
+						</div>
+					</div>
+				</div>
 			</AsideFoot>
 		</Aside>
 	);

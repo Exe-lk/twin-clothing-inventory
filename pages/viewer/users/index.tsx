@@ -19,8 +19,14 @@ import Swal from 'sweetalert2';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
 import SellerDeleteModal from '../../../components/custom/UserDeleteModal';
-import { useGetUsersQuery,useUpdateUserMutation } from '../../../redux/slices/userManagementApiSlice';
-
+import {
+	useGetUsersQuery,
+	useUpdateUserMutation,
+} from '../../../redux/slices/userManagementApiSlice';
+import PaginationButtons, {
+	dataPagination,
+	PER_COUNT,
+} from '../../../components/PaginationButtons';
 interface User {
 	cid: string;
 	image: string;
@@ -35,6 +41,8 @@ interface User {
 
 const Index: NextPage = () => {
 	// Dark mode
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
 	const { darkModeStatus } = useDarkMode();
 	const [searchTerm, setSearchTerm] = useState('');
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
@@ -42,11 +50,7 @@ const Index: NextPage = () => {
 	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
 	const [id, setId] = useState<string>('');
 	const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-	const role = [
-		{ role: 'Production Coordinator' },
-		{ role: 'Stock Keeper' },
-		
-	];
+	const role = [{ role: 'Production Coordinator' }, { role: 'Stock Keeper' }];
 	const { data: users, error, isLoading, refetch } = useGetUsersQuery(undefined);
 	const [updateuser] = useUpdateUserMutation();
 	//delete user
@@ -66,12 +70,13 @@ const Index: NextPage = () => {
 				try {
 					// Set the user's status to false (soft delete)
 					const values = await {
-						...user,status:false
+						...user,
+						status: false,
 					};
 					await updateuser(values);
 					// Refresh the list after deletion
 					Swal.fire('Deleted!', 'User has been deleted.', 'success');
-					 // This will refresh the list of users to reflect the changes
+					// This will refresh the list of users to reflect the changes
 				} catch (error) {
 					console.error('Error during handleDelete: ', error);
 					Swal.fire(
@@ -159,9 +164,7 @@ const Index: NextPage = () => {
 						{/* Table for displaying user data */}
 						<Card stretch>
 							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
-								<div className='flex-grow-1 text-center text-info'>
-									Users
-								</div>
+								<div className='flex-grow-1 text-center text-info'>Users</div>
 							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-bordered border-primary table-modern table-hover'>
@@ -172,7 +175,6 @@ const Index: NextPage = () => {
 											<th>Mobile number</th>
 											<th>NIC</th>
 											<th>Role</th>
-											
 										</tr>
 									</thead>
 									<tbody>
@@ -187,7 +189,7 @@ const Index: NextPage = () => {
 											</tr>
 										)}
 										{users &&
-											users
+											dataPagination(users, currentPage, perPage)
 												.filter((user: any) => user.status === true) // Only show users where status is true
 												.filter((user: any) =>
 													searchTerm
@@ -207,16 +209,25 @@ const Index: NextPage = () => {
 														<td>{user.email}</td>
 														<td>{user.mobile}</td>
 														<td>{user.nic}</td>
-														<td>{user.role}</td>			
+														<td>{user.role}</td>
 													</tr>
 												))}
 									</tbody>
-								</table>						
+								</table>
 							</CardBody>
+
+							<PaginationButtons
+								data={users || []}
+								label='parts'
+								setCurrentPage={setCurrentPage}
+								currentPage={currentPage}
+								perPage={perPage}
+								setPerPage={setPerPage}
+							/>
 						</Card>
 					</div>
 				</div>
-			</Page>			
+			</Page>
 		</PageWrapper>
 	);
 };

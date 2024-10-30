@@ -20,8 +20,6 @@ interface Category {
 }
 // ItemAddModal component definition
 const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
-
-
 	const { data: job } = useGetJobsQuery(undefined);
 	const [updatejob, { isLoading }] = useUpdateJobMutation();
 	const jobToEdit = job?.find((job: any) => job.id === id);
@@ -30,7 +28,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	// Initialize formik for form management
 	const formik = useFormik({
 		initialValues: {
-			id:jobToEdit?.id,
+			id: jobToEdit?.id,
 			code: jobToEdit?.code || '',
 			description: jobToEdit?.description || '',
 			client: jobToEdit?.client || '',
@@ -76,8 +74,13 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	});
 
 	return (
-		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
-			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
+		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}   aria-hidden={!isOpen}>
+			<ModalHeader
+				setIsOpen={() => {
+					setIsOpen(false);
+					formik.resetForm();
+				}}
+				className='p-4'>
 				<ModalTitle id=''>{'Edit Job '}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
@@ -89,6 +92,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
 							validFeedback='Looks good!'
+							isTouched={formik.touched.code}
+							invalidFeedback={formik.errors.code}
 						/>
 					</FormGroup>
 					<FormGroup id='description' label='Description' className='col-md-6'>
@@ -98,6 +103,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
 							validFeedback='Looks good!'
+							isTouched={formik.touched.description}
+							invalidFeedback={formik.errors.description}
 						/>
 					</FormGroup>
 					<FormGroup id='client' label='Client Name' className='col-md-6'>
@@ -106,6 +113,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							value={formik.values.client}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.client}
+							invalidFeedback={formik.errors.client}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>

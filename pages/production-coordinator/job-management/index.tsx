@@ -16,13 +16,23 @@ import StockAddModal from '../../../components/custom/JobAddModal';
 import StockEditModal from '../../../components/custom/JobEditModal';
 import Swal from 'sweetalert2';
 import JobDeleteModal from '../../../components/custom/JobDeleteModal';
-import { useUpdateJobMutation, useGetJobsQuery} from '../../../redux/slices/jobApiSlice';
+import { useUpdateJobMutation, useGetJobsQuery } from '../../../redux/slices/jobApiSlice';
 import { toPng, toSvg } from 'html-to-image';
-import jsPDF from 'jspdf'; 
+import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import Dropdown, { DropdownItem, DropdownMenu, DropdownToggle } from '../../../components/bootstrap/Dropdown';
+import Dropdown, {
+	DropdownItem,
+	DropdownMenu,
+	DropdownToggle,
+} from '../../../components/bootstrap/Dropdown';
+import PaginationButtons, {
+	dataPagination,
+	PER_COUNT,
+} from '../../../components/PaginationButtons';
 
 const Index: NextPage = () => {
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
 	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
@@ -33,7 +43,7 @@ const Index: NextPage = () => {
 	const [updatejob] = useUpdateJobMutation();
 	// Function to handle deletion of an item
 	const handleClickDelete = async (item: any) => {
-		try {	
+		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
 
@@ -46,7 +56,8 @@ const Index: NextPage = () => {
 			if (result.isConfirmed) {
 				try {
 					const values = await {
-						...item,status:false
+						...item,
+						status: false,
 					};
 					await updatejob(values);
 
@@ -86,7 +97,7 @@ const Index: NextPage = () => {
 				case 'csv':
 					downloadTableAsCSV(clonedTable);
 					break;
-				case 'pdf': 
+				case 'pdf':
 					await downloadTableAsPDF(clonedTable);
 					break;
 				default:
@@ -98,91 +109,91 @@ const Index: NextPage = () => {
 	};
 	// function to export the table data in CSV format
 	const downloadTableAsCSV = (table: any) => {
-				let csvContent = '';
-				const rows = table.querySelectorAll('tr');
-				rows.forEach((row: any) => {
-					const cols = row.querySelectorAll('td, th');
-					const rowData = Array.from(cols)
-						.map((col: any) => `"${col.innerText}"`)
-						.join(',');
-					csvContent += rowData + '\n';
-				});
-				const blob = new Blob([csvContent], { type: 'text/csv' });
-				const link = document.createElement('a');
-				link.href = URL.createObjectURL(blob);
-				link.download = 'job_data.csv';
-				link.click();
+		let csvContent = '';
+		const rows = table.querySelectorAll('tr');
+		rows.forEach((row: any) => {
+			const cols = row.querySelectorAll('td, th');
+			const rowData = Array.from(cols)
+				.map((col: any) => `"${col.innerText}"`)
+				.join(',');
+			csvContent += rowData + '\n';
+		});
+		const blob = new Blob([csvContent], { type: 'text/csv' });
+		const link = document.createElement('a');
+		link.href = URL.createObjectURL(blob);
+		link.download = 'job_data.csv';
+		link.click();
 	};
 	//  function for PDF export
 	const downloadTableAsPDF = (table: HTMLElement) => {
 		try {
-		  const pdf = new jsPDF('p', 'pt', 'a4');
-		  const rows: any[] = [];
-		  const headers: any[] = [];
-		  const thead = table.querySelector('thead');
-		  if (thead) {
-			const headerCells = thead.querySelectorAll('th');
-			headers.push(Array.from(headerCells).map((cell: any) => cell.innerText));
-		  }
-		  const tbody = table.querySelector('tbody');
-		  if (tbody) {
-			const bodyRows = tbody.querySelectorAll('tr');
-			bodyRows.forEach((row: any) => {
-			  const cols = row.querySelectorAll('td');
-			  const rowData = Array.from(cols).map((col: any) => col.innerText);
-			  rows.push(rowData);
+			const pdf = new jsPDF('p', 'pt', 'a4');
+			const rows: any[] = [];
+			const headers: any[] = [];
+			const thead = table.querySelector('thead');
+			if (thead) {
+				const headerCells = thead.querySelectorAll('th');
+				headers.push(Array.from(headerCells).map((cell: any) => cell.innerText));
+			}
+			const tbody = table.querySelector('tbody');
+			if (tbody) {
+				const bodyRows = tbody.querySelectorAll('tr');
+				bodyRows.forEach((row: any) => {
+					const cols = row.querySelectorAll('td');
+					const rowData = Array.from(cols).map((col: any) => col.innerText);
+					rows.push(rowData);
+				});
+			}
+			autoTable(pdf, {
+				head: headers,
+				body: rows,
+				margin: { top: 50, left: 10, right: 10 },
+				styles: {
+					overflow: 'linebreak',
+					cellWidth: 'wrap',
+				},
+				theme: 'grid',
 			});
-		  }
-		  autoTable(pdf, {
-			head: headers,
-			body: rows,
-			margin: { top: 50,left:10,right:10 },
-			styles: {
-			  overflow: 'linebreak',
-			  cellWidth: 'wrap',
-			},
-			theme: 'grid',
-		  });
-		  pdf.save('job.pdf');
+			pdf.save('job.pdf');
 		} catch (error) {
-		  console.error('Error generating PDF: ', error);
-		  alert('Error generating PDF. Please try again.');
+			console.error('Error generating PDF: ', error);
+			alert('Error generating PDF. Please try again.');
 		}
-	  };
+	};
 	// Function to export the table data in SVG format using library html-to-image
 	const downloadTableAsSVG = async (table: HTMLElement) => {
 		try {
 			const dataUrl = await toSvg(table, {
-				backgroundColor: 'white', 
-				cacheBust: true, 
-				style: { 
-					width: table.offsetWidth + 'px'
-				}
+				backgroundColor: 'white',
+				cacheBust: true,
+				style: {
+					width: table.offsetWidth + 'px',
+				},
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'job.svg'; 
+			link.download = 'job.svg';
 			link.click();
 		} catch (error) {
-			console.error('Error generating SVG: ', error); 
+			console.error('Error generating SVG: ', error);
 		}
 	};
 	// Function to export the table data in PNG format using library html-to-image
 	const downloadTableAsPNG = async (table: HTMLElement) => {
 		try {
 			const dataUrl = await toPng(table, {
-				backgroundColor: 'white', 
-				cacheBust: true, 
-				style: { 
-					width: table.offsetWidth + 'px'
-				}
+				backgroundColor: 'white',
+				cacheBust: true,
+				style: {
+					width: table.offsetWidth + 'px',
+				},
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'job.png'; 
+			link.download = 'job.png';
 			link.click();
 		} catch (error) {
-			console.error('Error generating PNG: ', error); 
+			console.error('Error generating PNG: ', error);
 		}
 	};
 	return (
@@ -206,7 +217,7 @@ const Index: NextPage = () => {
 						value={searchTerm}
 					/>
 				</SubHeaderLeft>
-				<SubHeaderRight>		
+				<SubHeaderRight>
 					<SubheaderSeparator />
 					{/* Button to open  New Item modal */}
 					<Button
@@ -223,27 +234,31 @@ const Index: NextPage = () => {
 					<div className='col-12'>
 						{/* Table for displaying customer data */}
 						<Card stretch>
-						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
+							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
 								<div className='flex-grow-1 text-center text-info'>Manage Job</div>
 								<Dropdown>
-								<DropdownToggle hasIcon={false}>
-									<Button
-										icon='UploadFile'
-										color='warning'>
-										Export
-									</Button>
-								</DropdownToggle>
-								<DropdownMenu isAlignmentEnd>
-									<DropdownItem onClick={() => handleExport('svg')}>Download SVG</DropdownItem>
-									
-									<DropdownItem onClick={() => handleExport('csv')}>Download CSV</DropdownItem>
-									<DropdownItem onClick={() => handleExport('pdf')}>Download PDF</DropdownItem>
-								</DropdownMenu>
-							</Dropdown>
+									<DropdownToggle hasIcon={false}>
+										<Button icon='UploadFile' color='warning'>
+											Export
+										</Button>
+									</DropdownToggle>
+									<DropdownMenu isAlignmentEnd>
+										<DropdownItem onClick={() => handleExport('svg')}>
+											Download SVG
+										</DropdownItem>
+
+										<DropdownItem onClick={() => handleExport('csv')}>
+											Download CSV
+										</DropdownItem>
+										<DropdownItem onClick={() => handleExport('pdf')}>
+											Download PDF
+										</DropdownItem>
+									</DropdownMenu>
+								</Dropdown>
 							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
-								<table className='table table-bordered border-primary table-modern table-hover'>
-									<thead>
+								<table className='table table-hover table-bordered border-primary'>
+									<thead className={'table-dark border-primary'}>
 										<tr>
 											<th>Job ID</th>
 											<th>Client Name</th>
@@ -257,7 +272,7 @@ const Index: NextPage = () => {
 									</thead>
 
 									<tbody>
-									{isLoading && (
+										{isLoading && (
 											<tr>
 												<td>Loading...</td>
 											</tr>
@@ -268,7 +283,7 @@ const Index: NextPage = () => {
 											</tr>
 										)}
 										{job &&
-											job
+											dataPagination(job, currentPage, perPage)
 												.filter((job: any) =>
 													searchTerm
 														? job.code
@@ -281,7 +296,6 @@ const Index: NextPage = () => {
 														<td>{job.code}</td>
 														<td>{job.client}</td>
 														<td>{job.description}</td>
-														
 
 														<td>
 															<Button
@@ -307,13 +321,22 @@ const Index: NextPage = () => {
 												))}
 									</tbody>
 								</table>
-								<Button icon='Delete' className='mb-5'
-								onClick={() => (
-									setDeleteModalStatus(true)
-									
-								)}>
-								Recycle Bin</Button> 
+								<Button
+									icon='Delete'
+									className='mb-5'
+									onClick={() => setDeleteModalStatus(true)}>
+									Recycle Bin
+								</Button>
 							</CardBody>
+
+							<PaginationButtons
+								data={job || []}
+								label='parts'
+								setCurrentPage={setCurrentPage}
+								currentPage={currentPage}
+								perPage={perPage}
+								setPerPage={setPerPage}
+							/>
 						</Card>
 					</div>
 				</div>

@@ -20,7 +20,10 @@ import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
 import SellerDeleteModal from '../../../components/custom/UserDeleteModal';
 import { useGetUsersQuery,useUpdateUserMutation } from '../../../redux/slices/userManagementApiSlice';
-
+import PaginationButtons, {
+	dataPagination,
+	PER_COUNT,
+} from '../../../components/PaginationButtons';
 interface User {
 	cid: string;
 	image: string;
@@ -35,6 +38,8 @@ interface User {
 
 const Index: NextPage = () => {
 	// Dark mode
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
 	const { darkModeStatus } = useDarkMode();
 	const [searchTerm, setSearchTerm] = useState('');
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
@@ -172,8 +177,8 @@ const Index: NextPage = () => {
 								</div>
 							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
-								<table className='table table-bordered border-primary table-modern table-hover'>
-									<thead>
+							<table className='table table-hover table-bordered border-primary'>
+							<thead className={'table-dark border-primary'}>
 										<tr>
 											<th>User</th>
 											<th>Email</th>
@@ -195,7 +200,7 @@ const Index: NextPage = () => {
 											</tr>
 										)}
 										{users &&
-											users
+										dataPagination(users, currentPage, perPage)
 												.filter((user: any) => user.status === true) // Only show users where status is true
 												.filter((user: any) =>
 													searchTerm
@@ -209,8 +214,8 @@ const Index: NextPage = () => {
 														? selectedUsers.includes(user.role)
 														: true,
 												)
-												.map((user: any) => (
-													<tr key={user.id}>
+												.map((user: any,index:any) => (
+													<tr key={index}>
 														<td>{user.name}</td>
 														<td>{user.email}</td>
 														<td>{user.mobile}</td>
@@ -247,6 +252,14 @@ const Index: NextPage = () => {
 									Recycle Bin
 								</Button>
 							</CardBody>
+							<PaginationButtons
+								data={users||[]}
+								label='parts'
+								setCurrentPage={setCurrentPage}
+								currentPage={currentPage}
+								perPage={perPage}
+								setPerPage={setPerPage}
+							/>
 						</Card>
 					</div>
 				</div>

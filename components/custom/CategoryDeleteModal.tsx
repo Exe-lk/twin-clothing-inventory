@@ -196,8 +196,8 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 							</tr>
 						)}
 						{categories &&
-							categories.map((category: any) => (
-								<tr key={category.cid}>
+							categories.map((category: any,index:any) => (
+								<tr key={index}>
 									<td>{category.name}</td>
 
 									<td>

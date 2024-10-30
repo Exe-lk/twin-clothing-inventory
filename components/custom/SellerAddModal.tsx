@@ -34,7 +34,6 @@ interface SellerAddModalProps {
 const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [items, setItems] = useState<Item[]>([]);
-	
 
 	const [addsupplier, { isLoading }] = useAddSupplierMutation();
 	const { refetch } = useGetSuppliersQuery(undefined);
@@ -48,7 +47,7 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			company_name: '',
 			company_email: '',
 			product: [{ category: '', name: '' }],
-			status:true
+			status: true,
 		},
 		validate: (values) => {
 			const errors: {
@@ -59,20 +58,37 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 				company_email?: string;
 				products?: string[];
 			} = {};
+			// Check if 'name' is provided
 			if (!values.name) {
 				errors.name = 'Required';
 			}
+
+			// Check if 'phone' is provided and is exactly 10 digits
 			if (!values.phone) {
 				errors.phone = 'Required';
+			} else if (!/^\d{10}$/.test(values.phone)) {
+				errors.phone = 'Phone number must be exactly 10 digits';
 			}
+
+			// Check if 'email' is provided and has a valid email format
 			if (!values.email) {
 				errors.email = 'Required';
+			} else if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(values.email)) {
+				errors.email = 'Invalid email address';
 			}
+
+			// Check if 'company_name' is provided
 			if (!values.company_name) {
 				errors.company_name = 'Required';
 			}
+
+			// Check if 'company_email' is provided and has a valid email format
 			if (!values.company_email) {
 				errors.company_email = 'Required';
+			} else if (
+				!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(values.company_email)
+			) {
+				errors.company_email = 'Invalid email address';
 			}
 			// if (!values.product) {
 			// 	errors.product = 'Required';
@@ -98,10 +114,8 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 
 				Swal.fire('Added!', 'Supplier has been added successfully.', 'success');
 				formik.resetForm();
-				
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
-			
 			}
 		},
 	});
@@ -123,7 +137,12 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
-			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
+			<ModalHeader
+				setIsOpen={() => {
+					setIsOpen(false);
+					formik.resetForm();
+				}}
+				className='p-4'>
 				<ModalTitle id=''>{'New Supplier'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
@@ -152,6 +171,7 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					</FormGroup>
 					<FormGroup id='email' label='Email' className='col-md-6'>
 						<Input
+							type='email'
 							onChange={formik.handleChange}
 							value={formik.values.email}
 							onBlur={formik.handleBlur}
@@ -271,5 +291,3 @@ SellerAddModal.propTypes = {
 	setIsOpen: PropTypes.func.isRequired,
 };
 export default SellerAddModal;
-
-

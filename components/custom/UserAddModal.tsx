@@ -58,15 +58,20 @@ const UserAddModal: FC<UserAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			if (!values.name) {
 				errors.name = 'Required';
 			}
-
 			if (!values.mobile) {
 				errors.mobile = 'Required';
+			} else if (values.mobile.length !== 10) {
+				errors.mobile = 'Mobile number must be exactly 10 digits';
 			}
 			if (!values.nic) {
 				errors.nic = 'Required';
+			} else if (!/^\d{9}[Vv]$/.test(values.nic) && !/^\d{12}$/.test(values.nic)) {
+				errors.nic = 'NIC must be 9 digits followed by "V" or 12 digits';
 			}
 			if (!values.email) {
 				errors.email = 'Required';
+			} else if (!values.email.includes('@')) {
+				errors.email = 'Invalid email format.';
 			}
 
 			return errors;
@@ -89,7 +94,7 @@ const UserAddModal: FC<UserAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 
 					// Refetch categories to update the list
 					refetch();
-
+					formik.resetForm();
 					// Success feedback
 					await Swal.fire({
 						icon: 'success',
@@ -113,7 +118,12 @@ const UserAddModal: FC<UserAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	});
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
-			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
+			<ModalHeader
+				setIsOpen={() => {
+					setIsOpen(false);
+					formik.resetForm();
+				}}
+				className='p-4'>
 				<ModalTitle id=''>{'New User'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>

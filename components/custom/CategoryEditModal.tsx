@@ -98,7 +98,12 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
-			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
+			<ModalHeader
+				setIsOpen={() => {
+					setIsOpen(false);
+					formik.resetForm();
+				}}
+				className='p-4'>
 				<ModalTitle id=''>{'Edit Category'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
@@ -118,7 +123,10 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 							value={formik.values.categoryname}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.categoryname}
+							invalidFeedback={formik.errors.categoryname}
 							validFeedback='Looks good!'
+							
 						/>
 					</FormGroup>
 					{formik.values.subcategory.map((sub: any, index: any) => (

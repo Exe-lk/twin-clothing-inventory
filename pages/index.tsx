@@ -89,7 +89,7 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 				  text: 'You have successfully logged in!',
 				});
 				switch (response.user.position) {
-				  case 'admin':
+				  case 'Admin':
 					router.push('/admin/dashboard');
 					break;
 				  case 'Viewer':

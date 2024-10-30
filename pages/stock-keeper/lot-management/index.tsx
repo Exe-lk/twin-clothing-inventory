@@ -20,13 +20,16 @@ import { toPng, toSvg } from 'html-to-image';
 import Dropdown from '../../../components/bootstrap/Dropdown';
 import { DropdownToggle } from '../../../components/bootstrap/Dropdown';
 import { DropdownMenu } from '../../../components/bootstrap/Dropdown';
-import { DropdownItem }from '../../../components/bootstrap/Dropdown';
-import jsPDF from 'jspdf'; 
+import { DropdownItem } from '../../../components/bootstrap/Dropdown';
+import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
-import FormGroup from '../../../components/bootstrap/forms/FormGroup';
-
+import PaginationButtons, {
+	dataPagination,
+	PER_COUNT,
+} from '../../../components/PaginationButtons';
 const Index: NextPage = () => {
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
 	const [editModalStatus, setEditModalStatus] = useState<boolean>(false); // State for edit modal status
@@ -49,13 +52,14 @@ const Index: NextPage = () => {
 			if (result.isConfirmed) {
 				try {
 					const values = await {
-						...item,status:false
+						...item,
+						status: false,
 					};
 					await updatelot(values);
 					Swal.fire('Deleted!', 'The lot has been deleted.', 'success');
 				} catch (error) {
 					console.error('Error during handle delete: ', error);
-					Swal.close;	
+					Swal.close;
 				}
 			}
 		} catch (error) {
@@ -63,7 +67,7 @@ const Index: NextPage = () => {
 			Swal.fire('Error', 'Failed to delete employee.', 'error');
 		}
 	};
-    // Function to handle the download in different formats
+	// Function to handle the download in different formats
 	const handleExport = async (format: string) => {
 		const table = document.querySelector('table');
 		if (!table) return;
@@ -89,7 +93,7 @@ const Index: NextPage = () => {
 				case 'csv':
 					downloadTableAsCSV(clonedTable);
 					break;
-				case 'pdf': 
+				case 'pdf':
 					await downloadTableAsPDF(clonedTable);
 					break;
 				default:
@@ -101,91 +105,91 @@ const Index: NextPage = () => {
 	};
 	// function to export the table data in CSV format
 	const downloadTableAsCSV = (table: any) => {
-				let csvContent = '';
-				const rows = table.querySelectorAll('tr');
-				rows.forEach((row: any) => {
-					const cols = row.querySelectorAll('td, th');
-					const rowData = Array.from(cols)
-						.map((col: any) => `"${col.innerText}"`)
-						.join(',');
-					csvContent += rowData + '\n';
-				});
-				const blob = new Blob([csvContent], { type: 'text/csv' });
-				const link = document.createElement('a');
-				link.href = URL.createObjectURL(blob);
-				link.download = 'lot_data.csv';
-				link.click();
+		let csvContent = '';
+		const rows = table.querySelectorAll('tr');
+		rows.forEach((row: any) => {
+			const cols = row.querySelectorAll('td, th');
+			const rowData = Array.from(cols)
+				.map((col: any) => `"${col.innerText}"`)
+				.join(',');
+			csvContent += rowData + '\n';
+		});
+		const blob = new Blob([csvContent], { type: 'text/csv' });
+		const link = document.createElement('a');
+		link.href = URL.createObjectURL(blob);
+		link.download = 'lot_data.csv';
+		link.click();
 	};
 	//  function for PDF export
 	const downloadTableAsPDF = (table: HTMLElement) => {
 		try {
-		  const pdf = new jsPDF('l', 'pt', 'a4');
-		  const rows: any[] = [];
-		  const headers: any[] = [];
-		  const thead = table.querySelector('thead');
-		  if (thead) {
-			const headerCells = thead.querySelectorAll('th');
-			headers.push(Array.from(headerCells).map((cell: any) => cell.innerText));
-		  }
-		  const tbody = table.querySelector('tbody');
-		  if (tbody) {
-			const bodyRows = tbody.querySelectorAll('tr');
-			bodyRows.forEach((row: any) => {
-			  const cols = row.querySelectorAll('td');
-			  const rowData = Array.from(cols).map((col: any) => col.innerText);
-			  rows.push(rowData);
+			const pdf = new jsPDF('l', 'pt', 'a4');
+			const rows: any[] = [];
+			const headers: any[] = [];
+			const thead = table.querySelector('thead');
+			if (thead) {
+				const headerCells = thead.querySelectorAll('th');
+				headers.push(Array.from(headerCells).map((cell: any) => cell.innerText));
+			}
+			const tbody = table.querySelector('tbody');
+			if (tbody) {
+				const bodyRows = tbody.querySelectorAll('tr');
+				bodyRows.forEach((row: any) => {
+					const cols = row.querySelectorAll('td');
+					const rowData = Array.from(cols).map((col: any) => col.innerText);
+					rows.push(rowData);
+				});
+			}
+			autoTable(pdf, {
+				head: headers,
+				body: rows,
+				margin: { top: 50, left: 10, right: 10 },
+				styles: {
+					overflow: 'linebreak',
+					cellWidth: 'wrap',
+				},
+				theme: 'grid',
 			});
-		  }
-		  autoTable(pdf, {
-			head: headers,
-			body: rows,
-			margin: { top: 50,left:10,right:10 },
-			styles: {
-			  overflow: 'linebreak',
-			  cellWidth: 'wrap',
-			},
-			theme: 'grid',
-		  });
-		  pdf.save('Lot_data.pdf');
+			pdf.save('Lot_data.pdf');
 		} catch (error) {
-		  console.error('Error generating PDF: ', error);
-		  alert('Error generating PDF. Please try again.');
+			console.error('Error generating PDF: ', error);
+			alert('Error generating PDF. Please try again.');
 		}
-	  };
+	};
 	// Function to export the table data in SVG format using library html-to-image
 	const downloadTableAsSVG = async (table: HTMLElement) => {
 		try {
 			const dataUrl = await toSvg(table, {
-				backgroundColor: 'white', 
-				cacheBust: true, 
-				style: { 
-					width: table.offsetWidth + 'px'
-				}
+				backgroundColor: 'white',
+				cacheBust: true,
+				style: {
+					width: table.offsetWidth + 'px',
+				},
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'lot_data.svg'; 
+			link.download = 'lot_data.svg';
 			link.click();
 		} catch (error) {
-			console.error('Error generating SVG: ', error); 
+			console.error('Error generating SVG: ', error);
 		}
 	};
 	// Function to export the table data in PNG format using library html-to-image
 	const downloadTableAsPNG = async (table: HTMLElement) => {
 		try {
 			const dataUrl = await toPng(table, {
-				backgroundColor: 'white', 
-				cacheBust: true, 
-				style: { 
-					width: table.offsetWidth + 'px'
-				}
+				backgroundColor: 'white',
+				cacheBust: true,
+				style: {
+					width: table.offsetWidth + 'px',
+				},
 			});
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'lot_data.png'; 
+			link.download = 'lot_data.png';
 			link.click();
 		} catch (error) {
-			console.error('Error generating PNG: ', error); 
+			console.error('Error generating PNG: ', error);
 		}
 	};
 	// Return the JSX for rendering the page
@@ -271,30 +275,34 @@ const Index: NextPage = () => {
 					<div className='col-12'>
 						{/* Table for displaying customer data */}
 						<Card stretch>
-						<CardTitle className='d-flex justify-content-between align-items-center m-4'>
-							<div className='flex-grow-1 text-center text-info '>Manage Lot</div>
-							{/* dropdown for export */}
-							<Dropdown>
-								<DropdownToggle hasIcon={false}>
-									<Button
-										icon='UploadFile'
-										color='warning'>
-										Export
-									</Button>
-								</DropdownToggle>
-								<DropdownMenu isAlignmentEnd>
-									<DropdownItem onClick={() => handleExport('svg')}>Download SVG</DropdownItem>
-									
-									<DropdownItem onClick={() => handleExport('csv')}>Download CSV</DropdownItem>
-									<DropdownItem onClick={() => handleExport('pdf')}>Download PDF</DropdownItem>
-								</DropdownMenu>
-							</Dropdown>
-						</CardTitle>
+							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
+								<div className='flex-grow-1 text-center text-info '>Manage Lot</div>
+								{/* dropdown for export */}
+								<Dropdown>
+									<DropdownToggle hasIcon={false}>
+										<Button icon='UploadFile' color='warning'>
+											Export
+										</Button>
+									</DropdownToggle>
+									<DropdownMenu isAlignmentEnd>
+										<DropdownItem onClick={() => handleExport('svg')}>
+											Download SVG
+										</DropdownItem>
+
+										<DropdownItem onClick={() => handleExport('csv')}>
+											Download CSV
+										</DropdownItem>
+										<DropdownItem onClick={() => handleExport('pdf')}>
+											Download PDF
+										</DropdownItem>
+									</DropdownMenu>
+								</Dropdown>
+							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
-								<table className='table table-bordered border-primary table-modern table-hover'>
-									<thead>
+								<table className='table table-hover table-bordered border-primary'>
+									<thead className={'table-dark border-primary'}>
 										<tr>
-										<th>Date</th>
+											<th>Date</th>
 											<th>Code</th>
 											<th>GRN number</th>
 											<th>Quantity</th>
@@ -303,7 +311,7 @@ const Index: NextPage = () => {
 											<th>Sub Category</th>
 											<th>Supplier</th>
 											<th>Description</th>
-											
+
 											<th></th>
 											{/* <th><Button icon='PersonAdd' color='primary' isLight onClick={() => setAddModalStatus(true)}>
                         New Item
@@ -322,23 +330,39 @@ const Index: NextPage = () => {
 											</tr>
 										)}
 										{lot &&
-											lot
+											dataPagination(lot, currentPage, perPage)
 												.filter((lot: any) =>
-													searchTerm? 
-												lot.code.toString().includes(searchTerm.toLowerCase()) ||
-												lot.GRN_number.toString().includes(searchTerm.toLowerCase()) ||
-												lot.category.toLowerCase().includes(searchTerm.toLowerCase())||
-												lot.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
-											  : true	
+													searchTerm
+														? lot.code
+																.toString()
+																.includes(
+																	searchTerm.toLowerCase(),
+																) ||
+														  lot.GRN_number.toString().includes(
+																searchTerm.toLowerCase(),
+														  ) ||
+														  lot.category
+																.toLowerCase()
+																.includes(
+																	searchTerm.toLowerCase(),
+																) ||
+														  lot.subcategory
+																.toLowerCase()
+																.includes(searchTerm.toLowerCase())
+														: true,
 												)
 												.map((lot: any) => (
 													<tr key={lot.id}>
 														<td>{lot.date}</td>
 														<td>{lot.code}</td>
 														<td>{lot.GRN_number}</td>
-														<td>{lot.qty} {lot.uom}</td>
-														<td>{lot.current_quantity} {lot.uom}</td>
-														<td>{lot.category||lot.type}</td>
+														<td>
+															{lot.qty} {lot.uom}
+														</td>
+														<td>
+															{lot.current_quantity} {lot.uom}
+														</td>
+														<td>{lot.category || lot.type}</td>
 														<td>{lot.subcategory}</td>
 														<td>{lot.supplier}</td>
 														<td>{lot.description}</td>
@@ -373,6 +397,14 @@ const Index: NextPage = () => {
 									Recycle Bin
 								</Button>
 							</CardBody>
+							<PaginationButtons
+								data={lot || []}
+								label='parts'
+								setCurrentPage={setCurrentPage}
+								currentPage={currentPage}
+								perPage={perPage}
+								setPerPage={setPerPage}
+							/>
 						</Card>
 					</div>
 				</div>
