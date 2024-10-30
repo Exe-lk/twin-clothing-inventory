@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
@@ -20,7 +20,7 @@ interface CategoryEditModalProps {
 
 const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const { data: categories } = useGetCategoriesQuery(undefined);
-	const [updateCategory, { isLoading }] = useUpdateCategoryMutation();
+	const [updateCategory] = useUpdateCategoryMutation();
 
 	const categoryToEdit = categories?.find((category: any) => category.id === id);
 
@@ -30,7 +30,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 			categoryname: categoryToEdit?.name || '',
 			subcategory: categoryToEdit?.subcategory || [''],
 		},
-		enableReinitialize: true, // This allows the form to reinitialize when categoryToEdit changes
+		enableReinitialize: true,
 		validate: (values) => {
 			const errors: { categoryname?: string; subcategory?: string } = {};
 			if (!values.categoryname) {
@@ -40,7 +40,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 		},
 		onSubmit: async (values) => {
 			try {
-				const process = Swal.fire({
+				Swal.fire({
 					title: 'Processing...',
 					html: 'Please wait while the data is being processed.<br><div class="spinner-border" role="status"></div>',
 					allowOutsideClick: false,
@@ -49,8 +49,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 				});
 
 				try {
-					// Update the category
-					console.log(values);
 					const data = {
 						name: values.categoryname,
 						subcategory: values.subcategory,
@@ -58,8 +56,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 						id: id,
 					};
 					await updateCategory(data).unwrap();
-
-					// Success feedback
 					await Swal.fire({
 						icon: 'success',
 						title: 'Category Updated Successfully',
@@ -115,9 +111,9 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 						className='col-md-6'>
 						<Input
 							name='categoryname'
-						    disabled={
-								formik.values.categoryname == 'Fabric'||
-								formik.values.categoryname== 'Thread'
+							disabled={
+								formik.values.categoryname == 'Fabric' ||
+								formik.values.categoryname == 'Thread'
 							}
 							onChange={formik.handleChange}
 							value={formik.values.categoryname}
@@ -126,7 +122,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 							isTouched={formik.touched.categoryname}
 							invalidFeedback={formik.errors.categoryname}
 							validFeedback='Looks good!'
-							
 						/>
 					</FormGroup>
 					{formik.values.subcategory.map((sub: any, index: any) => (

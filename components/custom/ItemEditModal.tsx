@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
@@ -13,7 +13,7 @@ import Checks, { ChecksGroup } from '../bootstrap/forms/Checks';
 import { useGetFabricsQuery } from '../../redux/slices/fabricApiSlice';
 import { useGetGSMsQuery } from '../../redux/slices/gsmApiSlice';
 import { useGetKnitTypesQuery } from '../../redux/slices/knitTypeApiSlice';
-import { useGetCategoriesQuery } from '../../redux/slices/categoryApiSlice'; // Import the RTK Query hook
+import { useGetCategoriesQuery } from '../../redux/slices/categoryApiSlice';
 import { useGetColorsQuery } from '../../redux/slices/colorApiSlice';
 import { useGetSuppliersQuery } from '../../redux/slices/supplierAPISlice';
 
@@ -35,26 +35,22 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const [isAddingNewGSM, setIsAddingNewGSM] = useState(false);
 	const [isAddingNewKnitType, setIsAddingNewKnitType] = useState(false);
 	const [selectedOption, setSelectedOption] = useState('Fabric');
-	const { refetch } = useGetLotsQuery(undefined);
 	const { data: fabric } = useGetFabricsQuery(undefined);
 	const { data: gsm } = useGetGSMsQuery(undefined);
 	const { data: knit } = useGetKnitTypesQuery(undefined);
 	const { data: supplier } = useGetSuppliersQuery(undefined);
 	const { data: categories } = useGetCategoriesQuery(undefined);
 	const { data: color } = useGetColorsQuery(undefined);
-
 	const { data: lots } = useGetLotsQuery(undefined);
-	const [updateLot, { isLoading }] = useUpdateLotMutation();
-
+	const [updateLot] = useUpdateLotMutation();
 	const lotToEdit = lots?.find((lot: any) => lot.id === id);
 
 	useEffect(() => {
 		if (lotToEdit) {
-		  setSelectedOption(lotToEdit.type);
+			setSelectedOption(lotToEdit.type);
 		}
-	  }, [lotToEdit]);
-	  
-	console.log(lotToEdit);
+	}, [lotToEdit]);
+
 	const formik = useFormik({
 		initialValues: {
 			id: lotToEdit?.id,
@@ -138,7 +134,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 				label: subcat,
 			}));
 			setSubcategories(options);
-			console.log(options);
 		} else {
 			setSubcategories([]);
 		}
@@ -164,7 +159,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>
-					{/*checked buttons for Fabric and Thread */}
 					<FormGroup id='typeSelection' className='col-md-12'>
 						<ChecksGroup isInline>
 							<Checks
@@ -196,8 +190,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							/>
 						</ChecksGroup>
 					</FormGroup>
-
-					{/* Common input fields */}
 					{selectedOption === 'Other' && (
 						<FormGroup
 							id='category'
@@ -211,6 +203,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								value={formik.values.category}
 								onBlur={formik.handleBlur}
 								isValid={formik.isValid}
+								isTouched={formik.touched.category}
+								invalidFeedback={formik.errors.category}
 								validFeedback='Looks good!'>
 								{categories &&
 									categories.map((category: any) => (
@@ -221,8 +215,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							</Select>
 						</FormGroup>
 					)}
-
-					{/* Common input fields */}
 					{selectedOption === 'Thread' && (
 						<FormGroup id='subcategory' label='Sub Category' className='col-md-6'>
 							<Select
@@ -232,6 +224,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								value={formik.values.subcategory}
 								onBlur={formik.handleBlur}
 								isValid={formik.isValid}
+								isTouched={formik.touched.subcategory}
+								invalidFeedback={formik.errors.subcategory}
 								validFeedback='Looks good!'>
 								{subcategories &&
 									subcategories.map((category: any) => (
@@ -251,6 +245,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								value={formik.values.subcategory}
 								onBlur={formik.handleBlur}
 								isValid={formik.isValid}
+								isTouched={formik.touched.subcategory}
+								invalidFeedback={formik.errors.subcategory}
 								validFeedback='Looks good!'>
 								{subcategories &&
 									subcategories.map((category: any) => (
@@ -261,7 +257,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							</Select>
 						</FormGroup>
 					)}
-
 					<FormGroup id='code' label='Code' className='col-md-6'>
 						<Input
 							disabled
@@ -269,6 +264,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							value={formik.values.code}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.code}
+							invalidFeedback={formik.errors.code}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
@@ -279,6 +276,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							value={formik.values.date}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.date}
+							invalidFeedback={formik.errors.date}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
@@ -288,10 +287,11 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							value={formik.values.description}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.description}
+							invalidFeedback={formik.errors.description}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-
 					<FormGroup id='color' label='Color' className='col-md-6'>
 						{!isAddingNewColor ? (
 							<Select
@@ -299,7 +299,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								placeholder='Open this select color'
 								onChange={(e: any) => {
 									if (e.target.value === 'Add new') {
-										setIsAddingNewColor(true); // Switch to input field
+										setIsAddingNewColor(true);
 									} else {
 										formik.handleChange(e);
 									}
@@ -307,6 +307,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								value={formik.values.color}
 								onBlur={formik.handleBlur}
 								isValid={formik.isValid}
+								isTouched={formik.touched.color}
+								invalidFeedback={formik.errors.color}
 								validFeedback='Looks good!'>
 								<Option value='Add new'>Add new</Option>
 
@@ -327,6 +329,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								value={formik.values.color}
 								onBlur={formik.handleBlur}
 								isValid={formik.isValid}
+								isTouched={formik.touched.color}
+								invalidFeedback={formik.errors.color}
 								validFeedback='Looks good!'
 							/>
 						)}
@@ -334,11 +338,13 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
 						<Input
 							type='number'
-							min={0}
+							min={1}
 							onChange={formik.handleChange}
 							value={formik.values.GRN_number}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.GRN_number}
+							invalidFeedback={formik.errors.GRN_number}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
@@ -350,6 +356,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							value={formik.values.supplier}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.supplier}
+							invalidFeedback={formik.errors.supplier}
 							validFeedback='Looks good!'>
 							{supplier &&
 								supplier.map((supplierItem: any) => (
@@ -368,6 +376,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							value={formik.values.order}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.order}
+							invalidFeedback={formik.errors.order}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
@@ -379,6 +389,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							value={formik.values.uom}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.uom}
+							invalidFeedback={formik.errors.uom}
 							validFeedback='Looks good!'>
 							<Option value='Pieces'>Pieces</Option>
 							<Option value='Yards'>Yards</Option>
@@ -389,26 +401,27 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					<FormGroup id='qty' label='Qty' className='col-md-6'>
 						<Input
 							type='number'
-							min={0}
+							min={1}
 							onChange={formik.handleChange}
 							value={formik.values.qty}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.qty}
+							invalidFeedback={formik.errors.qty}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-
-					{/* when Fabric selected */}
 					{selectedOption === 'Fabric' && (
 						<>
 							<p>Fabric</p>
-
 							<FormGroup id='fabric_type' label='Fabric Type' className='col-md-6'>
 								{isAddingNewFabric ? (
 									<Input
 										placeholder='Add new fabric type'
 										onBlur={formik.handleBlur}
 										isValid={formik.isValid}
+										isTouched={formik.touched.fabric_type}
+										invalidFeedback={formik.errors.fabric_type}
 										onChange={(e: any) =>
 											formik.setFieldValue('fabric_type', e.target.value)
 										}
@@ -419,6 +432,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 										ariaLabel='Fabric type select'
 										onBlur={formik.handleBlur}
 										isValid={formik.isValid}
+										isTouched={formik.touched.fabric_type}
+										invalidFeedback={formik.errors.fabric_type}
 										onChange={(e: any) => {
 											if (e.target.value === 'Add new') {
 												setIsAddingNewFabric(true);
@@ -452,12 +467,16 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 										value={formik.values.gsm}
 										onBlur={formik.handleBlur}
 										isValid={formik.isValid}
+										isTouched={formik.touched.gsm}
+										invalidFeedback={formik.errors.gsm}
 									/>
 								) : (
 									<Select
 										ariaLabel='GSM select'
 										onBlur={formik.handleBlur}
 										isValid={formik.isValid}
+										isTouched={formik.touched.gsm}
+										invalidFeedback={formik.errors.gsm}
 										onChange={(e: any) => {
 											if (e.target.value === 'Add new') {
 												setIsAddingNewGSM(true);
@@ -482,15 +501,16 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							<FormGroup id='width' label='Width' className='col-md-6'>
 								<Input
 									type='number'
-									min={0}
+									min={1}
 									onChange={formik.handleChange}
 									value={formik.values.width}
 									onBlur={formik.handleBlur}
 									isValid={formik.isValid}
+									isTouched={formik.touched.width}
+									invalidFeedback={formik.errors.width}
 									validFeedback='Looks good!'
 								/>
 							</FormGroup>
-							{/* Knit Type FormGroup with Dynamic Input */}
 							<FormGroup id='knit_type' label='Knit Type' className='col-md-6'>
 								{isAddingNewKnitType ? (
 									<Input
@@ -501,6 +521,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 										value={formik.values.knit_type}
 										onBlur={formik.handleBlur}
 										isValid={formik.isValid}
+										isTouched={formik.touched.knit_type}
+										invalidFeedback={formik.errors.knit_type}
 									/>
 								) : (
 									<Select
@@ -516,6 +538,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 										value={formik.values.knit_type}
 										onBlur={formik.handleBlur}
 										isValid={formik.isValid}
+										isTouched={formik.touched.knit_type}
+										invalidFeedback={formik.errors.knit_type}
 										validFeedback='Looks good!'>
 										<Option value='Add new'>Add new</Option>
 										{knit &&
@@ -529,46 +553,34 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 									</Select>
 								)}
 							</FormGroup>
-
-							{/* <FormGroup id='Job_ID' label='Job ID' className='col-md-6'>
-								<Input
-									type='text'
-									onChange={formik.handleChange}
-									value={formik.values.Job_ID}
-									onBlur={formik.handleBlur}
-									isValid={formik.isValid}
-									isTouched={formik.touched.Job_ID}
-									invalidFeedback={formik.errors.Job_ID}
-									validFeedback='Looks good!'
-								/>
-							</FormGroup> */}
-
 							<FormGroup id='bales' label='Bales' className='col-md-6'>
 								<Input
 									type='number'
-									min={0}
+									min={1}
 									onChange={formik.handleChange}
 									value={formik.values.bales}
 									onBlur={formik.handleBlur}
 									isValid={formik.isValid}
+									isTouched={formik.touched.bales}
+									invalidFeedback={formik.errors.bales}
 									validFeedback='Looks good!'
 								/>
 							</FormGroup>
 						</>
 					)}
-
-					{/*  when Thread selected */}
 					{selectedOption === 'Thread' && (
 						<>
 							<p>Thread</p>
 							<FormGroup id='Yrds' label='Yrds per cone' className='col-md-6'>
 								<Input
 									type='number'
-									min={0}
+									min={1}
 									onChange={formik.handleChange}
 									value={formik.values.Yrds}
 									onBlur={formik.handleBlur}
 									isValid={formik.isValid}
+									isTouched={formik.touched.Yrds}
+									invalidFeedback={formik.errors.Yrds}
 									validFeedback='Looks good!'
 								/>
 							</FormGroup>
@@ -577,7 +589,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 				</div>
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
-				{/* Save button to submit the form */}
 				<Button color='warning' onClick={handleResetForm}>
 					Reset
 				</Button>
@@ -588,13 +599,10 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 		</Modal>
 	);
 };
-// Prop types definition for ItemAddModal component
+
 ItemAddModal.propTypes = {
 	id: PropTypes.string.isRequired,
 	isOpen: PropTypes.bool.isRequired,
 	setIsOpen: PropTypes.func.isRequired,
 };
 export default ItemAddModal;
-function async() {
-	throw new Error('Function not implemented.');
-}

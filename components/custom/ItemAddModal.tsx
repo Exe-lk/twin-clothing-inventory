@@ -1,6 +1,6 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Formik, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
 import FormGroup from '../bootstrap/forms/FormGroup';
 import Input from '../bootstrap/forms/Input';
@@ -8,12 +8,12 @@ import Button from '../bootstrap/Button';
 import Swal from 'sweetalert2';
 import Select from '../bootstrap/forms/Select';
 import Option from '../bootstrap/Option';
-import { useGetLotsQuery, useAddLotMutation } from '../../redux/slices/lotAPISlice'; // Import the query
+import { useGetLotsQuery, useAddLotMutation } from '../../redux/slices/lotAPISlice';
 import Checks, { ChecksGroup } from '../bootstrap/forms/Checks';
 import { useGetFabricsQuery } from '../../redux/slices/fabricApiSlice';
 import { useGetGSMsQuery } from '../../redux/slices/gsmApiSlice';
 import { useGetKnitTypesQuery } from '../../redux/slices/knitTypeApiSlice';
-import { useGetCategoriesQuery } from '../../redux/slices/categoryApiSlice'; // Import the RTK Query hook
+import { useGetCategoriesQuery } from '../../redux/slices/categoryApiSlice';
 import { useGetColorsQuery } from '../../redux/slices/colorApiSlice';
 import { useGetSuppliersQuery } from '../../redux/slices/supplierAPISlice';
 import QRCode from 'react-qr-code';
@@ -37,8 +37,8 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const [isAddingNewGSM, setIsAddingNewGSM] = useState(false);
 	const [isAddingNewKnitType, setIsAddingNewKnitType] = useState(false);
 	const [selectedOption, setSelectedOption] = useState('Fabric');
-	const [addLot, { isLoading }] = useAddLotMutation();
-	const { data: lot, error } = useGetLotsQuery(undefined);
+	const [addLot] = useAddLotMutation();
+	const { data: lot } = useGetLotsQuery(undefined);
 	const { refetch } = useGetLotsQuery(undefined);
 	const { data: fabric } = useGetFabricsQuery(undefined);
 	const { data: gsm } = useGetGSMsQuery(undefined);
@@ -51,11 +51,10 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 
 	useEffect(() => {
 		if (lot) {
-			// Find max values for code and GRN_number in the lot data
 			const maxCodeValue = Math.max(...lot.map((item: any) => item.code || 0), 0);
 			const maxGRNValue = Math.max(...lot.map((item: any) => item.GRN_number || 0), 0);
-			setMaxCode(maxCodeValue + 1); // Auto increment by 1
-			setMaxGRN(maxGRNValue + 1); // Auto increment by 1
+			setMaxCode(maxCodeValue + 1);
+			setMaxGRN(maxGRNValue + 1);
 		}
 	}, [lot]);
 
@@ -102,7 +101,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			if (selectedOption == 'Fabric' && !values.width) errors.width = 'Required';
 			if (selectedOption == 'Fabric' && !values.knit_type) errors.knit_type = 'Required';
 			if (selectedOption == 'Thread' && !values.Yrds) errors.Yrds = 'Required';
-
 			return errors;
 		},
 		onSubmit: async (values) => {
@@ -114,19 +112,12 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					showCancelButton: false,
 					showConfirmButton: false,
 				});
-
 				values.current_quantity = values.qty;
 				const response = await addLot(values).unwrap();
-				console.log(response);
-
-				// Refetch categories to update the list
 				refetch();
-
-				// Create a QR code using the react-qr-code component as an HTML string
 				const qrCodeHtml = ReactDOMServer.renderToString(
 					<QRCode size={128} value={values.code.toString()} />,
 				);
-
 				Swal.fire({
 					title: 'QR Code Generated!',
 					html: `
@@ -152,8 +143,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 				}).then((result) => {
 					if (result.isConfirmed) {
 						const quantity = result.value;
-
-						// Add printing logic here
 						const printWindow = window.open('', '_blank');
 						printWindow?.document.write(`
 					<html>
@@ -174,7 +163,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 						printWindow?.print();
 					}
 				});
-
 				formik.resetForm();
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
@@ -187,7 +175,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const handleCategoryChange = (e: any) => {
 		const selectedCategory = e.target.value;
 		formik.handleChange(e);
-		// setSelectedOption(e.target.value);
 		const selectedCategoryData = categories.find((cat: any) => cat.name === selectedCategory);
 		if (selectedCategoryData) {
 			const options = selectedCategoryData.subcategory.map((subcat: any) => ({
@@ -195,7 +182,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 				label: subcat,
 			}));
 			setSubcategories(options);
-			console.log(options);
 		} else {
 			setSubcategories([]);
 		}
@@ -227,7 +213,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			</ModalHeader>
 			<ModalBody className='px-4'>
 				<div className='row g-4'>
-					{/*checked buttons for Fabric and Thread */}
 					<FormGroup id='typeSelection' className='col-md-12'>
 						<ChecksGroup isInline>
 							<Checks
@@ -287,17 +272,11 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 											}
 										})
 										.map((category: any) => (
-											
-												<Option value={category.name}>
-													{category.name}
-												</Option>
-											
+											<Option value={category.name}>{category.name}</Option>
 										))}
 							</Select>
 						</FormGroup>
 					)}
-
-					{/* Common input fields */}
 					{selectedOption === 'Thread' && (
 						<FormGroup id='subcategory' label='Sub Category' className='col-md-6'>
 							<Select
@@ -340,7 +319,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							</Select>
 						</FormGroup>
 					)}
-
 					<FormGroup id='code' label='Code' className='col-md-6'>
 						<Input
 							disabled
@@ -378,7 +356,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-
 					<FormGroup id='color' label='Color' className='col-md-6'>
 						{!isAddingNewColor ? (
 							<Select
@@ -422,7 +399,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							/>
 						)}
 					</FormGroup>
-
 					<FormGroup id='supplier' label='Supplier Name' className='col-md-6'>
 						<Select
 							ariaLabel='Default select example'
@@ -488,7 +464,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					<FormGroup id='qty' label='Quantity' className='col-md-6'>
 						<Input
 							type='number'
-							min={0}
+							min={1}
 							onChange={formik.handleChange}
 							value={formik.values.qty}
 							onBlur={formik.handleBlur}
@@ -498,12 +474,9 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-
-					{/* when Fabric selected */}
 					{selectedOption === 'Fabric' && (
 						<>
 							<p>Fabric</p>
-
 							<FormGroup id='fabric_type' label='Fabric Type' className='col-md-6'>
 								{isAddingNewFabric ? (
 									<Input
@@ -591,7 +564,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							<FormGroup id='width' label='Width' className='col-md-6'>
 								<Input
 									type='number'
-									min={0}
+									min={1}
 									onChange={formik.handleChange}
 									value={formik.values.width}
 									onBlur={formik.handleBlur}
@@ -601,7 +574,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 									validFeedback='Looks good!'
 								/>
 							</FormGroup>
-							{/* Knit Type FormGroup with Dynamic Input */}
 							<FormGroup id='knit_type' label='Knit Type' className='col-md-6'>
 								{isAddingNewKnitType ? (
 									<Input
@@ -644,24 +616,10 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 									</Select>
 								)}
 							</FormGroup>
-
-							{/* <FormGroup id='Job_ID' label='Job ID' className='col-md-6'>
-								<Input
-									type='text'
-									onChange={formik.handleChange}
-									value={formik.values.Job_ID}
-									onBlur={formik.handleBlur}
-									isValid={formik.isValid}
-									isTouched={formik.touched.Job_ID}
-									invalidFeedback={formik.errors.Job_ID}
-									validFeedback='Looks good!'
-								/>
-							</FormGroup> */}
-
 							<FormGroup id='bales' label='Bales' className='col-md-6'>
 								<Input
 									type='number'
-									min={0}
+									min={1}
 									onChange={formik.handleChange}
 									value={formik.values.bales}
 									onBlur={formik.handleBlur}
@@ -673,15 +631,13 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							</FormGroup>
 						</>
 					)}
-
-					{/*  when Thread selected */}
 					{selectedOption === 'Thread' && (
 						<>
 							<p>Thread</p>
 							<FormGroup id='Yrds' label='Yrds per cone' className='col-md-6'>
 								<Input
 									type='number'
-									min={0}
+									min={1}
 									onChange={formik.handleChange}
 									value={formik.values.Yrds}
 									onBlur={formik.handleBlur}
@@ -696,7 +652,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 				</div>
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
-				{/* Save button to submit the form */}
 				<Button color='warning' onClick={handleResetForm}>
 					Reset
 				</Button>
@@ -707,13 +662,9 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 		</Modal>
 	);
 };
-// Prop types definition for ItemAddModal component
 ItemAddModal.propTypes = {
 	id: PropTypes.string.isRequired,
 	isOpen: PropTypes.bool.isRequired,
 	setIsOpen: PropTypes.func.isRequired,
 };
 export default ItemAddModal;
-function async() {
-	throw new Error('Function not implemented.');
-}

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { NextPage } from 'next';
-import useDarkMode from '../../../hooks/useDarkMode';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import SubHeader, {
 	SubHeaderLeft,
@@ -24,23 +23,10 @@ import PaginationButtons, {
 	dataPagination,
 	PER_COUNT,
 } from '../../../components/PaginationButtons';
-interface User {
-	cid: string;
-	image: string;
-	name: string;
-	position: string;
-	email: string;
-	password: string;
-	mobile: number;
-	pin_number: number;
-	status: boolean;
-}
 
 const Index: NextPage = () => {
-	// Dark mode
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
-	const { darkModeStatus } = useDarkMode();
 	const [searchTerm, setSearchTerm] = useState('');
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
 	const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
@@ -54,7 +40,7 @@ const Index: NextPage = () => {
 	];
 	const { data: users, error, isLoading, refetch } = useGetUsersQuery(undefined);
 	const [updateuser] = useUpdateUserMutation();
-	//delete user
+
 	// Update the user's status to false instead of deleting
 	const handleClickDelete = async (user: any) => {
 		try {
@@ -69,14 +55,11 @@ const Index: NextPage = () => {
 			});
 			if (result.isConfirmed) {
 				try {
-					// Set the user's status to false (soft delete)
 					const values = await {
 						...user,status:false
 					};
 					await updateuser(values);
-					// Refresh the list after deletion
 					Swal.fire('Deleted!', 'User has been deleted.', 'success');
-					 // This will refresh the list of users to reflect the changes
 				} catch (error) {
 					console.error('Error during handleDelete: ', error);
 					Swal.fire(
@@ -96,7 +79,6 @@ const Index: NextPage = () => {
 		<PageWrapper>
 			<SubHeader>
 				<SubHeaderLeft>
-					{/* Search input  */}
 					<label
 						className='border-0 bg-transparent cursor-pointer me-0'
 						htmlFor='searchInput'>
@@ -107,7 +89,6 @@ const Index: NextPage = () => {
 						type='search'
 						className='border-0 shadow-none bg-transparent'
 						placeholder='Search...'
-						// onChange={formik.handleChange}
 						onChange={(event: any) => {
 							setSearchTerm(event.target.value);
 						}}
@@ -141,11 +122,11 @@ const Index: NextPage = () => {
 														setSelectedUsers(
 															(prevUsers) =>
 																checked
-																	? [...prevUsers, value] // Add category if checked
+																	? [...prevUsers, value] 
 																	: prevUsers.filter(
 																			(user) =>
 																				user !== value,
-																	  ), // Remove category if unchecked
+																	  ),
 														);
 													}}
 												/>
@@ -169,7 +150,6 @@ const Index: NextPage = () => {
 			<Page>
 				<div className='row h-100'>
 					<div className='col-12'>
-						{/* Table for displaying user data */}
 						<Card stretch>
 							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
 								<div className='flex-grow-1 text-center text-info'>
@@ -201,7 +181,7 @@ const Index: NextPage = () => {
 										)}
 										{users &&
 										dataPagination(users, currentPage, perPage)
-												.filter((user: any) => user.status === true) // Only show users where status is true
+												.filter((user: any) => user.status === true) 
 												.filter((user: any) =>
 													searchTerm
 														? user.nic
@@ -269,7 +249,7 @@ const Index: NextPage = () => {
 				setIsOpen={setEditModalStatus}
 				isOpen={editModalStatus}
 				id={id}
-				refetch={refetch} // Pass refetch function here
+				refetch={refetch}
 			/>
 			<SellerDeleteModal setIsOpen={setDeleteModalStatus} isOpen={deleteModalStatus} id='' />
 		</PageWrapper>

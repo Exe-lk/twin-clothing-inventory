@@ -5,12 +5,10 @@ export const userApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://twinclothinginventory.netlify.app/api/' }),
   tagTypes: ['User'],
   endpoints: (builder) => ({
-    // Read: Fetch all user
     getUsers: builder.query({
       query: () => 'user/route',
-      providesTags: ['User'], // The endpoint to fetch all user
+      providesTags: ['User'], 
     }),
-    // Create: Add a new user
     addUser: builder.mutation({
       query: (newUser) => ({
         url: 'user/route',

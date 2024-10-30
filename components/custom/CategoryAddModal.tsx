@@ -8,7 +8,7 @@ import Input from '../bootstrap/forms/Input';
 import Button from '../bootstrap/Button';
 import Swal from 'sweetalert2';
 import { useAddCategoryMutation } from '../../redux/slices/categoryApiSlice';
-import { useGetCategoriesQuery } from '../../redux/slices/categoryApiSlice'; // Import the query
+import { useGetCategoriesQuery } from '../../redux/slices/categoryApiSlice';
 
 interface CategoryEditModalProps {
 	id: string;
@@ -18,8 +18,7 @@ interface CategoryEditModalProps {
 
 const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const [addCategory, { isLoading }] = useAddCategoryMutation();
-	const { refetch } = useGetCategoriesQuery(undefined); // Refetch the categories after adding a new one
-
+	const { refetch } = useGetCategoriesQuery(undefined); 
 	const formik = useFormik({
 		initialValues: {
 			categoryname: '',
@@ -33,35 +32,27 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 			if (!values.categoryname) {
 				errors.categoryname = 'Required';
 			}
-
 			return errors;
 		},
 		onSubmit: async (values) => {
 			try {
-				// Show a processing modal
-				const process = Swal.fire({
+				Swal.fire({
 					title: 'Processing...',
 					html: 'Please wait while the data is being processed.<br><div class="spinner-border" role="status"></div>',
 					allowOutsideClick: false,
 					showCancelButton: false,
 					showConfirmButton: false,
 				});
-				
+
 				try {
-					// Add the new category
 					const response: any = await addCategory(values).unwrap();
-					console.log(response);
-
-					// Refetch categories to update the list
 					refetch();
-
-					// Success feedback
 					await Swal.fire({
 						icon: 'success',
 						title: 'Category Created Successfully',
 					});
-					formik.resetForm()
-					setIsOpen(false); // Close the modal after successful addition
+					formik.resetForm();
+					setIsOpen(false);
 				} catch (error) {
 					await Swal.fire({
 						icon: 'error',
@@ -129,7 +120,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 									value={formik.values.subcategory[index]}
 									onBlur={formik.handleBlur}
 									isValid={formik.isValid}
-									// isTouched={formik.touched.subcategory?.[index]}
 									invalidFeedback={formik.errors.subcategory?.[index]}
 									validFeedback='Looks good!'
 								/>

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
@@ -8,24 +8,17 @@ import Button from '../bootstrap/Button';
 import Swal from 'sweetalert2';
 import { useUpdateJobMutation, useGetJobsQuery } from '../../redux/slices/jobApiSlice';
 
-// Define the props for the ItemAddModal component
 interface ItemAddModalProps {
 	id: string;
 	isOpen: boolean;
 	setIsOpen(...args: unknown[]): unknown;
 }
-interface Category {
-	categoryname: string;
-	subcategory: string[];
-}
-// ItemAddModal component definition
+
 const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const { data: job } = useGetJobsQuery(undefined);
-	const [updatejob, { isLoading }] = useUpdateJobMutation();
+	const [updatejob] = useUpdateJobMutation();
 	const jobToEdit = job?.find((job: any) => job.id === id);
-
 	const divRef: any = useRef(null);
-	// Initialize formik for form management
 	const formik = useFormik({
 		initialValues: {
 			id: jobToEdit?.id,
@@ -50,7 +43,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			if (!values.client) {
 				errors.client = 'Required';
 			}
-
 			return errors;
 		},
 		onSubmit: async (values) => {
@@ -63,7 +55,6 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					showConfirmButton: false,
 				});
 				await updatejob(values).unwrap();
-
 				Swal.fire('Edited!', 'job has been update successfully.', 'success');
 				formik.resetForm();
 			} catch (error) {
@@ -74,7 +65,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 	});
 
 	return (
-		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}   aria-hidden={!isOpen}>
+		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id} aria-hidden={!isOpen}>
 			<ModalHeader
 				setIsOpen={() => {
 					setIsOpen(false);
@@ -118,12 +109,10 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-
-					<div ref={divRef}>{/* <Barcode value={formik.values.barcode} /> */}</div>
+					<div ref={divRef}></div>
 				</div>
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
-				{/* Save button to submit the form */}
 				<Button color='info' onClick={formik.handleSubmit}>
 					Save
 				</Button>
@@ -131,13 +120,10 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 		</Modal>
 	);
 };
-// Prop types definition for ItemAddModal component
+
 ItemAddModal.propTypes = {
 	id: PropTypes.string.isRequired,
 	isOpen: PropTypes.bool.isRequired,
 	setIsOpen: PropTypes.func.isRequired,
 };
 export default ItemAddModal;
-function async() {
-	throw new Error('Function not implemented.');
-}

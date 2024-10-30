@@ -1,11 +1,10 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import PropTypes from 'prop-types';
-import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
+import Modal, { ModalBody, ModalHeader, ModalTitle } from '../bootstrap/Modal';
 import Button from '../bootstrap/Button';
 import Swal from 'sweetalert2';
 import {
 	useDeleteJobMutation,
-	useGetJobsQuery,
 	useGetDeletedJobsQuery,
 	useUpdateJobMutation,
 } from '../../redux/slices/jobApiSlice';
@@ -20,7 +19,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 	const [updatejob] = useUpdateJobMutation();
 	const [deletejob] = useDeleteJobMutation();
 	const { refetch } = useGetDeletedJobsQuery(undefined);
-	
+
 	const handleClickDelete = async (job: any) => {
 		try {
 			const { value: inputText } = await Swal.fire({
@@ -38,13 +37,9 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 				cancelButtonColor: '#d33',
 				confirmButtonText: 'Yes, delete it!',
 			});
-
 			if (inputText === 'DELETE') {
 				await deletejob(job.id).unwrap();
 				Swal.fire('Deleted!', 'The job has been deleted.', 'success');
-
-				// Perform delete action here
-				console.log('Delete confirmed');
 			}
 		} catch (error) {
 			console.error('Error deleting document: ', error);
@@ -56,7 +51,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -68,9 +62,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					...job,
 					status: true,
 				};
-
 				await updatejob(values);
-
 				Swal.fire('Restored!', 'The job has been restored.', 'success');
 			}
 		} catch (error) {
@@ -80,8 +72,8 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 	};
 
 	const handleDeleteAll = async () => {
-		if(job.length==0){
-			return
+		if (job.length == 0) {
+			return;
 		}
 		try {
 			const { value: inputText } = await Swal.fire({
@@ -105,8 +97,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					await deletejob(jobs.id).unwrap();
 				}
 				Swal.fire('Deleted!', 'All jobs have been deleted.', 'success');
-
-				// Refetch categories after deletion
 				refetch();
 			}
 		} catch (error) {
@@ -114,11 +104,9 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 			Swal.fire('Error', 'Failed to delete all job.', 'error');
 		}
 	};
-
-	// Handle restore all categories
 	const handleRestoreAll = async () => {
-		if(job.length==0){
-			return
+		if (job.length == 0) {
+			return;
 		}
 		try {
 			const result = await Swal.fire({
@@ -135,14 +123,11 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 				for (const jobs of job) {
 					const values = {
 						...jobs,
-						status: true, // Assuming restoring means setting status to true
-						
+						status: true,
 					};
 					await updatejob(values).unwrap();
 				}
 				Swal.fire('Restored!', 'All jobs have been restored.', 'success');
-
-				// Refetch categories after restoring
 				refetch();
 			}
 		} catch (error) {
@@ -162,8 +147,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 							<th>Job ID</th>
 							<th>Client Name</th>
 							<th>Description</th>
-							
-						
 							<th>
 								<Button
 									icon='Delete'
@@ -183,7 +166,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 						</tr>
 					</thead>
 					<tbody>
-					{isLoading && (
+						{isLoading && (
 							<tr>
 								<td>Loading...</td>
 							</tr>
@@ -199,7 +182,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 									<td>{job.code}</td>
 									<td>{job.client}</td>
 									<td>{job.description}</td>
-
 									<td>
 										<Button
 											icon='Restore'
@@ -222,7 +204,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					</tbody>
 				</table>
 			</ModalBody>
-			
 		</Modal>
 	);
 };
