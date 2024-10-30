@@ -11,18 +11,18 @@ import Dropdown, { DropdownToggle, DropdownMenu } from '../../../components/boot
 import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
 import { useGetTransactionsQuery } from '../../../redux/slices/transactionHistoryApiSlice';
-
+import PaginationButtons, {
+	dataPagination,
+	PER_COUNT,
+} from '../../../components/PaginationButtons';
 const Index: NextPage = () => {
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
 	const [searchTerm, setSearchTerm] = useState(''); // State for search term
 	const { data: transaction, error, isLoading } = useGetTransactionsQuery(undefined);
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
-	const position = [
-		{ position: 'Return' },
-		{ position: 'Restore' },
-		{ position: 'Stock Out' },
-		
-	];
+	const position = [{ position: 'Return' }, { position: 'Restore' }, { position: 'Stock Out' }];
 	return (
 		<PageWrapper>
 			<SubHeader>
@@ -56,7 +56,7 @@ const Index: NextPage = () => {
 						<DropdownMenu isAlignmentEnd size='lg'>
 							<div className='container py-2'>
 								<div className='row g-3'>
-								<FormGroup label='Category' className='col-12'>
+									<FormGroup label='Category' className='col-12'>
 										<ChecksGroup>
 											{position.map((category: any, index) => (
 												<Checks
@@ -65,13 +65,18 @@ const Index: NextPage = () => {
 													label={category.position}
 													name={category.position}
 													value={category.position}
-													checked={selectedCategories.includes(category.position)}
+													checked={selectedCategories.includes(
+														category.position,
+													)}
 													onChange={(event: any) => {
 														const { checked, value } = event.target;
 														setSelectedCategories((prevCategories) =>
 															checked
 																? [...prevCategories, value]
-																: prevCategories.filter((category) => category !== value)
+																: prevCategories.filter(
+																		(category) =>
+																			category !== value,
+																  ),
 														);
 													}}
 												/>
@@ -123,7 +128,7 @@ const Index: NextPage = () => {
 											</tr>
 										)}
 										{transaction &&
-											transaction
+											dataPagination(transaction, currentPage, perPage)
 												.filter((transaction: any) =>
 													searchTerm
 														? transaction.code
@@ -133,7 +138,9 @@ const Index: NextPage = () => {
 												)
 												.filter((transaction: any) =>
 													selectedCategories.length > 0
-														? selectedCategories.includes(transaction.order_type)
+														? selectedCategories.includes(
+																transaction.order_type,
+														  )
 														: true,
 												)
 												.map((transaction: any) => {
@@ -141,27 +148,57 @@ const Index: NextPage = () => {
 													let textColorClass = '';
 													if (transaction.order_type == 'Restore') {
 														textColorClass = 'text-warning';
-													} else if (transaction.order_type === 'Return') {
+													} else if (
+														transaction.order_type === 'Return'
+													) {
 														textColorClass = 'text-danger';
-													} else if (transaction.order_type === 'Stock Out') {
+													} else if (
+														transaction.order_type === 'Stock Out'
+													) {
 														textColorClass = 'text-success';
 													}
 													return (
-														<tr key={transaction.id} className={textColorClass}>
-															<td className={textColorClass}>{transaction.code}</td>
-															<td className={textColorClass}>{transaction.date}</td>
-															<td className={textColorClass}>{transaction.order_type}</td>
-															<td className={textColorClass}>{transaction.quentity} {transaction.uom}</td>
-															<td className={textColorClass}>{transaction.lot_type}</td>
-															<td className={textColorClass}>{transaction.category||transaction.type}</td>
-															<td className={textColorClass}>{transaction.subcategory}</td>
-															
+														<tr
+															key={transaction.id}
+															className={textColorClass}>
+															<td className={textColorClass}>
+																{transaction.code}
+															</td>
+															<td className={textColorClass}>
+																{transaction.date}
+															</td>
+															<td className={textColorClass}>
+																{transaction.order_type}
+															</td>
+															<td className={textColorClass}>
+																{transaction.quentity}{' '}
+																{transaction.uom}
+															</td>
+															<td className={textColorClass}>
+																{transaction.lot_type}
+															</td>
+															<td className={textColorClass}>
+																{transaction.category ||
+																	transaction.type}
+															</td>
+															<td className={textColorClass}>
+																{transaction.subcategory}
+															</td>
 														</tr>
 													);
 												})}
 									</tbody>
 								</table>
 							</CardBody>
+
+							<PaginationButtons
+								data={transaction || []}
+								label='parts'
+								setCurrentPage={setCurrentPage}
+								currentPage={currentPage}
+								perPage={perPage}
+								setPerPage={setPerPage}
+							/>
 						</Card>
 					</div>
 				</div>

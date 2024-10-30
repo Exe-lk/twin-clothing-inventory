@@ -48,6 +48,12 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 
 	const lotToEdit = lots?.find((lot: any) => lot.id === id);
 
+	useEffect(() => {
+		if (lotToEdit) {
+		  setSelectedOption(lotToEdit.type);
+		}
+	  }, [lotToEdit]);
+	  
 	console.log(lotToEdit);
 	const formik = useFormik({
 		initialValues: {
@@ -86,14 +92,13 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			if (!values.description) errors.description = 'Required';
 			if (selectedOption == 'Fabric' && !values.bales) errors.bales = 'Required';
 			if (selectedOption == 'Other' && !values.category) errors.category = 'Required';
-			if (selectedOption != 'Fabric' && !values.subcategory) errors.subcategory = 'Required';
-			if ( !values.color) errors.color = 'Required';
+			if (selectedOption == 'Thread' && !values.subcategory) errors.subcategory = 'Required';
+			if (!values.color) errors.color = 'Required';
 			if (selectedOption == 'Fabric' && !values.fabric_type) errors.fabric_type = 'Required';
 			if (selectedOption == 'Fabric' && !values.gsm) errors.gsm = 'Required';
 			if (selectedOption == 'Fabric' && !values.width) errors.width = 'Required';
 			if (selectedOption == 'Fabric' && !values.knit_type) errors.knit_type = 'Required';
 			if (selectedOption == 'Thread' && !values.Yrds) errors.Yrds = 'Required';
-
 
 			return errors;
 		},
@@ -120,7 +125,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 
 	const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSelectedOption(event.target.value);
-		handleCategoryChange(event)
+		handleCategoryChange(event);
 	};
 	const handleCategoryChange = (e: any) => {
 		const selectedCategory = e.target.value;
@@ -149,7 +154,12 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
-			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
+			<ModalHeader
+				setIsOpen={() => {
+					setIsOpen(false);
+					formik.resetForm();
+				}}
+				className='p-4'>
 				<ModalTitle id=''>{'Edit LOT'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>
@@ -301,10 +311,12 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								<Option value='Add new'>Add new</Option>
 
 								{color &&
-									color.map((color: any) => (
-										<>
-											<Option value={color.name}>{color.name}</Option>
-										</>
+									color.map((colorItem: any) => (
+										<Option
+											key={colorItem.id || colorItem.name}
+											value={colorItem.name}>
+											{colorItem.name}
+										</Option>
 									))}
 							</Select>
 						) : (
@@ -322,6 +334,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					<FormGroup id='GRN_number' label='GRN Number' className='col-md-6'>
 						<Input
 							type='number'
+							min={0}
 							onChange={formik.handleChange}
 							value={formik.values.GRN_number}
 							onBlur={formik.handleBlur}
@@ -339,10 +352,12 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							isValid={formik.isValid}
 							validFeedback='Looks good!'>
 							{supplier &&
-								supplier.map((supplier: any) => (
-									<>
-										<Option value={supplier.name}>{supplier.name}</Option>
-									</>
+								supplier.map((supplierItem: any) => (
+									<Option
+										key={supplierItem.id || supplierItem.name}
+										value={supplierItem.name}>
+										{supplierItem.name}
+									</Option>
 								))}
 						</Select>
 					</FormGroup>
@@ -374,6 +389,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					<FormGroup id='qty' label='Qty' className='col-md-6'>
 						<Input
 							type='number'
+							min={0}
 							onChange={formik.handleChange}
 							value={formik.values.qty}
 							onBlur={formik.handleBlur}
@@ -416,12 +432,12 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 										{/* Existing fabric type options can be dynamically loaded here */}
 
 										{fabric &&
-											fabric.map((fabric: any) => (
-												<>
-													<Option value={fabric.name}>
-														{fabric.name}
-													</Option>
-												</>
+											fabric.map((fabricItem: any) => (
+												<Option
+													key={fabricItem.id || fabricItem.name}
+													value={fabricItem.name}>
+													{fabricItem.name}
+												</Option>
 											))}
 									</Select>
 								)}
@@ -453,10 +469,12 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 										<Option value=''>Select GSM</Option>
 										<Option value='Add new'>Add New</Option>
 										{gsm &&
-											gsm.map((gsm: any) => (
-												<>
-													<Option value={gsm.name}>{gsm.name}</Option>
-												</>
+											gsm.map((gsmItem: any) => (
+												<Option
+													key={gsmItem.id || gsmItem.name}
+													value={gsmItem.name}>
+													{gsmItem.name}
+												</Option>
 											))}
 									</Select>
 								)}
@@ -464,6 +482,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							<FormGroup id='width' label='Width' className='col-md-6'>
 								<Input
 									type='number'
+									min={0}
 									onChange={formik.handleChange}
 									value={formik.values.width}
 									onBlur={formik.handleBlur}
@@ -498,14 +517,14 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 										onBlur={formik.handleBlur}
 										isValid={formik.isValid}
 										validFeedback='Looks good!'>
-										{/* <Option value=''>Select Knit Type</Option> */}
-
 										<Option value='Add new'>Add new</Option>
 										{knit &&
-											knit.map((knit: any) => (
-												<>
-													<Option value={knit.name}>{knit.name}</Option>
-												</>
+											knit.map((knitItem: any) => (
+												<Option
+													key={knitItem.id || knitItem.name}
+													value={knitItem.name}>
+													{knitItem.name}
+												</Option>
 											))}
 									</Select>
 								)}
@@ -527,6 +546,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							<FormGroup id='bales' label='Bales' className='col-md-6'>
 								<Input
 									type='number'
+									min={0}
 									onChange={formik.handleChange}
 									value={formik.values.bales}
 									onBlur={formik.handleBlur}
@@ -544,6 +564,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							<FormGroup id='Yrds' label='Yrds per cone' className='col-md-6'>
 								<Input
 									type='number'
+									min={0}
 									onChange={formik.handleChange}
 									value={formik.values.Yrds}
 									onBlur={formik.handleBlur}

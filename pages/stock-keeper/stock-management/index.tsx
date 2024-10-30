@@ -17,7 +17,9 @@ import {
 	useGetDeletedLotMovementsQuery,
 } from '../../../redux/slices/LotMovementApiSlice';
 
+
 function index() {
+
 	const [toggleRightPanel, setToggleRightPanel] = useState(false);
 	// const [orderedItems, setOrderedItems] = useState<any>([]);
 	const [addtransaction, { isLoading }] = useAddTransactionMutation();
@@ -118,12 +120,12 @@ function index() {
 					</Card>
 				</div>
 			</div>
-			<CommonRightPanel
+			{/* <CommonRightPanel
 				setOpen={setToggleRightPanel}
 				isOpen={toggleRightPanel}
 				orderedItems={orderedItems}
 				id={id}
-			/>
+			/> */}
 		</PageWrapper>
 	);
 }

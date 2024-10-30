@@ -54,7 +54,7 @@ export const addminPagesMenu = {
 		subMenu: null,
 	},
 	seller: {
-		id: 'lot',
+		id: 'lot1',
 		text: 'Supplier Management',
 		path: 'admin/seller-management',
 		icon: 'SelectAll',
@@ -68,7 +68,7 @@ export const addminPagesMenu = {
 		subMenu: null,
 	},
 	action: {
-		id: 'user',
+		id: 'user1',
 		text: 'User Action ',
 		path: 'admin/user-action',
 		icon: 'SupervisedUserCircle',
@@ -88,25 +88,25 @@ export const addminPagesMenu = {
 			// 	icon: 'Groups',
 			// },
 			color: {
-				id: 'fluidSingle',
+				id: 'fluidSingle1',
 				text: 'Color',
 				path: 'admin/setting/color',
 				icon: 'ColorLens',
 			},
 			fabric: {
-				id: 'fluidSingle',
+				id: 'fluidSingle2',
 				text: 'Fabric',
 				path: 'admin/setting/fabric-type',
 				icon: 'AppSettingsAlt',
 			},
 			gsm: {
-				id: 'fluidSingle',
+				id: 'fluidSingle3',
 				text: 'GSM',
 				path: 'admin/setting/gsm',
 				icon: 'AlignVerticalCenter',
 			},
 			knet: {
-				id: 'fluidSingle',
+				id: 'fluidSingle4',
 				text: 'Knit Type',
 				path: 'admin/setting/knit-type',
 				icon: 'AirlineSeatLegroomExtra',
@@ -120,25 +120,25 @@ export const addminPagesMenu = {
 					
 					
 					color: {
-						id: 'fluidSingle',
+						id: 'fluidSingle5',
 						text: 'Color',
 						path: 'admin/setting/recycle-bin/color',
 						icon: 'ColorLens',
 					},
 					fabric: {
-						id: 'fluidSingle',
+						id: 'fluidSingle6',
 						text: 'Fabric',
 						path: 'admin/setting/recycle-bin/fabric',
 						icon: 'AppSettingsAlt',
 					},
 					gsm: {
-						id: 'fluidSingle',
+						id: 'fluidSingle7',
 						text: 'GSM',
 						path: 'admin/setting/recycle-bin/gsm',
 						icon: 'AlignVerticalCenter',
 					},
 					knet: {
-						id: 'fluidSingle',
+						id: 'fluidSingle8',
 						text: 'Knit Type',
 						path: 'admin/setting/recycle-bin/knit-type',
 						icon: 'AirlineSeatLegroomExtra',
@@ -308,14 +308,14 @@ export const viewmenu = {
 		subMenu: null,
 	},
 	user: {
-		id: 'user',
+		id: 'user4',
 		text: 'Users',
 		path: 'viewer/users',
 		icon: 'SupervisedUserCircle',
 		subMenu: null,
 	},
 	action: {
-		id: 'user',
+		id: 'user3',
 		text: 'User Action ',
 		path: 'viewer/user-action',
 		icon: 'SupervisedUserCircle',
@@ -396,7 +396,7 @@ export const demoPagesMenu = {
 				icon: 'ViewArray',
 			},
 			fluidSingle: {
-				id: 'fluidSingle',
+				id: 'fluidSingle99',
 				text: 'Fluid',
 				path: 'single-pages/fluid',
 				icon: 'ViewDay',

@@ -22,9 +22,14 @@ import { toPng, toSvg } from 'html-to-image';
 import { DropdownItem } from '../../../components/bootstrap/Dropdown';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
+import PaginationButtons, {
+	dataPagination,
+	PER_COUNT,
+} from '../../../components/PaginationButtons';
 
 const Index: NextPage = () => {
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
 	const { darkModeStatus } = useDarkMode(); // Dark mode
 	const [searchTerm, setSearchTerm] = useState('');
 	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State to control the visibility of the Add Seller modal
@@ -183,9 +188,7 @@ const Index: NextPage = () => {
 						{/* Table for displaying customer data */}
 						<Card stretch>
 							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
-								<div className='flex-grow-1 text-center text-info '>
-									Suppliers
-								</div>
+								<div className='flex-grow-1 text-center text-info '>Suppliers</div>
 								{/* dropdown for export */}
 								<Dropdown>
 									<DropdownToggle hasIcon={false}>
@@ -230,7 +233,7 @@ const Index: NextPage = () => {
 											</tr>
 										)}
 										{supplier &&
-											supplier
+											dataPagination(supplier, currentPage, perPage)
 												.filter((supplier: any) =>
 													searchTerm
 														? supplier.name
@@ -250,6 +253,15 @@ const Index: NextPage = () => {
 									</tbody>
 								</table>
 							</CardBody>
+
+							<PaginationButtons
+								data={supplier || []}
+								label='parts'
+								setCurrentPage={setCurrentPage}
+								currentPage={currentPage}
+								perPage={perPage}
+								setPerPage={setPerPage}
+							/>
 						</Card>
 					</div>
 				</div>

@@ -151,7 +151,12 @@ const CustomerEditModal: FC<ICustomerEditModalProps> = ({ id, isOpen, setIsOpen 
 
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
-			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
+			<ModalHeader
+				setIsOpen={() => {
+					setIsOpen(false);
+					formik.resetForm();
+				}}
+				className='p-4'>
 				<ModalTitle id="">{'Change Location'}</ModalTitle>
 			</ModalHeader>
 			<ModalBody className='px-4'>

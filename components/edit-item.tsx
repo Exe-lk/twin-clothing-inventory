@@ -90,11 +90,12 @@ const Index: React.FC<KeyboardProps> = ({
 					</CardLabel>
 				</CardHeader>
 				<CardBody isScrollable className='table-responsive'>
-					{orderedItems?.map((order: any, index: any) => (
+					<>
+					{orderedItems?.map((order: any) => (
 						<Card
-							key={index}
+							key={order.id} // Use a unique identifier instead of the index
 							className={classNames('col-12 p-3', {
-								'bg-info': index === focusedIndex,
+								'bg-info': orderedItems.indexOf(order) === focusedIndex,
 							})}>
 							<div className={classNames('todo-item')}>
 								<div className='col d-flex align-items-center'>
@@ -207,6 +208,7 @@ const Index: React.FC<KeyboardProps> = ({
 							</div>
 						</Card>
 					))}
+					</>
 				</CardBody>
 			</Card>
 		</div>

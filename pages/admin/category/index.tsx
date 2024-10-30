@@ -26,17 +26,21 @@ import { DropdownMenu } from '../../../components/bootstrap/Dropdown';
 import { DropdownItem } from '../../../components/bootstrap/Dropdown';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-// Define the functional component for the index page
+import PaginationButtons, {
+	dataPagination,
+	PER_COUNT,
+} from '../../../components/PaginationButtons';
+
 const Index: NextPage = () => {
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
 	const { darkModeStatus } = useDarkMode();
 	const [searchTerm, setSearchTerm] = useState('');
 	const [addModalStatus, setAddModalStatus] = useState(false);
 	const [deleteModalStatus, setDeleteModalStatus] = useState(false);
 	const [editModalStatus, setEditModalStatus] = useState(false);
 	const [id, setId] = useState<string>('');
-
-	// Fetch categories using RTK Query from the custom API
-	const { data: categories, error, isLoading } = useGetCategoriesQuery(undefined);
+	const { data: categories, error, isLoading } = useGetCategoriesQuery("");
 	const [updateCategory] = useUpdateCategoryMutation();
 
 	const handleClickDelete = async (category: any) => {
@@ -266,8 +270,8 @@ const Index: NextPage = () => {
 							</CardTitle>
 
 							<CardBody isScrollable className='table-responsive'>
-								<table className='table table-modern table-bordered border-primary table-hover text-center'>
-									<thead>
+								<table className='table table-hover table-bordered border-primary'>
+									<thead className={'table-dark border-primary'}>
 										<tr>
 											<th>Category name</th>
 											<th>Sub Category</th>
@@ -286,7 +290,7 @@ const Index: NextPage = () => {
 											</tr>
 										)}
 										{categories &&
-											categories
+											dataPagination(categories, currentPage, perPage)
 												.filter((category: any) =>
 													searchTerm
 														? category.name
@@ -294,14 +298,14 @@ const Index: NextPage = () => {
 																.includes(searchTerm.toLowerCase())
 														: true,
 												)
-												.map((category: any) => (
-													<tr key={category.cid}>
+												.map((category: any, index: any) => (
+													<tr key={index}>
 														<td>{category.name}</td>
 														<td>
 															<ul>
 																{category.subcategory?.map(
 																	(sub: any, index: any) => (
-																		<p>{sub}</p>
+																		<p key={index}>{sub}</p> // Add a unique key prop here
 																	),
 																)}
 															</ul>
@@ -317,6 +321,7 @@ const Index: NextPage = () => {
 																Edit
 															</Button>
 															<Button
+															isDisable={category.name=="Fabric" || category.name=="Thread"}
 																className='m-2'
 																icon='Delete'
 																color='danger'
@@ -337,6 +342,15 @@ const Index: NextPage = () => {
 									Recycle Bin
 								</Button>
 							</CardBody>
+
+							<PaginationButtons
+								data={categories||[]}
+								label='parts'
+								setCurrentPage={setCurrentPage}
+								currentPage={currentPage}
+								perPage={perPage}
+								setPerPage={setPerPage}
+							/>
 						</Card>
 					</div>
 				</div>
