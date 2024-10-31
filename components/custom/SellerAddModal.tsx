@@ -1,41 +1,21 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
-import showNotification from '../extras/showNotification';
-import Icon from '../icon/Icon';
 import FormGroup from '..//bootstrap/forms/FormGroup';
 import Input from '../bootstrap/forms/Input';
 import Button from '../bootstrap/Button';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
-import { firestore, storage } from '../../firebaseConfig';
 import Swal from 'sweetalert2';
-import Select from '../bootstrap/forms/Select';
-import Option, { Options } from '../bootstrap/Option';
-import { useGetSuppliersQuery, useAddSupplierMutation } from '../../redux/slices/supplierAPISlice'; // Import the query
+import { useGetSuppliersQuery, useAddSupplierMutation } from '../../redux/slices/supplierAPISlice';
 
-interface Category {
-	categoryId: string;
-	categoryname: string;
-}
-interface Item {
-	itemId: string;
-	name: string;
-	category: string;
-}
-// Define the props for the SellerAddModal component
 interface SellerAddModalProps {
 	id: string;
 	isOpen: boolean;
 	setIsOpen(...args: unknown[]): unknown;
 }
 
-// SellerAddModal component definition
 const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
-	const [categories, setCategories] = useState<Category[]>([]);
-	const [items, setItems] = useState<Item[]>([]);
-
-	const [addsupplier, { isLoading }] = useAddSupplierMutation();
+	const [addsupplier] = useAddSupplierMutation();
 	const { refetch } = useGetSuppliersQuery(undefined);
 
 	// Initialize formik for form management
@@ -58,31 +38,22 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 				company_email?: string;
 				products?: string[];
 			} = {};
-			// Check if 'name' is provided
 			if (!values.name) {
 				errors.name = 'Required';
 			}
-
-			// Check if 'phone' is provided and is exactly 10 digits
 			if (!values.phone) {
 				errors.phone = 'Required';
 			} else if (!/^\d{10}$/.test(values.phone)) {
 				errors.phone = 'Phone number must be exactly 10 digits';
 			}
-
-			// Check if 'email' is provided and has a valid email format
 			if (!values.email) {
 				errors.email = 'Required';
 			} else if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(values.email)) {
 				errors.email = 'Invalid email address';
 			}
-
-			// Check if 'company_name' is provided
 			if (!values.company_name) {
 				errors.company_name = 'Required';
 			}
-
-			// Check if 'company_email' is provided and has a valid email format
 			if (!values.company_email) {
 				errors.company_email = 'Required';
 			} else if (
@@ -90,9 +61,6 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			) {
 				errors.company_email = 'Invalid email address';
 			}
-			// if (!values.product) {
-			// 	errors.product = 'Required';
-			// }
 			return errors;
 		},
 		onSubmit: async (values) => {
@@ -104,14 +72,9 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					showCancelButton: false,
 					showConfirmButton: false,
 				});
-				const response: any = await addsupplier(values).unwrap();
-				console.log(response);
-
-				// Refetch categories to update the list
+				await addsupplier(values).unwrap();
 				refetch();
-
 				setIsOpen(false);
-
 				Swal.fire('Added!', 'Supplier has been added successfully.', 'success');
 				formik.resetForm();
 			} catch (error) {
@@ -119,21 +82,6 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			}
 		},
 	});
-	// Function to handle adding a new product input field
-	const addProductField = () => {
-		formik.setValues({
-			...formik.values,
-			product: [...formik.values.product, { category: '', name: '' }],
-		});
-	};
-	const removeProductField = (index: number) => {
-		const newProducts = [...formik.values.product];
-		newProducts.splice(index, 1);
-		formik.setValues({
-			...formik.values,
-			product: newProducts,
-		});
-	};
 
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
@@ -203,80 +151,9 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-
-					{/* {formik.values.product.map((product, index) => (
-						<FormGroup
-							key={index}
-							id={`product-${index}`}
-							label={`Product ${index + 1}`}
-							className='col-md-6'>
-							<div className='d-flex align-items-center'>
-								<Select
-									ariaLabel='Select Product'
-									value={product.category} // Use category value
-									onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-										const newProducts = [...formik.values.product];
-										newProducts[index] = {
-											...newProducts[index],
-											category: event.target.value,
-										}; // Update category
-										formik.setFieldValue('product', newProducts);
-									}}>
-									<Option value='' disabled>
-										Select Product
-									</Option>
-									{categories.map((category) => (
-										<Option
-											key={category.categoryId}
-											value={category.categoryname}>
-											{category.categoryname}
-										</Option>
-									))}
-								</Select>
-								{product.category && ( // Show item dropdown only when category is selected
-									<Select
-										ariaLabel={`Select item for ${product.category}`} // Use selected category
-										value={product.name} // Use item name value
-										onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-											const newProducts = [...formik.values.product];
-											newProducts[index] = {
-												...newProducts[index],
-												name: event.target.value,
-											}; // Update item name
-											formik.setFieldValue('product', newProducts);
-										}}>
-										<Option value='' disabled>
-											Select Item
-										</Option>
-										{items
-											.filter((item) => item.category === product.category) // Filter items based on selected category
-											.map((item) => (
-												<Option key={item.itemId} value={item.name}>
-													{item.name}
-												</Option>
-											))}
-									</Select>
-								)}
-								<button
-									type='button'
-									onClick={() => removeProductField(index)}
-									className='btn btn-outline-danger ms-2'>
-									<Icon icon='Delete' />
-								</button>
-							</div>
-						</FormGroup>
-					))}
-
-				
-					<div className='col-md-12'>
-						<Button color='info' onClick={addProductField}>
-							Add Product
-						</Button>
-					</div> */}
 				</div>
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
-				{/* Save button to submit the form */}
 				<Button color='info' onClick={formik.handleSubmit}>
 					Save
 				</Button>
@@ -284,7 +161,7 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 		</Modal>
 	);
 };
-// Prop types definition for SellerEditModal component
+
 SellerAddModal.propTypes = {
 	id: PropTypes.string.isRequired,
 	isOpen: PropTypes.bool.isRequired,

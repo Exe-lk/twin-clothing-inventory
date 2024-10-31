@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Card, { CardActions, CardBody, CardHeader, CardLabel, CardTitle } from './bootstrap/Card';
+import Card, { CardBody, CardHeader, CardLabel, CardTitle } from './bootstrap/Card';
 import classNames from 'classnames';
 import useDarkMode from '../hooks/useDarkMode';
-import { getFirstLetter, priceFormat } from '../helpers/helpers';
+import { getFirstLetter } from '../helpers/helpers';
 import Keyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
 import Input from './bootstrap/forms/Input';
@@ -15,35 +15,13 @@ import {
 	useGetLotMovementsQuery,
 } from '../redux/slices/LotMovementApiSlice';
 
-interface Item {
-	cid: string;
-	category: string;
-	image: string;
-	name: string;
-	price: number;
-	quentity: number;
-	reorderlevel: number;
-}
-
-// Define props for the Keyboard component
 interface KeyboardProps {
-	// orderedItems: Item[];
-	// setOrderedItems: React.Dispatch<React.SetStateAction<Item[]>>;
 	isActive: boolean;
 	setActiveComponent: React.Dispatch<React.SetStateAction<'additem' | 'edit'>>;
 }
 
-const Index: React.FC<KeyboardProps> = ({
-	// orderedItems,
-	// setOrderedItems,
-	isActive,
-	setActiveComponent,
-}) => {
-	// Custom hook to manage dark mode
+const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }) => {
 	const { darkModeStatus } = useDarkMode();
-
-	// State variables
-	const [category1, setCategory1] = useState<string>('');
 	const [input, setInput] = useState<string>('');
 	const keyboard = useRef<any>(null);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
@@ -59,6 +37,7 @@ const Index: React.FC<KeyboardProps> = ({
 	const [updateLot] = useUpdateLotMutation();
 	const [addlotmovement] = useAddLotMovementMutation();
 	const { refetch } = useGetLotMovementsQuery(undefined);
+
 	// Handle input change
 	const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const input = event.target.value;
@@ -73,7 +52,6 @@ const Index: React.FC<KeyboardProps> = ({
 	const onChange = (input: string) => {
 		const numericInput = input.replace(/\D/g, '');
 		if (showPopup) {
-			//   setPopupInput(numericInput);
 		} else {
 			setInput(numericInput);
 		}
@@ -101,37 +79,23 @@ const Index: React.FC<KeyboardProps> = ({
 			return;
 		}
 		if (selectedItem) {
-			const { id, ...rest } = selectedItem; // Destructure to remove id
+			const { id, ...rest } = selectedItem;
 			const updatedItem = {
-				...rest, // Spread the remaining properties without id
-				stock_id: id, // Add stock_id with the value of id
+				...rest,
+				stock_id: id,
 				quentity: Number(popupInput),
 				order_type: selectedType,
 				Job_ID: popupInput1,
 			};
 			await addlotmovement(updatedItem).unwrap();
-
-			// Refetch categories to update the list
 			refetch();
-	
-			const quentity=selectedItem.current_quantity-Number(popupInput)
-			
-			const updatedItem1 = { 
-				...selectedItem, 
-				current_quantity: quentity  // Update current_quantity with the new quentity
-			  };
+			const quentity = selectedItem.current_quantity - Number(popupInput);
+			const updatedItem1 = {
+				...selectedItem,
+				current_quantity: quentity,
+			};
 			await updateLot(updatedItem1).unwrap();
 			refetch();
-			// await setOrderedItems((prevItems: any) => {
-			// 	const itemIndex = prevItems.findIndex((item: any) => item.id === updatedItem.id);
-			// 	if (itemIndex > -1) {
-			// 		const updatedItems = [...prevItems];
-			// 		updatedItems[itemIndex] = updatedItem;
-			// 		return updatedItems;
-			// 	} else {
-			// 		return [...prevItems, updatedItem];
-			// 	}
-			// });
 			setPopupInput('');
 			setPopupInput1('');
 			setSelectedType('');
@@ -149,13 +113,6 @@ const Index: React.FC<KeyboardProps> = ({
 	const handlePopupOpen = async (selectedIndex1: any) => {
 		setSelectedItem(items[selectedIndex1] || null);
 		setShowPopup(true);
-	};
-
-	// Handle input change in the popup
-	const onChangePopupInput = async (event: React.ChangeEvent<HTMLInputElement>) => {
-		const input: any = event.target.value;
-
-		await setPopupInput(input);
 	};
 
 	// Handle keyboard events for navigation and actions
@@ -199,9 +156,7 @@ const Index: React.FC<KeyboardProps> = ({
 			popupInputRef.current?.focus();
 		}
 	}, [showPopup]);
-	const handleTypeChange = async (e: any) => {
-		await setSelectedType(e.target.value);
-	};
+
 	return (
 		<div>
 			<div>
@@ -210,11 +165,6 @@ const Index: React.FC<KeyboardProps> = ({
 						<CardLabel>
 							<CardTitle>Lot</CardTitle>
 						</CardLabel>
-						{/* <CardActions>
-						 <Button color='info' isLink icon='Summarize' tag='a'>
-								View
-							</Button> 
-						</CardActions> */}
 					</CardHeader>
 					<CardBody isScrollable>
 						<div className='row g-3'>
@@ -222,13 +172,9 @@ const Index: React.FC<KeyboardProps> = ({
 								items
 									.filter((val: any) => {
 										if (input === '') {
-											
-												return val;
-											
+											return val;
 										} else if (val.code.toString().includes(input)) {
-										
-												return val;
-										
+											return val;
 										}
 										return null;
 									})

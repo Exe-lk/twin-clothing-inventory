@@ -1,19 +1,14 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC} from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
-import showNotification from '../extras/showNotification';
-import Icon from '../icon/Icon';
 import FormGroup from '../bootstrap/forms/FormGroup';
 import Input from '../bootstrap/forms/Input';
 import Button from '../bootstrap/Button';
 import Swal from 'sweetalert2';
 import Select from '../bootstrap/forms/Select';
 import Option from '../bootstrap/Option';
-import {
-	useGetUsersQuery,
-	useUpdateUserMutation,
-} from '../../redux/slices/userManagementApiSlice';
+import { useGetUsersQuery, useUpdateUserMutation } from '../../redux/slices/userManagementApiSlice';
 
 interface UserEditModalProps {
 	id: string;
@@ -23,10 +18,9 @@ interface UserEditModalProps {
 }
 
 const UserEditModal: FC<UserEditModalProps> = ({ id, isOpen, setIsOpen }) => {
-	const{data:users,refetch}=useGetUsersQuery(undefined);
-	const [updateUser,{isLoading}] = useUpdateUserMutation();
-
-	const userToEdit = users?.find((user:any) => user.id === id);
+	const { data: users, refetch } = useGetUsersQuery(undefined);
+	const [updateUser] = useUpdateUserMutation();
+	const userToEdit = users?.find((user: any) => user.id === id);
 
 	const formik = useFormik({
 		initialValues: {
@@ -39,7 +33,13 @@ const UserEditModal: FC<UserEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 		},
 		enableReinitialize: true,
 		validate: (values) => {
-			const errors: {name?: string; role?: string; mobile?: string; email?: string; nic?: string} = {};
+			const errors: {
+				name?: string;
+				role?: string;
+				mobile?: string;
+				email?: string;
+				nic?: string;
+			} = {};
 			if (!values.role) {
 				errors.role = 'Required';
 			}
@@ -65,17 +65,14 @@ const UserEditModal: FC<UserEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 		},
 		onSubmit: async (values) => {
 			try {
-				const process = Swal.fire({
+				Swal.fire({
 					title: 'Processing...',
 					html: 'Please wait while the data is being processed.<br><div class="spinner-border" role="status"></div>',
 					allowOutsideClick: false,
 					showCancelButton: false,
 					showConfirmButton: false,
 				});
-
 				try {
-					// Update the category
-					console.log(values);
 					const data = {
 						name: values.name,
 						role: values.role,
@@ -86,15 +83,13 @@ const UserEditModal: FC<UserEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 						id: id,
 					};
 					await updateUser(data).unwrap();
-					refetch(); // Trigger refetch of stock keeper list after update
-
-					// Success feedback
+					refetch();
 					await Swal.fire({
 						icon: 'success',
 						title: 'User Updated Successfully',
 					});
 					formik.resetForm();
-                	setIsOpen(false);
+					setIsOpen(false);
 				} catch (error) {
 					await Swal.fire({
 						icon: 'error',
@@ -108,15 +103,7 @@ const UserEditModal: FC<UserEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 			}
 		},
 	});
-
-	const formatMobileNumber = (value: string) => {
-		let sanitized = value.replace(/\D/g, ''); // Remove non-digit characters
-		if (!sanitized.startsWith('0')) sanitized = '0' + sanitized; // Ensure it starts with '0'
-		return sanitized.slice(0, 10); // Limit to 10 digits (with leading 0)
-	};
 	
-
-
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
 			<ModalHeader
@@ -143,7 +130,9 @@ const UserEditModal: FC<UserEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 					</FormGroup>
 					<FormGroup id='role' label='Role' className='col-md-6'>
 						<Select
-						disabled={formik.values.role=="Admin"||formik.values.role=="Viewer"}
+							disabled={
+								formik.values.role == 'Admin' || formik.values.role == 'Viewer'
+							}
 							name='role'
 							placeholder='Select user role'
 							value={formik.values.role}
@@ -204,7 +193,6 @@ const UserEditModal: FC<UserEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 		</Modal>
 	);
 };
-
 // Prop types definition for CustomerEditModal component
 UserEditModal.propTypes = {
 	id: PropTypes.string.isRequired,

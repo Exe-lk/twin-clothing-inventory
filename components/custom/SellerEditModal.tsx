@@ -1,63 +1,25 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
-import Icon from '../icon/Icon';
 import FormGroup from '../bootstrap/forms/FormGroup';
 import Input from '../bootstrap/forms/Input';
 import Button from '../bootstrap/Button';
 import Swal from 'sweetalert2';
-import Select from '../bootstrap/forms/Select';
-import Option, { Options } from '../bootstrap/Option';
 import {
 	useUpdateSupplierMutation,
 	useGetSuppliersQuery,
 } from '../../redux/slices/supplierAPISlice';
 
-interface Category {
-	categoryId: string;
-	categoryname: string;
-}
-interface Item {
-	itemId: string;
-	name: string;
-	category: string;
-}
-// Define the props for the SellerAddModal component
 interface SellerAddModalProps {
 	id: string;
 	isOpen: boolean;
 	setIsOpen(...args: unknown[]): unknown;
 }
 
-interface Seller {
-	cid: string;
-	name: string;
-	phone: string;
-	email: string;
-	company_name: string;
-	company_email: string;
-	product: { category: string; name: string }[];
-	status: boolean;
-}
-// SellerAddModal component definition
 const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
-	const initialSellerData: Seller = {
-		cid: '',
-		name: '',
-		phone: '',
-		email: '',
-		company_name: '',
-		company_email: '',
-		product: [{ category: '', name: '' }],
-		status: true,
-	};
-
-	const [seller, setSeller] = useState<Seller>(initialSellerData);
-
 	const { data: supplier } = useGetSuppliersQuery(undefined);
-	const [updateSupplier, { isLoading }] = useUpdateSupplierMutation();
-
+	const [updateSupplier] = useUpdateSupplierMutation();
 	const SupplierToEdit = supplier?.find((supplier: any) => supplier.id === id);
 
 	// Initialize formik for form management
@@ -81,31 +43,23 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 				company_email?: string;
 				products?: string[];
 			} = {};
-			// Check if 'name' is provided
+
 			if (!values.name) {
 				errors.name = 'Required';
 			}
-
-			// Check if 'phone' is provided and is exactly 10 digits
 			if (!values.phone) {
 				errors.phone = 'Required';
 			} else if (!/^\d{10}$/.test(values.phone)) {
 				errors.phone = 'Phone number must be exactly 10 digits';
 			}
-
-			// Check if 'email' is provided and has a valid email format
 			if (!values.email) {
 				errors.email = 'Required';
 			} else if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(values.email)) {
 				errors.email = 'Invalid email address';
 			}
-
-			// Check if 'company_name' is provided
 			if (!values.company_name) {
 				errors.company_name = 'Required';
 			}
-
-			// Check if 'company_email' is provided and has a valid email format
 			if (!values.company_email) {
 				errors.company_email = 'Required';
 			} else if (
@@ -113,9 +67,6 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			) {
 				errors.company_email = 'Invalid email address';
 			}
-			// if (!values.product) {
-			// 	errors.product = 'Required';
-			// }
 			return errors;
 		},
 		onSubmit: async (values) => {
@@ -128,7 +79,6 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					showConfirmButton: false,
 				});
 				await updateSupplier(values).unwrap();
-
 				Swal.fire('Updated!', 'Supplier has been update successfully.', 'success');
 				formik.resetForm();
 			} catch (error) {
@@ -138,18 +88,6 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			}
 		},
 	});
-
-	// Function to handle adding a new product input field
-	const addProductField = () => {
-		const newProducts = [...seller.product, { category: '', name: '' }];
-		setSeller({ ...seller, product: newProducts });
-	};
-
-	const removeProductField = (index: number) => {
-		const newProducts = [...seller.product];
-		newProducts.splice(index, 1);
-		setSeller({ ...seller, product: newProducts });
-	};
 
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='xl' titleId={id}>
@@ -178,6 +116,8 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							value={formik.values.phone}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.phone}
+							invalidFeedback={formik.errors.phone}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
@@ -187,6 +127,8 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							value={formik.values.email}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.email}
+							invalidFeedback={formik.errors.email}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
@@ -196,6 +138,8 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							value={formik.values.company_name}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.company_name}
+							invalidFeedback={formik.errors.company_name}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
@@ -205,83 +149,14 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							value={formik.values.company_email}
 							onBlur={formik.handleBlur}
 							isValid={formik.isValid}
+							isTouched={formik.touched.company_email}
+							invalidFeedback={formik.errors.company_email}
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
-
-					{/* {formik.values.product.map((product, index) => (
-						<FormGroup
-							key={index}
-							id={`product-${index}`}
-							label={`Product ${index + 1}`}
-							className='col-md-6'>
-							<div className='d-flex align-items-center'>
-								<Select
-									ariaLabel='Select Product'
-									value={product.category} // Use category value
-									onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-										const newProducts = [...formik.values.product];
-										newProducts[index] = {
-											...newProducts[index],
-											category: event.target.value,
-										}; // Update category
-										formik.setFieldValue('product', newProducts);
-									}}>
-									<Option value='' disabled>
-										Select Product
-									</Option>
-									{categories.map((category) => (
-										<Option
-											key={category.categoryId}
-											value={category.categoryname}>
-											{category.categoryname}
-										</Option>
-									))}
-								</Select>
-								{product.category && ( // Show item dropdown only when category is selected
-									<Select
-										ariaLabel={`Select item for ${product.category}`} // Use selected category
-										value={product.name} // Use item name value
-										onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-											const newProducts = [...formik.values.product];
-											newProducts[index] = {
-												...newProducts[index],
-												name: event.target.value,
-											}; // Update item name
-											formik.setFieldValue('product', newProducts);
-										}}>
-										<Option value='' disabled>
-											Select Item
-										</Option>
-										{items
-											.filter((item) => item.category === product.category) // Filter items based on selected category
-											.map((item) => (
-												<Option key={item.itemId} value={item.name}>
-													{item.name}
-												</Option>
-											))}
-									</Select>
-								)}
-								<button
-									type='button'
-									onClick={() => removeProductField(index)}
-									className='btn btn-outline-danger ms-2'>
-									<Icon icon='Delete' />
-								</button>
-							</div>
-						</FormGroup>
-					))}
-
-					
-					<div className='col-md-12'>
-						<Button color='info' onClick={addProductField}>
-							Add Product
-						</Button>
-					</div> */}
 				</div>
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
-				{/* Save button to submit the form */}
 				<Button color='info' onClick={formik.handleSubmit}>
 					Save
 				</Button>

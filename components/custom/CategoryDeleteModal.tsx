@@ -1,11 +1,10 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import PropTypes from 'prop-types';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
 import Button from '../bootstrap/Button';
 import Swal from 'sweetalert2';
 import {
 	useDeleteCategoryMutation,
-	useGetCategoriesQuery,
 	useGetDeleteCategoriesQuery,
 	useUpdateCategoryMutation,
 } from '../../redux/slices/categoryApiSlice';
@@ -41,11 +40,8 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 			});
 
 			if (inputText === 'DELETE') {
-				// Call the delete mutation from Redux
 				await deleteCategory(category.id).unwrap();
 				Swal.fire('Deleted!', 'The category has been deleted.', 'success');
-
-				// Refetch categories to update the list
 				refetch();
 			}
 		} catch (error) {
@@ -58,7 +54,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -72,9 +67,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					status: true,
 					subcategory: category.subcategory,
 				};
-
 				await updateCategory(values);
-
 				Swal.fire('Restored!', 'The category has been restored.', 'success');
 			}
 		} catch (error) {
@@ -84,8 +77,8 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 	};
 
 	const handleDeleteAll = async () => {
-		if(categories.length==0){
-			return
+		if (categories.length == 0) {
+			return;
 		}
 		try {
 			const { value: inputText } = await Swal.fire({
@@ -103,14 +96,11 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 				cancelButtonColor: '#d33',
 				confirmButtonText: 'Yes, delete all!',
 			});
-
 			if (inputText === 'DELETE ALL') {
 				for (const category of categories) {
 					await deleteCategory(category.id).unwrap();
 				}
 				Swal.fire('Deleted!', 'All categories have been deleted.', 'success');
-
-				// Refetch categories after deletion
 				refetch();
 			}
 		} catch (error) {
@@ -121,8 +111,8 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 
 	// Handle restore all categories
 	const handleRestoreAll = async () => {
-		if(categories.length==0){
-			return
+		if (categories.length == 0) {
+			return;
 		}
 		try {
 			const result = await Swal.fire({
@@ -134,7 +124,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 				cancelButtonColor: '#d33',
 				confirmButtonText: 'Yes, restore all!',
 			});
-
 			if (result.isConfirmed) {
 				for (const category of categories) {
 					const values = {
@@ -146,8 +135,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					await updateCategory(values).unwrap();
 				}
 				Swal.fire('Restored!', 'All categories have been restored.', 'success');
-
-				// Refetch categories after restoring
 				refetch();
 			}
 		} catch (error) {
@@ -196,10 +183,9 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 							</tr>
 						)}
 						{categories &&
-							categories.map((category: any,index:any) => (
+							categories.map((category: any, index: any) => (
 								<tr key={index}>
 									<td>{category.name}</td>
-
 									<td>
 										<Button
 											icon='Restore'
@@ -208,7 +194,6 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 											onClick={() => handleClickRestore(category)}>
 											Restore
 										</Button>
-
 										<Button
 											className='m-2'
 											icon='Delete'

@@ -1,9 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { NextPage } from 'next';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
-import useDarkMode from '../../../../hooks/useDarkMode';
 import Page from '../../../../layout/Page/Page';
-import { firestore } from '../../../../firebaseConfig';
 import SubHeader, {
 	SubHeaderLeft,
 	SubHeaderRight,
@@ -11,7 +9,6 @@ import SubHeader, {
 } from '../../../../layout/SubHeader/SubHeader';
 import Icon from '../../../../components/icon/Icon';
 import Input from '../../../../components/bootstrap/forms/Input';
-import Dropdown, { DropdownMenu, DropdownToggle } from '../../../../components/bootstrap/Dropdown';
 import Button from '../../../../components/bootstrap/Button';
 import Card, { CardBody, CardTitle } from '../../../../components/bootstrap/Card';
 import CategoryAddModal from '../../../../components/custom/ColourAddModal';
@@ -19,14 +16,14 @@ import CategoryEditModal from '../../../../components/custom/ColourEditModal';
 import Swal from 'sweetalert2';
 import { useUpdateColorMutation, useGetColorsQuery } from '../../../../redux/slices/colorApiSlice';
 
-// Define the functional component for the index page
 const Index: NextPage = () => {
-	const [searchTerm, setSearchTerm] = useState(''); // State for search term
-	const [addModalStatus, setAddModalStatus] = useState<boolean>(false); // State for add modal status
-	const [editModalStatus, setEditModalStatus] = useState<boolean>(false); // State for edit modal status
-	const [id, setId] = useState<string>(''); // State for current category ID
+	const [searchTerm, setSearchTerm] = useState('');
+	const [addModalStatus, setAddModalStatus] = useState<boolean>(false);
+	const [editModalStatus, setEditModalStatus] = useState<boolean>(false);
+	const [id, setId] = useState<string>('');
 	const { data: color, error, isLoading } = useGetColorsQuery(undefined);
 	const [updateColor] = useUpdateColorMutation();
+
 	const handleClickDelete = async (color: any) => {
 		try {
 			const result = await Swal.fire({
@@ -60,7 +57,6 @@ const Index: NextPage = () => {
 		<PageWrapper>
 			<SubHeader>
 				<SubHeaderLeft>
-					{/* Search input */}
 					<label
 						className='border-0 bg-transparent cursor-pointer me-0'
 						htmlFor='searchInput'>
@@ -79,7 +75,6 @@ const Index: NextPage = () => {
 				</SubHeaderLeft>
 				<SubHeaderRight>
 					<SubheaderSeparator />
-					{/* Button to open New category */}
 					<Button icon='Restore' color='success' onClick={() => setAddModalStatus(true)}>
 						Add Color
 					</Button>
@@ -88,7 +83,6 @@ const Index: NextPage = () => {
 			<Page>
 				<div className='row h-100'>
 					<div className='col-12'>
-						{/* Table for displaying customer data */}
 						<Card stretch>
 							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
 								<div className='flex-grow-1 text-center text-info'>
@@ -96,9 +90,8 @@ const Index: NextPage = () => {
 								</div>
 							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
-								{/* <table className='table table-modern table-hover'> */}
-								<table className='table table-bordered border-primary table-modern table-hover text-center'>
-									<thead>
+								<table className='table table-hover table-bordered border-primary'>
+									<thead className={'table-dark border-primary'}>
 										<tr>
 											<th>Color Name</th>
 											<th></th>

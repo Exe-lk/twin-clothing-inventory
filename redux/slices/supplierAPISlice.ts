@@ -5,22 +5,18 @@ export const supplierApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://twinclothinginventory.netlify.app/api/' }),
   tagTypes: ['Supplier'],
   endpoints: (builder) => ({
-    // Fetch all suppliers
     getSuppliers: builder.query({
       query: () => 'supplier/route',
       providesTags: ['Supplier'],
     }),
-    // Fetch a single supplier by ID
     getSupplierById: builder.query({
       query: (id) => `supplier/${id}`,
       providesTags: ['Supplier'],
     }),
-    // Fetch deleted suppliers (status = false)
     getDeletedSuppliers: builder.query({
       query: () => 'supplier/bin',
       providesTags: ['Supplier'],
     }),
-    // Add a new supplier
     addSupplier: builder.mutation({
       query: (newSupplier) => ({
         url: 'supplier/route',
@@ -29,7 +25,6 @@ export const supplierApiSlice = createApi({
       }),
       invalidatesTags: ['Supplier'],
     }),
-    // Update an existing supplier
     updateSupplier: builder.mutation({
       query: (updatedSupplier) => ({
         url: `supplier/${updatedSupplier.id}`,
@@ -38,7 +33,6 @@ export const supplierApiSlice = createApi({
       }),
       invalidatesTags: ['Supplier'],
     }),
-    // Delete a supplier
     deleteSupplier: builder.mutation({
       query: (id) => ({
         url: `supplier/${id}`,

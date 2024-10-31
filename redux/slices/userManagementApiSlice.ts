@@ -12,8 +12,8 @@ export const userManagementApiSlice = createApi({
     }),
     // Get a user by ID
     getUserById: builder.query({
-      query: (id) => `User_management/${id}`, // Call endpoint with ID
-      providesTags: (result, error, id) => [{ type: 'User', id }], // Cache invalidation
+      query: (id) => `User_management/${id}`, 
+      providesTags: (result, error, id) => [{ type: 'User', id }],
     }),
     getDeleteUsers: builder.query({
       query: () => 'User_management/bin',

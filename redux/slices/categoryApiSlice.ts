@@ -5,12 +5,10 @@ export const categoryApiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://twinclothinginventory.netlify.app/api/' }),
   tagTypes: ['Category'],
   endpoints: (builder) => ({
-    // Read: Fetch all categories
     getCategories: builder.query({
       query: () => 'category/route',
       providesTags: ['Category'],
     }),
-    // Fetch a single category by ID
     getCategoryById: builder.query({
       query: (id) => `category/${id}`,
       providesTags: ['Category'],

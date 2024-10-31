@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import SubHeader, { SubHeaderLeft, SubHeaderRight } from '../../../layout/SubHeader/SubHeader';
@@ -18,16 +18,14 @@ import PaginationButtons, {
 const Index: NextPage = () => {
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
-	const [searchTerm, setSearchTerm] = useState(''); // State for search term
+	const [searchTerm, setSearchTerm] = useState('');
 	const { data: transaction, error, isLoading } = useGetTransactionsQuery(undefined);
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
 	const position = [{ position: 'Return' }, { position: 'Restore' }, { position: 'Stock Out' }];
 	return (
 		<PageWrapper>
 			<SubHeader>
 				<SubHeaderLeft>
-					{/* Search input */}
 					<label
 						className='border-0 bg-transparent cursor-pointer me-0'
 						htmlFor='searchInput'>
@@ -87,21 +85,16 @@ const Index: NextPage = () => {
 							</div>
 						</DropdownMenu>
 					</Dropdown>
-					{/* Button to open  New Item modal */}
 				</SubHeaderRight>
 			</SubHeader>
 			<Page>
 				<div className='row h-100'>
 					<div className='col-12'>
-						{/* Table for displaying customer data */}
 						<Card stretch>
 							<CardTitle className='d-flex justify-content-between align-items-center m-4'>
 								<div className='flex-grow-1 text-center text-info'>
 									Transaction History
 								</div>
-								{/* <Button icon='UploadFile' color='warning'>
-									Export
-								</Button> */}
 							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>
 								<table className='table table-hover table-bordered border-primary'>
@@ -144,7 +137,6 @@ const Index: NextPage = () => {
 														: true,
 												)
 												.map((transaction: any) => {
-													// Determine the appropriate Bootstrap text color class based on order_type
 													let textColorClass = '';
 													if (transaction.order_type == 'Restore') {
 														textColorClass = 'text-warning';
