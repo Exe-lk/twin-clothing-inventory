@@ -50,6 +50,8 @@ password?: string;
 				errors.mobile = 'Required';
 			} else if (values.mobile.length !== 10) {
 				errors.mobile = 'Mobile number must be exactly 10 digits';
+			} else if (!/^0\d{9}$/.test(values.mobile)) {
+				errors.mobile = 'Mobile number must start with 0 and be exactly 10 digits';
 			}
 			if (!values.nic) {
 				errors.nic = 'Required';
@@ -60,6 +62,8 @@ password?: string;
 				errors.email = 'Required';
 			} else if (!values.email.includes('@')) {
 				errors.email = 'Invalid email format.';
+			} else if (values.email.includes(' ')) {
+				errors.email = 'Email should not contain spaces.';
 			}
 
 			return errors;
