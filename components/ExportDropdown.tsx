@@ -115,7 +115,7 @@ const ExportDropdown: React.FC<ExportDropdownProps> = ({ tableSelector, title })
 			pdf.text('Twin Clothing Inventory.', 20, logoY + logoHeight + 10);
 
 			// Add the table heading (title) in the top-right corner
-			const title1 = `${title} Report`;
+			const title1 = `${title}`;
 			pdf.setFontSize(16);
 			pdf.setFont('helvetica', 'bold');
 			const titleWidth = pdf.getTextWidth(title1);

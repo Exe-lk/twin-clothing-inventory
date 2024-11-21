@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { GetStaticProps } from 'next';
@@ -19,22 +19,21 @@ import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 const DefaultAside = () => {
-	// Context for theme
 	const { asideStatus, setAsideStatus } = useContext(ThemeContext);
-
-	// State to manage document status
-	const [doc, setDoc] = useState(
-		(typeof window !== 'undefined' &&
-			localStorage.getItem('facit_asideDocStatus') === 'true') ||
-			false,
-	);
-
-	// Translation hook
 	const { t } = useTranslation(['common', 'menu']);
-
 	const router = useRouter();
-	// Dark mode hook
-	const { darkModeStatus } = useDarkMode();
+
+	// useEffect(() => {
+	// 	const validateUser = async () => {
+	// 		const role = localStorage.getItem('userRole');
+
+	// 		if (role != 'Admin') {
+	// 			router.push('/');
+	// 		}
+	// 	};
+
+	// 	validateUser();
+	// }, []);
 
 	// Function to handle logout button click
 	const handleLogout = async () => {

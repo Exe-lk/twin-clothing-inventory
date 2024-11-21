@@ -118,7 +118,7 @@ const Index: React.FC<KeyboardProps> = ({ isActive, setActiveComponent }: any) =
 											</div>
 										</div>
 										<div className='flex-grow-1'>
-											<div className='fs-6'>Quentity : {order.quentity}</div>
+											<div className='fs-6'>Quantity : {order.quentity}</div>
 											<div className='fs-6'>Job ID : {order.Job_ID}</div>
 										</div>
 										<div className='flex-grow-1'>

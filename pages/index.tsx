@@ -71,6 +71,7 @@ const Login: NextPage<ILoginProps> = ({ isSignUp }) => {
 						title: 'Login Successful',
 						text: 'You have successfully logged in!',
 					});
+					localStorage.setItem('userRole', response.user.position);
 					switch (response.user.position) {
 						case 'Admin':
 							router.push('/admin/dashboard');

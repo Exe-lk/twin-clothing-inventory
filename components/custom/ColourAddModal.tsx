@@ -16,7 +16,7 @@ interface CategoryEditModalProps {
 const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 	const [addcolor] = useAddColorMutation();
 	const { refetch } = useGetColorsQuery(undefined);
-	
+
 	const formik = useFormik({
 		initialValues: {
 			name: '',
@@ -24,10 +24,10 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 		},
 		validate: (values) => {
 			const errors: {
-				categoryname?: string;
+				name?: string;
 			} = {};
 			if (!values.name) {
-				errors.categoryname = 'Required';
+				errors.name = 'Required';
 			}
 			return errors;
 		},
@@ -40,7 +40,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					showCancelButton: false,
 					showConfirmButton: false,
 				});
-
+				formik.resetForm();
 				await addcolor(values).unwrap();
 				refetch();
 				await Swal.fire({
@@ -81,7 +81,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
 				<Button color='info' onClick={formik.handleSubmit}>
-					Save
+					Add Color
 				</Button>
 			</ModalFooter>
 		</Modal>

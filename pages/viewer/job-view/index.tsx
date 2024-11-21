@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import SubHeader, { SubHeaderLeft } from '../../../layout/SubHeader/SubHeader';
@@ -18,7 +18,13 @@ const Index: NextPage = () => {
 	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
 	const [searchTerm, setSearchTerm] = useState('');
 	const { data: job, error, isLoading } = useGetJobsQuery(undefined);
+	const inputRef = useRef<HTMLInputElement>(null);
 
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [job]);
 	return (
 		<PageWrapper>
 			<SubHeader>
@@ -37,6 +43,7 @@ const Index: NextPage = () => {
 							setSearchTerm(event.target.value);
 						}}
 						value={searchTerm}
+						ref={inputRef}
 					/>
 				</SubHeaderLeft>
 			</SubHeader>
@@ -48,7 +55,7 @@ const Index: NextPage = () => {
 								<div className='flex-grow-1 text-center text-info'>Jobs</div>
 								<ExportDropdown
 									tableSelector='table'
-									title='Jon Management Report'
+									title='Job Management Report'
 								/>
 							</CardTitle>
 							<CardBody isScrollable className='table-responsive'>

@@ -44,7 +44,7 @@ const Index: NextPage = () => {
 			});
 			if (inputText === 'DELETE') {
 				await deletedata(data.id).unwrap();
-				Swal.fire('Deleted!', 'The data has been deleted.', 'success');
+				Swal.fire('Deleted!', 'The data has been permanently deleted..', 'success');
 				refetch();
 			}
 		} catch (error) {
@@ -99,7 +99,7 @@ const Index: NextPage = () => {
 				for (const datas of data) {
 					await deletedata(datas.id).unwrap();
 				}
-				Swal.fire('Deleted!', 'All data have been deleted.', 'success');
+				Swal.fire('Deleted!', 'All data have been permanently deleted.', 'success');
 				refetch();
 			}
 		} catch (error) {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../layout/Page/Page';
@@ -22,6 +22,13 @@ const Index: NextPage = () => {
 	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
 	const [searchTerm, setSearchTerm] = useState('');
 	const { data: categories, error, isLoading } = useGetCategoriesQuery('');
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [categories]);
 	return (
 		<PageWrapper>
 			<SubHeader>
@@ -38,6 +45,7 @@ const Index: NextPage = () => {
 						placeholder='Search...'
 						onChange={(event: any) => setSearchTerm(event.target.value)}
 						value={searchTerm}
+						ref={inputRef}
 					/>
 				</SubHeaderLeft>
 				<SubHeaderRight>
@@ -61,6 +69,7 @@ const Index: NextPage = () => {
 										<tr>
 											<th>Category name</th>
 											<th>Sub Category</th>
+											<th hidden></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -95,6 +104,7 @@ const Index: NextPage = () => {
 																)}
 															</ul>
 														</td>
+														<td hidden></td>
 													</tr>
 												))}
 									</tbody>

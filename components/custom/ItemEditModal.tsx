@@ -167,7 +167,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								label='Fabric'
 								name='type'
 								value='Fabric'
-								onChange={handleOptionChange}
+								// onChange={handleOptionChange}
 								checked={selectedOption}
 							/>
 							<Checks
@@ -176,7 +176,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								label='Thread'
 								name='type'
 								value='Thread'
-								onChange={handleOptionChange}
+								// onChange={handleOptionChange}
 								checked={selectedOption}
 							/>
 							<Checks
@@ -185,7 +185,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 								label='Other'
 								name='type'
 								value='Other'
-								onChange={handleOptionChange}
+								// onChange={handleOptionChange}
 								checked={selectedOption}
 							/>
 						</ChecksGroup>
@@ -593,7 +593,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					Reset
 				</Button>
 				<Button color='info' onClick={formik.handleSubmit}>
-					Save
+					Edit Lot
 				</Button>
 			</ModalFooter>
 		</Modal>

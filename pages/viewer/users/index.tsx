@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, {useEffect, useRef, useState } from 'react';
 import type { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import SubHeader, {
@@ -28,9 +28,15 @@ const Index: NextPage = () => {
 	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-	const role = [{ role: 'Production Coordinator' }, { role: 'Stock Keeper' }];
+	const role = [{ role: 'Production Coordinator' }, { role: 'Stock Keeper' },{ role: 'Admin' },{ role: 'Viewer' }];
 	const { data: users, error, isLoading} = useGetUsersQuery(undefined);
+	const inputRef = useRef<HTMLInputElement>(null);
 
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [users]);
 	return (
 		<PageWrapper>
 			<SubHeader>
@@ -49,6 +55,7 @@ const Index: NextPage = () => {
 							setSearchTerm(event.target.value);
 						}}
 						value={searchTerm}
+						ref={inputRef}
 					/>
 				</SubHeaderLeft>
 				<SubHeaderRight>
@@ -130,11 +137,13 @@ const Index: NextPage = () => {
 												.filter((user: any) => user.status === true)
 												.filter((user: any) =>
 													searchTerm
-														? user.nic
+														? user.name
 																.toLowerCase()
-																.includes(searchTerm.toLowerCase())
+																.includes(searchTerm.toLowerCase())||
+																user.email.toLowerCase().includes(searchTerm.toLowerCase())
 														: true,
 												)
+												
 												.filter((user: any) =>
 													selectedUsers.length > 0
 														? selectedUsers.includes(user.role)

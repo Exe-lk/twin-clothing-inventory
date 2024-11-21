@@ -25,10 +25,10 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 		},
 		validate: (values) => {
 			const errors: {
-				categoryname?: string;
+				name?: string;
 			} = {};
 			if (!values.name) {
-				errors.categoryname = 'Required';
+				errors.name = 'Required';
 			}
 			return errors;
 		},
@@ -47,6 +47,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					icon: 'success',
 					title: 'Fabric Added Successfully',
 				});
+				formik.resetForm();
 				setIsOpen(false);
 			} catch (error) {
 				console.error('Error during handleUpload: ', error);
@@ -80,7 +81,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
 				<Button color='info' onClick={formik.handleSubmit}>
-					Save
+					Add Fabric
 				</Button>
 			</ModalFooter>
 		</Modal>
