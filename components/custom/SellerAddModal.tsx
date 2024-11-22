@@ -43,23 +43,29 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			}
 			if (!values.phone) {
 				errors.phone = 'Required';
-			} else if (!/^\d{10}$/.test(values.phone)) {
-				errors.phone = 'Phone number must be exactly 10 digits';
+			} else if (values.phone.length !== 10) {
+				errors.phone = 'Mobile number must be exactly 10 digits';
+			} else if (!/^0\d{9}$/.test(values.phone)) {
+				errors.phone = 'Mobile number must start with 0 and be exactly 10 digits';
 			}
 			if (!values.email) {
 				errors.email = 'Required';
-			} else if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(values.email)) {
-				errors.email = 'Invalid email address';
-			}
+			} else if (!values.email.includes('@')) {
+				errors.email = 'Invalid email format.';
+			} else if (values.email.includes(' ')) {
+				errors.email = 'Email should not contain spaces.';
+			} else if (/[A-Z]/.test(values.email)) {
+				errors.email = 'Email should be in lowercase only.';
+			}		
 			if (!values.company_name) {
 				errors.company_name = 'Required';
 			}
 			if (!values.company_email) {
 				errors.company_email = 'Required';
 			} else if (
-				!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(values.company_email)
+				!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(values.company_email)
 			) {
-				errors.company_email = 'Invalid email address';
+				errors.company_email = 'Email should not contain spaces or uppercase latters ';
 			}
 			return errors;
 		},
@@ -155,7 +161,7 @@ const SellerAddModal: FC<SellerAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
 				<Button color='info' onClick={formik.handleSubmit}>
-					Save
+					Add Supplier
 				</Button>
 			</ModalFooter>
 		</Modal>

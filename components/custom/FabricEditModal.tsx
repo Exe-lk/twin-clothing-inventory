@@ -78,7 +78,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
 				<Button color='info' onClick={formik.handleSubmit}>
-					Save
+					Edit Fabric
 				</Button>
 			</ModalFooter>
 		</Modal>

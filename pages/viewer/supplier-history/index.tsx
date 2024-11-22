@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
@@ -19,6 +19,13 @@ const Index: NextPage = () => {
 	const [perPage, setPerPage] = useState<number>(PER_COUNT['50']);
 	const [searchTerm, setSearchTerm] = useState('');
 	const { data: supplier, error, isLoading } = useGetSuppliersQuery(undefined);
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [supplier]);
 
 	return (
 		<PageWrapper>
@@ -41,6 +48,7 @@ const Index: NextPage = () => {
 							setSearchTerm(event.target.value);
 						}}
 						value={searchTerm}
+						ref={inputRef}
 					/>
 				</SubHeaderLeft>
 			</SubHeader>
@@ -64,6 +72,7 @@ const Index: NextPage = () => {
 											<th>Company Email</th>
 											<th>Phone Number</th>
 											<th>Supplier Email</th>
+											<th hidden></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -93,6 +102,7 @@ const Index: NextPage = () => {
 														<td>{supplier.company_email}</td>
 														<td>{supplier.phone}</td>
 														<td>{supplier.email}</td>
+														<td hidden></td>
 													</tr>
 												))}
 									</tbody>

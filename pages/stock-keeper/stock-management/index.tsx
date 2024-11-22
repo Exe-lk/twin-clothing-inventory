@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Button from '../../../components/bootstrap/Button';
 import 'react-simple-keyboard/build/css/index.css';
@@ -25,7 +25,13 @@ function index() {
 		hour: '2-digit',
 		minute: '2-digit',
 	});
+	const inputRef = useRef<HTMLInputElement>(null);
 
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [orderedItems]);
 	const addbill = async () => {
 		try {
 			const result = await Swal.fire({

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import SubHeader, { SubHeaderLeft, SubHeaderRight } from '../../../layout/SubHeader/SubHeader';
@@ -23,8 +23,14 @@ const Index: NextPage = () => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const { data: transaction, error, isLoading } = useGetTransactionsQuery(undefined);
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
 	const position = [{ position: 'Return' }, { position: 'Restore' }, { position: 'Stock Out' }];
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [transaction]);
 	return (
 		<PageWrapper>
 			<SubHeader>
@@ -44,6 +50,7 @@ const Index: NextPage = () => {
 							setSearchTerm(event.target.value);
 						}}
 						value={searchTerm}
+						ref={inputRef}
 					/>
 				</SubHeaderLeft>
 				<SubHeaderRight>

@@ -50,6 +50,8 @@ const UserEditModal: FC<UserEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 				errors.mobile = 'Required';
 			} else if (values.mobile.length !== 10) {
 				errors.mobile = 'Mobile number must be exactly 10 digits';
+			} else if (!/^0\d{9}$/.test(values.mobile)) {
+				errors.mobile = 'Mobile number must start with 0 and be exactly 10 digits';
 			}
 			if (!values.nic) {
 				errors.nic = 'Required';
@@ -60,7 +62,11 @@ const UserEditModal: FC<UserEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 				errors.email = 'Required';
 			} else if (!values.email.includes('@')) {
 				errors.email = 'Invalid email format.';
-			}
+			} else if (values.email.includes(' ')) {
+				errors.email = 'Email should not contain spaces.';
+			} else if (/[A-Z]/.test(values.email)) {
+				errors.email = 'Email should be in lowercase only.';
+			}		
 			return errors;
 		},
 		onSubmit: async (values) => {
@@ -187,7 +193,7 @@ const UserEditModal: FC<UserEditModalProps> = ({ id, isOpen, setIsOpen }) => {
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
 				<Button color='info' onClick={formik.handleSubmit}>
-					Save
+					Edit User
 				</Button>
 			</ModalFooter>
 		</Modal>

@@ -1,4 +1,4 @@
-import React, { FC,useState } from 'react';
+import React, { FC, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
@@ -18,10 +18,9 @@ interface UserAddModalProps {
 }
 
 const UserAddModal: FC<UserAddModalProps> = ({ id, isOpen, setIsOpen }) => {
-
 	const [addUser] = useAddUserMutation();
 	const { refetch } = useGetUsersQuery(undefined);
-// Initialize formik for form management
+	// Initialize formik for form management
 	const formik = useFormik({
 		initialValues: {
 			name: '',
@@ -29,15 +28,15 @@ const UserAddModal: FC<UserAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 			nic: '',
 			email: '',
 			mobile: '',
-status: true,
+			status: true,
 		},
 		validate: (values) => {
 			const errors: {
 				role?: string;
-name?: string;
+				name?: string;
 				nic?: string;
 				email?: string;
-password?: string;
+				password?: string;
 				mobile?: string;
 			} = {};
 			if (!values.role) {
@@ -50,6 +49,8 @@ password?: string;
 				errors.mobile = 'Required';
 			} else if (values.mobile.length !== 10) {
 				errors.mobile = 'Mobile number must be exactly 10 digits';
+			} else if (!/^0\d{9}$/.test(values.mobile)) {
+				errors.mobile = 'Mobile number must start with 0 and be exactly 10 digits';
 			}
 			if (!values.nic) {
 				errors.nic = 'Required';
@@ -60,7 +61,11 @@ password?: string;
 				errors.email = 'Required';
 			} else if (!values.email.includes('@')) {
 				errors.email = 'Invalid email format.';
-			}
+			} else if (values.email.includes(' ')) {
+				errors.email = 'Email should not contain spaces.';
+			} else if (/[A-Z]/.test(values.email)) {
+				errors.email = 'Email should be in lowercase only.';
+			}		
 
 			return errors;
 		},
@@ -75,7 +80,7 @@ password?: string;
 				});
 
 				try {
-await addUser(values).unwrap();
+					await addUser(values).unwrap();
 					refetch();
 					formik.resetForm();
 					await Swal.fire({
@@ -135,7 +140,7 @@ await addUser(values).unwrap();
 							<Option value={'Stock Keeper'}>Stock Keeper</Option>
 						</Select>
 					</FormGroup>
-<FormGroup id='mobile' label='Mobile number' className='col-md-6'>
+					<FormGroup id='mobile' label='Mobile number' className='col-md-6'>
 						<Input
 							onChange={formik.handleChange}
 							value={formik.values.mobile}
@@ -172,7 +177,7 @@ await addUser(values).unwrap();
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
 				<Button color='info' onClick={formik.handleSubmit}>
-					Save
+					Add User
 				</Button>
 			</ModalFooter>
 		</Modal>

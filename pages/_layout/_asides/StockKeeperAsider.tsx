@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { GetStaticProps } from 'next';
@@ -41,6 +41,17 @@ const DefaultAside = () => {
 	// Dark mode hook
 	const { darkModeStatus } = useDarkMode();
 
+	useEffect(() => {
+		const validateUser = async () => {
+			const role = localStorage.getItem('userRole');
+
+			if (role != 'Stock Keeper') {
+				router.push('/');
+			}
+		};
+
+		validateUser();
+	}, []);
 	// Function to handle logout button click
 	const handleLogout = async () => {
 		try {

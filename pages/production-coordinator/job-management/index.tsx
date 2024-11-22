@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import SubHeader, {
@@ -33,7 +33,13 @@ const Index: NextPage = () => {
 	const [id1, setId1] = useState<string>('12356');
 	const { data: job, error, isLoading } = useGetJobsQuery(undefined);
 	const [updatejob] = useUpdateJobMutation();
+	const inputRef = useRef<HTMLInputElement>(null);
 
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [job]);
 	const handleClickDelete = async (item: any) => {
 		try {
 			const result = await Swal.fire({
@@ -81,6 +87,7 @@ const Index: NextPage = () => {
 							setSearchTerm(event.target.value);
 						}}
 						value={searchTerm}
+						ref={inputRef}
 					/>
 				</SubHeaderLeft>
 				<SubHeaderRight>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {  useEffect, useRef, useState } from 'react';
 import type { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import SubHeader, {
@@ -40,7 +40,13 @@ const Index: NextPage = () => {
 	];
 	const { data: users, error, isLoading, refetch } = useGetUsersQuery(undefined);
 	const [updateuser] = useUpdateUserMutation();
+	const inputRef = useRef<HTMLInputElement>(null);
 
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [users]);
 	// Update the user's status to false instead of deleting
 	const handleClickDelete = async (user: any) => {
 		try {
@@ -212,6 +218,10 @@ const Index: NextPage = () => {
 																Edit
 															</Button>
 															<Button
+															isDisable={
+																user.role == 'Admin' ||
+																user.role == 'Viewer'
+															}
 																className='m-2'
 																icon='Delete'
 																color='danger'
@@ -256,3 +266,5 @@ const Index: NextPage = () => {
 	);
 };
 export default Index;
+
+

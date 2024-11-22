@@ -277,27 +277,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							</Select>
 						</FormGroup>
 					)}
-					{selectedOption === 'Thread' && (
-						<FormGroup id='subcategory' label='Sub Category' className='col-md-6'>
-							<Select
-								ariaLabel='Default select example'
-								placeholder='Open this select sub category'
-								onChange={formik.handleChange}
-								value={formik.values.subcategory}
-								onBlur={formik.handleBlur}
-								isValid={formik.isValid}
-								isTouched={formik.touched.subcategory}
-								invalidFeedback={formik.errors.subcategory}
-								validFeedback='Looks good!'>
-								{subcategories &&
-									subcategories.map((category: any) => (
-										<Option key={category.value} value={category.value}>
-											{category.label}
-										</Option>
-									))}
-							</Select>
-						</FormGroup>
-					)}
+					
 					{selectedOption === 'Other' && (
 						<FormGroup id='subcategory' label='Sub Category' className='col-md-6'>
 							<Select
@@ -344,6 +324,27 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 							validFeedback='Looks good!'
 						/>
 					</FormGroup>
+					{selectedOption === 'Thread' && (
+						<FormGroup id='subcategory' label='Sub Category' className='col-md-6'>
+							<Select
+								ariaLabel='Default select example'
+								placeholder='Open this select sub category'
+								onChange={formik.handleChange}
+								value={formik.values.subcategory}
+								onBlur={formik.handleBlur}
+								isValid={formik.isValid}
+								isTouched={formik.touched.subcategory}
+								invalidFeedback={formik.errors.subcategory}
+								validFeedback='Looks good!'>
+								{subcategories &&
+									subcategories.map((category: any) => (
+										<Option key={category.value} value={category.value}>
+											{category.label}
+										</Option>
+									))}
+							</Select>
+						</FormGroup>
+					)}
 					<FormGroup id='date' label='Date' className='col-md-6'>
 						<Input
 							type='date'
@@ -656,7 +657,7 @@ const ItemAddModal: FC<ItemAddModalProps> = ({ id, isOpen, setIsOpen }) => {
 					Reset
 				</Button>
 				<Button color='info' onClick={formik.handleSubmit}>
-					Save
+					Add Lot
 				</Button>
 			</ModalFooter>
 		</Modal>

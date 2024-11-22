@@ -48,6 +48,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 					title: 'Knit Added Successfully',
 				});
 				setIsOpen(false);
+				formik.resetForm();
 			} catch (error) {}
 		},
 	});
@@ -78,7 +79,7 @@ const CategoryEditModal: FC<CategoryEditModalProps> = ({ id, isOpen, setIsOpen }
 			</ModalBody>
 			<ModalFooter className='px-4 pb-4'>
 				<Button color='info' onClick={formik.handleSubmit}>
-					Save
+					Add Knit Type
 				</Button>
 			</ModalFooter>
 		</Modal>

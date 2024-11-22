@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import SubHeader, {
@@ -33,6 +33,13 @@ const Index: NextPage = () => {
 	const [id1, setId1] = useState<string>('12356');
 	const { data: lot, error, isLoading } = useGetLotsQuery(undefined);
 	const [updatelot] = useUpdateLotMutation();
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [lot]);
 
 	// Function to handle deletion of an item
 	const handleClickDelete = async (item: any) => {
@@ -82,6 +89,7 @@ const Index: NextPage = () => {
 							setSearchTerm(event.target.value);
 						}}
 						value={searchTerm}
+						ref={inputRef}
 					/>
 				</SubHeaderLeft>
 				<SubHeaderRight>

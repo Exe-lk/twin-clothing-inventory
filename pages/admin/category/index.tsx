@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NextPage } from 'next';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../layout/Page/Page';
@@ -32,7 +32,13 @@ const Index: NextPage = () => {
 	const [id, setId] = useState<string>('');
 	const { data: categories, error, isLoading } = useGetCategoriesQuery('');
 	const [updateCategory] = useUpdateCategoryMutation();
+	const inputRef = useRef<HTMLInputElement>(null);
 
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [categories]);
 	//delete category
 	const handleClickDelete = async (category: any) => {
 		try {
@@ -76,6 +82,7 @@ const Index: NextPage = () => {
 						placeholder='Search...'
 						onChange={(event: any) => setSearchTerm(event.target.value)}
 						value={searchTerm}
+						ref={inputRef}
 					/>
 				</SubHeaderLeft>
 				<SubHeaderRight>

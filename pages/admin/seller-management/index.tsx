@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
@@ -36,6 +36,13 @@ const Index: NextPage = () => {
 	const [deleteModalStatus, setDeleteModalStatus] = useState<boolean>(false);
 	const { data: supplier, error, isLoading } = useGetSuppliersQuery(undefined);
 	const [updatesupplier] = useUpdateSupplierMutation();
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [supplier]);
 
 	const handleClickDelete = async (item: any) => {
 		try {
@@ -89,6 +96,7 @@ const Index: NextPage = () => {
 							setSearchTerm(event.target.value);
 						}}
 						value={searchTerm}
+						ref={inputRef}
 					/>
 				</SubHeaderLeft>
 				<SubHeaderRight>

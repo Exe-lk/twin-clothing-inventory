@@ -1,52 +1,34 @@
-import React, { useContext, useState } from 'react';
-import classNames from 'classnames';
-import { useTranslation } from 'next-i18next';
+import React, { useContext, useEffect, useState } from 'react';
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Brand from '../../../layout/Brand/Brand';
-import Navigation, { NavigationLine } from '../../../layout/Navigation/Navigation';
-import User from '../../../layout/User/User';
-import {
-
-	addminPagesMenu,
-	logoutmenu
-} from '../../../menu';
+import Navigation from '../../../layout/Navigation/Navigation';
+import { addminPagesMenu} from '../../../menu';
 import ThemeContext from '../../../context/themeContext';
-import Card, { CardBody } from '../../../components/bootstrap/Card';
-
-import Hand from '../../../assets/img/hand.png';
-import Icon from '../../../components/icon/Icon';
 import Button from '../../../components/bootstrap/Button';
-import useDarkMode from '../../../hooks/useDarkMode';
 import Aside, { AsideBody, AsideFoot, AsideHead } from '../../../layout/Aside/Aside';
-import logo from "../../../assets/logos/Logo.png"
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 const DefaultAside = () => {
 	// Context for theme
 	const { asideStatus, setAsideStatus } = useContext(ThemeContext);
-
-	// State to manage document status
-	const [doc, setDoc] = useState(
-		(typeof window !== 'undefined' &&
-			localStorage.getItem('facit_asideDocStatus') === 'true') ||
-		false,
-	);
-
-	// Translation hook
-	const { t } = useTranslation(['common', 'menu']);
-
 	const router = useRouter();
-	// Dark mode hook
-	const { darkModeStatus } = useDarkMode();
+	useEffect(() => {
+		const validateUser = async () => {
+			const role = localStorage.getItem('userRole');
+		
+			if (role !='Admin') {
+				router.push('/');
+			} 
+		};
 
-	// Function to handle logout button click
+		validateUser();
+	}, []);
 	const handleLogout = async () => {
 		try {
 			const result = await Swal.fire({
 				title: 'Are you sure?',
-				// text: 'You will not be able to recover this user!',
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -55,7 +37,7 @@ const DefaultAside = () => {
 			});
 			if (result.isConfirmed) {
 				try {
-					localStorage.removeItem('user');
+					localStorage.removeItem('userRole');
 
 					router.push('/');
 				} catch (error) {
@@ -77,7 +59,6 @@ const DefaultAside = () => {
 			<AsideBody>
 				{/* Navigation menu for 'My Pages' */}
 				<Navigation menu={addminPagesMenu} id='aside-dashboard' />
-
 			</AsideBody>
 			<AsideFoot>
 				{/* <div onClick={() => { localStorage.removeItem('token') }}>
@@ -90,9 +71,7 @@ const DefaultAside = () => {
 					color='dark'
 					size='lg'
 					tag='button'
-					onClick={handleLogout}>
-						
-					</Button>
+					onClick={handleLogout}></Button>
 			</AsideFoot>
 		</Aside>
 	);
