@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const supplierApiSlice = createApi({
   reducerPath: 'supplierApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://twinclothinginventory.netlify.app/api/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
   tagTypes: ['Supplier'],
   endpoints: (builder) => ({
     getSuppliers: builder.query({
