@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const fabricApiSlice = createApi({
   reducerPath: 'fabricApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://magical-dragon-ffe065.netlify.app/api/' }),
   tagTypes: ['Fabric'],
   endpoints: (builder) => ({
     getFabrics: builder.query({

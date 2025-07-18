@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const colorApiSlice = createApi({
   reducerPath: 'colorApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://magical-dragon-ffe065.netlify.app/api/' }),
   tagTypes: ['Color'],
   endpoints: (builder) => ({
     getColors: builder.query({

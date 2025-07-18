@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const knitTypeApiSlice = createApi({
   reducerPath: 'knitTypeApi',
-  baseQuery: fetchBaseQuery({ baseUrl:'/api/' }),
+  baseQuery: fetchBaseQuery({ baseUrl:'https://magical-dragon-ffe065.netlify.app/api/' }),
   tagTypes: ['KnitType'],
   endpoints: (builder) => ({
     getKnitTypes: builder.query({

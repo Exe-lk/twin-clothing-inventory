@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const categoryApiSlice = createApi({
   reducerPath: 'categoryApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://magical-dragon-ffe065.netlify.app/api/' }),
   tagTypes: ['Category'],
   endpoints: (builder) => ({
     getCategories: builder.query({

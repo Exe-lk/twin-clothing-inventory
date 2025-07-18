@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const lotApiSlice = createApi({
   reducerPath: 'lotApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://magical-dragon-ffe065.netlify.app/api/' }),
   tagTypes: ['Lot'],
   endpoints: (builder) => ({
     // Fetch all lots
