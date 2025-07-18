@@ -14,17 +14,17 @@ const DefaultAside = () => {
 	// Context for theme
 	const { asideStatus, setAsideStatus } = useContext(ThemeContext);
 	const router = useRouter();
-	useEffect(() => {
-		const validateUser = async () => {
-			const role = localStorage.getItem('userRole');
+	// useEffect(() => {
+	// 	const validateUser = async () => {
+	// 		const role = localStorage.getItem('userRole');
 		
-			if (role !='Admin') {
-				router.push('/');
-			} 
-		};
+	// 		if (role !='Admin') {
+	// 			router.push('/');
+	// 		} 
+	// 	};
 
-		validateUser();
-	}, []);
+	// 	validateUser();
+	// }, []);
 	const handleLogout = async () => {
 		try {
 			const result = await Swal.fire({

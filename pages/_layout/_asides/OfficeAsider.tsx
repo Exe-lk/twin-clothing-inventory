@@ -40,17 +40,17 @@ const DefaultAside = () => {
 	// Dark mode hook
 	const { darkModeStatus } = useDarkMode();
 	const router = useRouter();
-	useEffect(() => {
-		const validateUser = async () => {
-			const role = localStorage.getItem('userRole');
+	// useEffect(() => {
+	// 	const validateUser = async () => {
+	// 		const role = localStorage.getItem('userRole');
 
-			if (role != 'Production Coordinator') {
-				router.push('/');
-			}
-		};
+	// 		if (role != 'Production Coordinator') {
+	// 			router.push('/');
+	// 		}
+	// 	};
 
-		validateUser();
-	}, []);
+	// 	validateUser();
+	// }, []);
 	// Function to handle logout button click
 	const handleLogout = async () => {
 		try {

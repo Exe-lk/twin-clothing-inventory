@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const fabricApiSlice = createApi({
   reducerPath: 'fabricApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://twinclothinginventory.netlify.app/api/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
   tagTypes: ['Fabric'],
   endpoints: (builder) => ({
     getFabrics: builder.query({
