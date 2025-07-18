@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const transactionHistoryApiSlice = createApi({
   reducerPath: 'transactionHistoryApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://magical-dragon-ffe065.netlify.app/api/' }),
   tagTypes: ['TransactionHistory'],
   endpoints: (builder) => ({
     // Fetch all active transactions
